@@ -1,0 +1,5 @@
+
+.yarn
+**/dist
+**/docs
+**/node_modules
