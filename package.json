@@ -1,12 +1,11 @@
 {
   "name": "@relefant/superenum",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
   "author": "Relefant",
   "license": "BSD-2-Clause",
   "main": "dist/cjs/superenum.js",
   "module": "dist/esm/superenum.js",
-  "browser": "dist/browser/superenum.min.js",
   "types": "dist/superenum.d.ts",
   "files": [
     "dist"
@@ -20,7 +19,7 @@
     "test": "jest --coverage",
     "test-browser": "node ./test/browser-test.js",
     "publish": "yarn npm publish",
-    "prepublish": "run clean && run build",
+    "prepublish": "run clean && run build && run test",
     "prepublish2": "run lint && run clean && run build && run test && run test-browser",
     "clean": "shx rm -rf ./dist",
     "lint": "eslint --max-warnings 0 -- '/**/*.@(tsx|ts|jsx|js|mjs|cjs)'"

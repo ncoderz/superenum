@@ -20,4 +20,4 @@ Ignore case when getting the enum value from the key
 
 #### Defined in
 
-[superenum.ts:83](https://github.com/relefant/superenum/blob/d390f7e/src/superenum.ts#L83)
+[superenum.ts:83](https://github.com/relefant/superenum/blob/cd25d8d/src/superenum.ts#L83)

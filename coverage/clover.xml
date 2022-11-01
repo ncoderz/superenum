@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1667273774586" clover="3.2.0">
-  <project timestamp="1667273774586" name="All files">
+<coverage generated="1667276784884" clover="3.2.0">
+  <project timestamp="1667276784884" name="All files">
     <metrics statements="88" coveredstatements="88" conditionals="49" coveredconditionals="49" methods="20" coveredmethods="20" elements="157" coveredelements="157" complexity="0" loc="88" ncloc="88" packages="1" files="1" classes="1"/>
     <file name="superenum.ts" path="/Users/sewell/relefant/git/superenum/src/superenum.ts">
       <metrics statements="88" coveredstatements="88" conditionals="49" coveredconditionals="49" methods="20" coveredmethods="20"/>

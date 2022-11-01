@@ -47,8 +47,8 @@ const { superenum, EnumType } = require('@relefant/superenum');
 ```
 
 ```html
-// NOT AVAILABLE YET
-<script src="../../dist/browser/superenum.min.js"></script>
+// TODO - distribute this file
+<script src="./dist/browser/superenum.min.js"></script>
 <script
   const { superenum } = window.superenum;
 
