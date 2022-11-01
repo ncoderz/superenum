@@ -1,12 +1,12 @@
 {
   "name": "@relefant/superenum",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
   "author": "Relefant",
   "license": "BSD-2-Clause",
   "main": "dist/cjs/superenum.js",
   "module": "dist/esm/superenum.js",
-  "types": "dist/superenum.d.ts",
+  "types": "dist/types/superenum.d.ts",
   "files": [
     "dist"
   ],

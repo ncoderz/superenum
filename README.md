@@ -215,7 +215,8 @@ for (const value of MyMixedEnum.keys()) {
 ## Validation
 Validation is a common use case when reading data from an API, file or database.
 
-`@relefant/superenum` makes this easy with `<enum>.fromValue()`
+`@relefant/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
+data does not match an enum value.
 
 ```ts
 const MyEnum = superenum.fromArray([
