@@ -7,6 +7,7 @@ package.tgz
 /vscode-case-study
 .history
 junit.xml
+/coverage
 tsconfig.tsbuildinfo
 
 
