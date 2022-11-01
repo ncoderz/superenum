@@ -26,25 +26,6 @@ Additionally, the library is committed to:
 - permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
 - fixing bugs
 
-## Feature Comparison
-
-| Feature | `@relefant/enum` (numeric and string) | TypeScript `enum` (numeric) | TypeScript `enum` (string) |
-| ------- | ------------------------------------- | --------------------------- | -------------------------- |
-| Compatible with simple JS enums | Yes | X | X |
-| Mixed numeric and string keys | Yes | X | X |
-| Compare value | `value === Enum.key` | `Enum[value] === Enum[Enum.key]` | `value === Enum.key`
-| Validate external data to valid typed enum | `const val: EnumType = Enum.fromValue(value)` | `const val: Enum = ((Enum[value] === Enum[Enum.key]) ? value : undefined) as Enum` | `const val: Enum = ((value === Enum.key) ? value : undefined) as Enum`
-| Value from key | `const val: EnumType = Enum.fromKey(key)` | `Enum[key]` - only if key is const; not very useful | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (k === key) return v; }, '')` - not typed (is string) |
-| Value from key safe? | Safe | No, will return key for invalid input which happens to be a valid value | Safe, but see above! |
-| Key from value | `Enum.keyFromValue(value)` | `Enum[value]` | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (v === value) return k; }, '')` |
-| Key from value safe? | Safe | No, will return value for invalid input which happens to be a valid key | Safe, but see above! |
-| Iterate values? | `Enum.values()` | `Object.values(Enum).filter((v) => isNaN(Number(v))` | `Object.values(Enum)`
-| Iterate keys? | `Enum.keys()` | `Object.keys(Enum).filter((k) => !isNaN(Number(k))` | `Object.keys(Enum)` |
-| Iterate entries? | `Enum.entries()` | `Object.entries(Enum).filter(([k,v]) => isNaN(Number(k)))` | `Object.entries(Enum)` |
-| Associate metadata with an enum value | Yes | X | X |
-| Declare just first number value and increment | X | Yes | N/A |
-| Bloat code? | < 1kB | Built-in | Built-in |
-| Fast? | Yes | Workarounds involve looping | Workarounds involve looping |
 
 
 ## Installation
@@ -327,6 +308,26 @@ const desc = MyEnum.getMetadata(valueNode);   // 'Node.js is an open-source, cro
 
 [API Documentation](docs/API.md)
 
+## Feature Comparison
+
+| Feature | `@relefant/enum` (numeric and string) | TypeScript `enum` (numeric) | TypeScript `enum` (string) |
+| ------- | ------------------------------------- | --------------------------- | -------------------------- |
+| Compatible with simple JS enums | Yes | X | X |
+| Mixed numeric and string keys | Yes | X | X |
+| Compare value | `value === Enum.key` | `Enum[value] === Enum[Enum.key]` | `value === Enum.key`
+| Validate external data to valid typed enum | `const val: EnumType = Enum.fromValue(value)` | `const val: Enum = ((Enum[value] === Enum[Enum.key]) ? value : undefined) as Enum` | `const val: Enum = ((value === Enum.key) ? value : undefined) as Enum`
+| Value from key | `const val: EnumType = Enum.fromKey(key)` | `Enum[key]` - only if key is const; not very useful | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (k === key) return v; }, '')` - not typed (is string) |
+| Value from key safe? | Safe | No, will return key for invalid input which happens to be a valid value | Safe, but see above! |
+| Key from value | `Enum.keyFromValue(value)` | `Enum[value]` | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (v === value) return k; }, '')` |
+| Key from value safe? | Safe | No, will return value for invalid input which happens to be a valid key | Safe, but see above! |
+| Iterate values? | `Enum.values()` | `Object.values(Enum).filter((v) => isNaN(Number(v))` | `Object.values(Enum)`
+| Iterate keys? | `Enum.keys()` | `Object.keys(Enum).filter((k) => !isNaN(Number(k))` | `Object.keys(Enum)` |
+| Iterate entries? | `Enum.entries()` | `Object.entries(Enum).filter(([k,v]) => isNaN(Number(k)))` | `Object.entries(Enum)` |
+| Associate metadata with an enum value | Yes | X | X |
+| Declare just first number value and increment | X | Yes | N/A |
+| Bloat code? | < 1kB | Built-in | Built-in |
+| Fast? | Yes | Workarounds involve looping | Workarounds involve looping |
+
 
 ## Limitations
 
@@ -345,3 +346,4 @@ All open source code released by Relefant is licenced under the [BSD-2-Clause li
 ## Alternatives
 
 - [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+
