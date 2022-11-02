@@ -19,9 +19,9 @@ jobs:
         cache: 'yarn'
     - name: Setup Yarn
       run: |
-        yarn config set npmScopes.my-org.npmRegistryServer "https://registry.npmjs.org"
-        yarn config set npmScopes.my-org.npmAlwaysAuth true
-        yarn config set npmScopes.my-org.npmAuthToken $NPM_AUTH_TOKEN
+        yarn config set npmRegistryServer "https://registry.npmjs.org"
+        yarn config set npmAlwaysAuth true
+        yarn config set npmAuthToken $NPM_AUTH_TOKEN
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - name: Install dependencies
