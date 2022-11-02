@@ -9,7 +9,7 @@ module.exports = [
     output: {
       name: 'superenum',
       file: 'dist/browser/superenum.min.js',
-      format: 'iife',
+      format: 'umd',
       exports: 'named',
       sourcemap: true,
     },
