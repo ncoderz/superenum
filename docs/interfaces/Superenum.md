@@ -35,7 +35,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:237](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L237)
+[superenum.ts:237](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L237)
 
 ## Table of contents
 
@@ -90,7 +90,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:264](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L264)
+[superenum.ts:264](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L264)
 
 ___
 
@@ -134,4 +134,4 @@ the plain array enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:288](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L288)
+[superenum.ts:288](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L288)

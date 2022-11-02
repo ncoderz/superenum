@@ -165,7 +165,7 @@ export interface EnumExtensions<V extends EnumValue> {
   getMetadata<M>(value: V | undefined, options?: GetMetadataOptions): M | undefined;
 
   /**
-   * An iterator that iterates the enum values.
+   * An array of the  that iterates the enum values.
    *
    * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
    * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
@@ -177,7 +177,7 @@ export interface EnumExtensions<V extends EnumValue> {
    *
    * @returns iterator over the enum values
    */
-  values(): IterableIterator<V>;
+  values(): readonly V[];
 
   /**
    * An iterator that iterates the enum keys.
@@ -192,7 +192,7 @@ export interface EnumExtensions<V extends EnumValue> {
    *
    * @returns iterator over the enum values
    */
-  keys(): IterableIterator<EnumKey>;
+  keys(): readonly EnumKey[];
 
   /**
    * An iterator that iterates the enum entries.
@@ -207,7 +207,7 @@ export interface EnumExtensions<V extends EnumValue> {
    *
    * @returns iterator over the enum values
    */
-  entries(): IterableIterator<[EnumKey, V]>;
+  entries(): readonly [EnumKey, V][];
 
   /**
    * An iterator that iterates the enum values.
@@ -336,6 +336,9 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     lcValueKeyMap.set(lcValue, key);
   }
 
+  const values = iterationKeys.map((k) => keyValueMap.get(k));
+  const entries = iterationKeys.map((k) => [k, keyValueMap.get(k)]);
+
   const init = (options?: EnumOptions) => {
     let superEn = enumeration;
 
@@ -381,56 +384,15 @@ function fromObject(enumeration: any, options?: EnumOptions) {
       const keys = iterationKeys;
       let i = 0;
       return {
-        [Symbol.iterator]() {
-          return this;
-        },
+        // [Symbol.iterator]() {
+        //   return this;
+        // },
         next: () => {
           if (i < keys.length) {
             const key = keys[i];
             const value = keyValueMap.get(`${key}`);
             i++;
             return { value, done: false };
-          }
-          return {
-            done: true,
-          };
-        },
-      };
-    }
-
-    function keyIterator() {
-      const keys = iterationKeys;
-      let i = 0;
-      return {
-        [Symbol.iterator]() {
-          return this;
-        },
-        next: () => {
-          if (i < keys.length) {
-            const key = keys[i];
-            i++;
-            return { value: key, done: false };
-          }
-          return {
-            done: true,
-          };
-        },
-      };
-    }
-
-    function entryIterator() {
-      const keys = iterationKeys;
-      let i = 0;
-      return {
-        [Symbol.iterator]() {
-          return this;
-        },
-        next: () => {
-          if (i < keys.length) {
-            const key = keys[i];
-            const value = keyValueMap.get(`${key}`);
-            i++;
-            return { value: [key, value], done: false };
           }
           return {
             done: true,
@@ -471,17 +433,17 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     });
 
     Object.defineProperty(superEn, 'values', {
-      value: valueIterator,
+      value: () => values,
       enumerable: false,
     });
 
     Object.defineProperty(superEn, 'keys', {
-      value: keyIterator,
+      value: () => iterationKeys,
       enumerable: false,
     });
 
     Object.defineProperty(superEn, 'entries', {
-      value: entryIterator,
+      value: () => entries,
       enumerable: false,
     });
 
@@ -489,6 +451,9 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     let res = superEn;
     if (!options?.noFreeze) {
       res = freeze(superEn);
+      freeze(iterationKeys);
+      freeze(values);
+      freeze(entries);
     }
 
     return res;

@@ -143,8 +143,38 @@ switch (value) {
 }
 ```
 
-## Iteration
+## Validation
+Validation is a common use case when reading data from an API, file or database.
+
+`@relefant/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
+data does not match an enum value.
+
+```ts
+const MyEnum = superenum.fromArray([
+  'node',
+  'chrome',
+  'safari',
+]);
+
+// End enum declaration
+
+// Input values could come from external data / API
+const valueNode = MyEnum.fromValue('node');         // MyEnum.node / 'node'
+const valueChrome = MyEnum.fromValue('chrome');     // MyEnum.chrome / 'chrome'
+const invalid = MyEnum.fromValue('surfari');        // undefined
+const invalid2 = MyEnum.fromValue(undefined);       // undefined
+
+// Validate with default of MyEnum.node
+const validOrDefault = MyEnum.fromValue('invalid') ?? MyEnum.node;  // MyEnum.node / 'node'
+```
+
+## Iteration / forEach / map / reduce
 It is easy to iterate the enum values, keys or entries.
+
+The `<enum>` itself is iterable and will iterate the values in the defined key order.
+
+The `<enum>.values()`, `<enum>.keys()`, `<enum>.entries()` functions return arrays in the defined key order which
+can be iterated, mapped, reduced, etc.
 
 ```ts
 const MyNumericEnum = superenum({
@@ -157,14 +187,34 @@ const MyNumericEnum = superenum({
 
 // Iterate enum values
 for (const value of MyNumericEnum) {
-  // ALIAS: for (const value of MyNumericEnum.values()) {
   console.log(value)
 }
 // 0
 // 1
 // 2
 
-// Iterate enum keys
+for (const value of MyNumericEnum.values()) {
+  console.log(value)
+}
+// 0
+// 1
+// 2
+
+MyNumericEnum.values().forEach((value) => {
+  console.log(value)
+});
+// 0
+// 1
+// 2
+
+MyNumericEnum.values().map((value) => {
+  console.log(value + 1)
+});
+// 1
+// 2
+// 3
+
+// Iterate enum keys (forEach, map, etc also work on keys())
 for (const value of MyNumericEnum.keys()) {
   console.log(value)
 }
@@ -172,7 +222,7 @@ for (const value of MyNumericEnum.keys()) {
 // chrome
 // safari
 
-// Iterate enum entries
+// Iterate enum entries (forEach, map, etc also work on entries())
 for (const value of MyNumericEnum.entries()) {
   console.log(value)
 }
@@ -211,31 +261,6 @@ for (const value of MyMixedEnum.keys()) {
 
 ```
 
-
-## Validation
-Validation is a common use case when reading data from an API, file or database.
-
-`@relefant/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
-data does not match an enum value.
-
-```ts
-const MyEnum = superenum.fromArray([
-  'node',
-  'chrome',
-  'safari',
-]);
-
-// End enum declaration
-
-// Input values could come from external data / API
-const valueNode = MyEnum.fromValue('node');         // MyEnum.node / 'node'
-const valueChrome = MyEnum.fromValue('chrome');     // MyEnum.chrome / 'chrome'
-const invalid = MyEnum.fromValue('surfari');        // undefined
-const invalid2 = MyEnum.fromValue(undefined);       // undefined
-
-// Validate with default of MyEnum.node
-const validOrDefault = MyEnum.fromValue('invalid') ?? MyEnum.node;  // MyEnum.node / 'node'
-```
 
 ## Enum value from enum key
 There are use-cases where you might want to get an enum value from the enum key.

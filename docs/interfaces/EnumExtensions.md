@@ -51,7 +51,7 @@ the enum value, or undefined if the value cannot be matched to the enum
 
 #### Defined in
 
-[superenum.ts:120](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L120)
+[superenum.ts:120](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L120)
 
 ___
 
@@ -79,7 +79,7 @@ the enum represented by the key, or undefined if the key cannot be matched to th
 
 #### Defined in
 
-[superenum.ts:132](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L132)
+[superenum.ts:132](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L132)
 
 ___
 
@@ -107,7 +107,7 @@ the enum key represented by the value, or undefined if the value cannot be match
 
 #### Defined in
 
-[superenum.ts:144](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L144)
+[superenum.ts:144](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L144)
 
 ___
 
@@ -139,7 +139,7 @@ true if the metadata was associated with the value, otherwise false
 
 #### Defined in
 
-[superenum.ts:154](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L154)
+[superenum.ts:154](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L154)
 
 ___
 
@@ -172,15 +172,15 @@ the metadata associated with the enum value
 
 #### Defined in
 
-[superenum.ts:165](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L165)
+[superenum.ts:165](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L165)
 
 ___
 
 ### values
 
-▸ **values**(): `IterableIterator`<`V`\>
+▸ **values**(): readonly `V`[]
 
-An iterator that iterates the enum values.
+An array of the  that iterates the enum values.
 
 Note: Iteration order is guaranteed unless the enum is initialised using [Superenum](Superenum.md) or
 [fromObject](Superenum.md#fromObject) and it contains keys which can be converted to integers. In this case it will
@@ -192,19 +192,19 @@ https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-pro
 
 #### Returns
 
-`IterableIterator`<`V`\>
+readonly `V`[]
 
 iterator over the enum values
 
 #### Defined in
 
-[superenum.ts:180](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L180)
+[superenum.ts:180](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L180)
 
 ___
 
 ### keys
 
-▸ **keys**(): `IterableIterator`<`string`\>
+▸ **keys**(): readonly `string`[]
 
 An iterator that iterates the enum keys.
 
@@ -218,19 +218,19 @@ https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-pro
 
 #### Returns
 
-`IterableIterator`<`string`\>
+readonly `string`[]
 
 iterator over the enum values
 
 #### Defined in
 
-[superenum.ts:195](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L195)
+[superenum.ts:195](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L195)
 
 ___
 
 ### entries
 
-▸ **entries**(): `IterableIterator`<[`string`, `V`]\>
+▸ **entries**(): readonly [`string`, `V`][]
 
 An iterator that iterates the enum entries.
 
@@ -244,13 +244,13 @@ https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-pro
 
 #### Returns
 
-`IterableIterator`<[`string`, `V`]\>
+readonly [`string`, `V`][]
 
 iterator over the enum values
 
 #### Defined in
 
-[superenum.ts:210](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L210)
+[superenum.ts:210](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L210)
 
 ___
 
@@ -272,4 +272,4 @@ iterator over the enum values
 
 #### Defined in
 
-[superenum.ts:221](https://github.com/relefant/superenum/blob/f165b2c/src/superenum.ts#L221)
+[superenum.ts:221](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L221)
