@@ -295,10 +295,6 @@ export interface Superenum {
   ): Readonly<ArrayEnumToObjectEnum<T>> & EnumExtensions<EnumType<ArrayEnumToObjectEnum<T>>>;
 }
 
-function freeze<T>(obj: T): Readonly<T> {
-  return Object.freeze(obj);
-}
-
 function fromArray(arr: any, options?: EnumOptions) {
   if (!Array.isArray(arr)) arr = [];
 
@@ -317,6 +313,14 @@ function fromArray(arr: any, options?: EnumOptions) {
 }
 
 function fromObject(enumeration: any, options?: EnumOptions) {
+  // For reducing code size when minified
+  const Object_freeze = Object.freeze;
+  const Object_defineProperty = Object.defineProperty;
+  const Object_assign = Object.assign;
+  const definePropertyOptions = {
+    enumerable: false,
+  };
+
   const keyValueMap = new Map<EnumKey, EnumValue>();
   const valueKeyMap = new Map<EnumValue, EnumKey>();
   const lcKeyValueMap = new Map<EnumKey, EnumValue>();
@@ -348,7 +352,7 @@ function fromObject(enumeration: any, options?: EnumOptions) {
 
     // If original object is not extensible, so we have to make a copy
     if (!Object.isExtensible(enumeration)) {
-      superEn = Object.assign({}, enumeration);
+      superEn = Object_assign({}, enumeration);
     }
 
     function fromValue(value: EnumValue, options?: FromValueOptions) {
@@ -376,7 +380,7 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     function setMetadata(value: EnumValue, metadata: unknown, options?: SetMetadataOptions) {
       options;
       const v = fromValue(value);
-      if (v) metadataMap.set(value, metadata);
+      if (v) metadataMap.set(v, metadata);
     }
 
     function getMetadata(value: EnumValue, options?: GetMetadataOptions) {
@@ -385,18 +389,14 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     }
 
     function valueIterator() {
-      const keys = iterationKeys;
       let i = 0;
       return {
         // [Symbol.iterator]() {
         //   return this;
         // },
         next: () => {
-          if (i < keys.length) {
-            const key = keys[i];
-            const value = keyValueMap.get(`${key}`);
-            i++;
-            return { value, done: false };
+          if (i < iterationKeys.length) {
+            return { value: keyValueMap.get(`${iterationKeys[i++]}`), done: false };
           }
           return {
             done: true,
@@ -406,58 +406,112 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     }
 
     // Add helper functions to the enum but so they cannot be enumerated
-    Object.defineProperty(superEn, 'fromKey', {
-      value: fromKey,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'fromKey',
+      Object_assign(
+        {
+          value: fromKey,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'fromValue', {
-      value: fromValue,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'fromValue',
+      Object_assign(
+        {
+          value: fromValue,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'keyFromValue', {
-      value: keyFromValue,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'keyFromValue',
+      Object_assign(
+        {
+          value: keyFromValue,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'setMetadata', {
-      value: setMetadata,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'setMetadata',
+      Object_assign(
+        {
+          value: setMetadata,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'getMetadata', {
-      value: getMetadata,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'getMetadata',
+      Object_assign(
+        {
+          value: getMetadata,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, Symbol.iterator, {
-      value: valueIterator,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      Symbol.iterator,
+      Object_assign(
+        {
+          value: valueIterator,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'values', {
-      value: () => values,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'values',
+      Object_assign(
+        {
+          value: () => values,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'keys', {
-      value: () => iterationKeys,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'keys',
+      Object_assign(
+        {
+          value: () => iterationKeys,
+        },
+        definePropertyOptions,
+      ),
+    );
 
-    Object.defineProperty(superEn, 'entries', {
-      value: () => entries,
-      enumerable: false,
-    });
+    Object_defineProperty(
+      superEn,
+      'entries',
+      Object_assign(
+        {
+          value: () => entries,
+        },
+        definePropertyOptions,
+      ),
+    );
 
     // Freeze the enum if required
     let res = superEn;
     if (!options?.noFreeze) {
-      res = freeze(superEn);
-      freeze(iterationKeys);
-      freeze(values);
-      freeze(entries);
+      res = Object_freeze(superEn);
+      Object_freeze(iterationKeys);
+      Object_freeze(values);
+      Object_freeze(entries);
     }
 
     return res;
