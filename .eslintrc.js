@@ -12,12 +12,26 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['prettier', 'json'],
+  plugins: ['prettier', 'json', 'arca'],
   settings: {
     react: { version: '16' },
   },
   rules: {
     'no-unused-vars': [1, { vars: 'all', args: 'none' }],
+    'arca/import-ordering': [
+      2,
+      {
+        hoistOneliners: true,
+      },
+    ],
+
+    'arca/newline-after-import-section': [
+      2,
+      {
+        enableOnelinerSections: true,
+      },
+    ],
+    'arca/no-default-export': [2],
   },
   overrides: [
     {
