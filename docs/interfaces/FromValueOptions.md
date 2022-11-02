@@ -20,4 +20,4 @@ Ignore case when validating the enum value
 
 #### Defined in
 
-[superenum.ts:73](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L73)
+[superenum.ts:73](https://github.com/relefant/superenum/blob/4e8d1ef/src/superenum.ts#L73)

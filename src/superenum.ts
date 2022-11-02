@@ -165,13 +165,13 @@ export interface EnumExtensions<V extends EnumValue> {
   getMetadata<M>(value: V | undefined, options?: GetMetadataOptions): M | undefined;
 
   /**
-   * An array of the  that iterates the enum values.
+   * Get an array of the enum values.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
+   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
    * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
    * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
+   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
    *
    * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
    *
@@ -180,13 +180,13 @@ export interface EnumExtensions<V extends EnumValue> {
   values(): readonly V[];
 
   /**
-   * An iterator that iterates the enum keys.
+   * Get an array of the enum keys.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
+   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
    * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
    * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
+   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
    *
    * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
    *
@@ -195,13 +195,13 @@ export interface EnumExtensions<V extends EnumValue> {
   keys(): readonly EnumKey[];
 
   /**
-   * An iterator that iterates the enum entries.
+   * Get an array of the enum entries.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
+   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
    * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
    * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
+   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
    *
    * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
    *
@@ -212,7 +212,11 @@ export interface EnumExtensions<V extends EnumValue> {
   /**
    * An iterator that iterates the enum values.
    *
-   * Alias of {@link EnumExtensions.values}.
+   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
+   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
+   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
+   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
    *
    * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
    *
@@ -244,11 +248,11 @@ export interface Superenum {
    *
    * The plain JavaScript object will be enhanced with {@link EnumExtensions}.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
+   * Note: Item / iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
    * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item / iteration order
    * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
+   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item / iteration order.
    *
    * Note: If the object has duplicate values, or duplicate keys or values when lower-cased, the initialisation will
    * still succeed. However, the behaviour of

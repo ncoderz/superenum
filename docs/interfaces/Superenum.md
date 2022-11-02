@@ -35,7 +35,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:237](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L237)
+[superenum.ts:241](https://github.com/relefant/superenum/blob/4e8d1ef/src/superenum.ts#L241)
 
 ## Table of contents
 
@@ -54,11 +54,11 @@ Create a superenum from a plain JavaScript object.
 
 The plain JavaScript object will be enhanced with [EnumExtensions](EnumExtensions.md).
 
-Note: Iteration order is guaranteed unless the enum is initialised using [Superenum](Superenum.md) or
+Note: Item / iteration order is guaranteed unless the enum is initialised using [Superenum](Superenum.md) or
 [fromObject](Superenum.md#fromObject) and it contains keys which can be converted to integers. In this case it will
-follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
+follow the rules of the JavaScript engine which may vary. In order to guarantee the item / iteration order
 in the case of integer keys, use [fromArray](Superenum.md#fromArray) to initialise the enum, or pass in an array
-of keys to [iterationKeys](EnumOptions.md#iterationKeys) to represent the desired iteration order.
+of keys to [iterationKeys](EnumOptions.md#iterationKeys) to represent the desired item / iteration order.
 
 Note: If the object has duplicate values, or duplicate keys or values when lower-cased, the initialisation will
 still succeed. However, the behaviour of
@@ -90,7 +90,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:264](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L264)
+[superenum.ts:268](https://github.com/relefant/superenum/blob/4e8d1ef/src/superenum.ts#L268)
 
 ___
 
@@ -134,4 +134,4 @@ the plain array enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:288](https://github.com/relefant/superenum/blob/0805fb2/src/superenum.ts#L288)
+[superenum.ts:292](https://github.com/relefant/superenum/blob/4e8d1ef/src/superenum.ts#L292)
