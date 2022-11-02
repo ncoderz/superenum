@@ -49,8 +49,7 @@ const { superenum, EnumType } = require('@relefant/superenum');
 ```
 
 ```html
-// TODO - distribute this file
-<script src="./dist/browser/superenum.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@relefant/superenum/dist/browser/superenum.min.js"></script>
 <script
   const { superenum } = window.superenum;
 

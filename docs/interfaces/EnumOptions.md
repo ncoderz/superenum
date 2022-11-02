@@ -19,7 +19,7 @@ Options for the [Superenum](Superenum.md) and [fromArray](Superenum.md#fromArray
 
 #### Defined in
 
-[superenum.ts:62](https://github.com/relefant/superenum/blob/2155acf/src/superenum.ts#L62)
+[superenum.ts:62](https://github.com/relefant/superenum/blob/b61a8d6/src/superenum.ts#L62)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[superenum.ts:63](https://github.com/relefant/superenum/blob/2155acf/src/superenum.ts#L63)
+[superenum.ts:63](https://github.com/relefant/superenum/blob/b61a8d6/src/superenum.ts#L63)
