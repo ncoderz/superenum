@@ -101,6 +101,50 @@ const superenumTests = (superenum: Superenum) => {
       });
     });
 
+    describe('enum should be read-only', () => {
+      test.failing('<enum>', async () => {
+        const Enum = superenum(ENUM_OBJ1);
+        (Enum as any)[99] = 'Should Fail';
+      });
+
+      test.failing('<enum>.values() ', async () => {
+        const Enum = superenum(ENUM_OBJ1);
+        (Enum.values() as any[]).push('Should fail');
+      });
+
+      test.failing('<enum>.keys() ', async () => {
+        const Enum = superenum(ENUM_OBJ1);
+        (Enum.keys() as any[]).push('Should fail');
+      });
+
+      test.failing('<enum>.entries() ', async () => {
+        const Enum = superenum(ENUM_OBJ1);
+        (Enum.entries() as any[]).push('Should fail');
+      });
+    });
+
+    describe('enum should NOT be read-only when noFreeze set', () => {
+      test('<enum>', async () => {
+        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
+        (Enum as any)[99] = 'Should succeed';
+      });
+
+      test('<enum>.values() ', async () => {
+        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
+        (Enum.values() as any[]).push('Should succeed');
+      });
+
+      test('<enum>.keys() ', async () => {
+        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
+        (Enum.keys() as any[]).push('Should succeed');
+      });
+
+      test('<enum>.entries() ', async () => {
+        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
+        (Enum.entries() as any[]).push('Should succeed');
+      });
+    });
+
     describe('<enum>.fromValue()', () => {
       test('should be able to validate external data enum value as enum value', async () => {
         const Enum = EnumObj1;
@@ -325,6 +369,34 @@ const superenumTests = (superenum: Superenum) => {
               break;
             case 5:
               expect(value).toBeUndefined();
+              break;
+            default:
+              throw new Error(`Unexpected value: ${value}`);
+          }
+          i++;
+        }
+      });
+    });
+
+    describe('should be able to iterate the enum values (using <enum> iterator)', () => {
+      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
+        const Enum = EnumObj1;
+
+        // Expected cases
+        let i = 0;
+        for (const value of Enum) {
+          switch (i) {
+            case 0:
+              expect(value).toBe(Enum.thing);
+              break;
+            case 1:
+              expect(value).toBe(Enum.other);
+              break;
+            case 2:
+              expect(value).toBe(Enum.something);
+              break;
+            case 3:
+              expect(value).toBe(Enum[99]);
               break;
             default:
               throw new Error(`Unexpected value: ${value}`);
