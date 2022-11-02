@@ -17,12 +17,10 @@
     "build-iife": "tsc && rollup -c",
     "build-doc": "typedoc",
     "test": "jest --coverage",
-    "test-browser": "node ./test/browser-test.js",
     "publish": "yarn npm publish",
-    "prepublish": "run clean && run build && run test",
-    "prepublish2": "run lint && run clean && run build && run test && run test-browser",
+    "prepublish": "run lint && run clean && run build && run test",
     "clean": "shx rm -rf ./dist",
-    "lint": "eslint --max-warnings 0 -- '/**/*.@(tsx|ts|jsx|js|mjs|cjs)'"
+    "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'"
   },
   "packageManager": "yarn@3.2.4",
   "engines": {

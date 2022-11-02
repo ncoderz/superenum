@@ -4,122 +4,43 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const { superenum } = window.superenum;
-    console.log('Test Browser');
+    console.log('Superenum Browser Test');
     console.log(superenum);
 
-    const TestEnum = superenum({
-      thing: 'thing',
-      other: 'other',
-      something: 'somethingOther',
-      else: 23,
-    });
+    const Enum = superenum(
+      {
+        thing: 'thing',
+        other: 'other',
+        something: 'somethingOther',
+        99: 1,
+      },
+      {
+        iterationKeys: ['other', 99, 'thing', 'something'],
+      },
+    );
+    console.log(Enum);
 
-    TestEnum.setMetadata(TestEnum.thing, 'meta0');
-    TestEnum.setMetadata(TestEnum.other, 'meta1');
-    TestEnum.setMetadata(TestEnum.something, 'meta2');
-    TestEnum.setMetadata(TestEnum.else, 'meta3');
+    const textEnum = document.createElement('pre');
+    textEnum.textContent = JSON.stringify(Enum, null, 2);
+    document.body.appendChild(textEnum);
 
-    console.log(TestEnum);
-
-    for (const k of TestEnum) {
-      console.log(k);
+    const textEnumIteration = document.createElement('pre');
+    const s = [];
+    for (const e of Enum) {
+      s.push(e);
     }
+    console.log(s);
+    const str = JSON.stringify(s);
+    textEnumIteration.textContent = str;
+    document.body.appendChild(textEnumIteration);
 
-    const test = TestEnum.other;
-    const test2 = TestEnum.else;
-    const test23 = 23;
-    console.log(test);
-    console.log(test2);
-    console.log(test23);
-    const test3 = test2;
-    const test4 = test;
-    console.log(test3);
-    console.log(test4);
+    const ok = str === '["other",1,"thing","somethingOther"]';
 
-    console.log(`0: ${TestEnum.fromKey('something')}`);
-    console.log(`1: ${TestEnum.fromKey('someThing', true)}`);
-    console.log(`2: ${TestEnum.fromKey('somethingOther')}`);
-    console.log(`3: ${TestEnum.fromValue('something')}`);
-    console.log(`4: ${TestEnum.fromValue('somethingOther')}`);
-    console.log(`5: ${TestEnum.fromValue(TestEnum.something)}`);
-    console.log(`6: ${TestEnum.keyFromValue(TestEnum.something)}`);
-    console.log(`7: ${TestEnum.keyFromValue(TestEnum.other)}`);
-    console.log(`8: ${TestEnum.keyFromValue('somethingOther')}`);
-    console.log(`9: ${TestEnum.keyFromValue(23)}`);
-    console.log(`10:${TestEnum.else}`);
-
-    // TestEnum.else = 23;
-    // TestEnum.other = 'thing';
-
-    const meta0 = TestEnum.getMetadata(TestEnum.thing);
-    const meta1 = TestEnum.getMetadata(TestEnum.other);
-    const meta2 = TestEnum.getMetadata(TestEnum.else);
-    const meta3 = TestEnum.getMetadata(TestEnum.something);
-    const meta4 = TestEnum.getMetadata(23);
-    // const meta5 = TestEnum.getMetadata(26);
-
-    console.log(meta0);
-    console.log(meta1);
-    console.log(meta2);
-    console.log(meta3);
-    console.log(meta4);
-
-    console.log('Iterator');
-    for (const [k, v] of Object.entries(TestEnum)) console.log(`${k}: ${v}`);
-
-    const TestEnum2 = superenum.fromArray(['thing', 'other', 'somethingOther', 23]);
-
-    TestEnum2.setMetadata(TestEnum2.thing, 'meta0');
-    TestEnum2.setMetadata(TestEnum2.other, 'meta1');
-    TestEnum2.setMetadata(TestEnum2.somethingOther, 'meta2');
-    TestEnum2.setMetadata(TestEnum2[23], 'meta3');
-
-    console.log(TestEnum2);
-
-    for (const k of TestEnum2) {
-      console.log(k);
-    }
-
-    const test_2 = TestEnum2.other;
-    const test2_2 = TestEnum2.else;
-    const test23_2 = 23;
-    console.log(test_2);
-    console.log(test2_2);
-    console.log(test23_2);
-    const test3_2 = test2;
-    const test4_2 = test;
-    console.log(test3_2);
-    console.log(test4_2);
-
-    console.log(`0: ${TestEnum2.fromKey('something')}`);
-    console.log(`1: ${TestEnum2.fromKey('someThing', true)}`);
-    console.log(`2: ${TestEnum2.fromKey('somethingOther')}`);
-    console.log(`3: ${TestEnum2.fromValue('something')}`);
-    console.log(`4: ${TestEnum2.fromValue('somethingOther')}`);
-    console.log(`5: ${TestEnum2.fromValue(TestEnum2.something)}`);
-    console.log(`6: ${TestEnum2.keyFromValue(TestEnum2.something)}`);
-    console.log(`7: ${TestEnum2.keyFromValue(TestEnum2.other)}`);
-    console.log(`8: ${TestEnum2.keyFromValue('somethingOther')}`);
-    console.log(`9: ${TestEnum2.keyFromValue(23)}`);
-    console.log(`10:${TestEnum2.else}`);
-
-    // TestEnum.else = 23;
-    // TestEnum.other = 'thing';
-
-    const meta0_2 = TestEnum2.getMetadata(TestEnum2.thing);
-    const meta1_2 = TestEnum2.getMetadata(TestEnum2.other);
-    const meta2_2 = TestEnum2.getMetadata(TestEnum2.somethingOther);
-    const meta3_2 = TestEnum2.getMetadata(TestEnum2[23]);
-    const meta4_2 = TestEnum2.getMetadata(23);
-    // const meta5_2 = TestEnum.getMetadata(26);
-
-    console.log(meta0_2);
-    console.log(meta1_2);
-    console.log(meta2_2);
-    console.log(meta3_2);
-    console.log(meta4_2);
-
-    console.log('Iterator');
-    for (const [k, v] of Object.entries(TestEnum2)) console.log(`${k}: ${v}`);
+    const textResult = document.createElement('pre');
+    textResult.textContent = ok ? 'PASS' : 'FAIL';
+    textResult.style.background = ok ? 'green' : 'red';
+    textResult.style.color = 'white';
+    textResult.style.display = 'inline';
+    document.body.appendChild(textResult);
   });
 </script>

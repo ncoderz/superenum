@@ -276,7 +276,7 @@ const MyEnum = superenum({
 // End enum declaration
 
 const nodeKey = MyEnum.keyFromValue('NodeJS');        // 'node'
-const nodeKey2 = MyEnum.keyFromValue(MyEnum.NodeJS);  // 'node'
+const nodeKey2 = MyEnum.keyFromValue(MyEnum.node);  // 'node'
 const invalid = MyEnum.keyFromValue('node');          // undefined
 ```
 

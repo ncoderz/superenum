@@ -20,4 +20,5 @@ module.exports = {
     ],
   },
   reporters: ['default', [require.resolve('jest-junit'), { output: '<rootDir>/junit.xml' }]],
+  collectCoverageFrom: ['src/**/*.{js,ts}', '!<rootDir>/node_modules/', '!<rootDir>/path/to/dir/'],
 };
