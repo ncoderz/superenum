@@ -20,7 +20,7 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 - iteration order can be guaranteed
 - is interoperable with standard JavaScript enums
 - works in node or the browser
-- has a very small code footprint (~1kB minified+gzipped)
+- has a very small code footprint (< 1kB minified + gzipped)
 
 Additionally, the library is committed to:
 - an API that will always remain backwards compatible
