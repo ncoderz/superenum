@@ -1,6 +1,8 @@
 @relefant/superenum
 ================
 
+![Build & Test](https://github.com/relefant/superenum/actions/workflows/build-test.yml/badge.svg?branch=master)
+
 THIS LIBRARY IS CURRENTLY IN BETA - PLEASE GIVE FEEDBACK!
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
