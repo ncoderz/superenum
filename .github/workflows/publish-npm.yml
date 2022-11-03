@@ -20,6 +20,7 @@ jobs:
     - name: Setup Yarn
       run: |
         yarn config set npmRegistryServer "https://registry.npmjs.org"
+        yarn config set npmPublishRegistry "https://registry.npmjs.org"
         yarn config set npmAlwaysAuth true
         yarn config set npmAuthToken $NPM_AUTH_TOKEN
       env:

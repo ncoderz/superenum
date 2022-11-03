@@ -24,6 +24,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
         registry-url: 'https://registry.npmjs.org'
         cache: 'yarn'
+    - name: Setup Yarn
+      run: |
+        yarn config set npmScopes.relefant.npmRegistryServer "https://npm.pkg.github.com"
+        yarn config set npmScopes.relefant.npmPublishRegistry "https://npm.pkg.github.com"
+        yarn config set npmScopes.relefant.npmAlwaysAuth true
+        yarn config set npmScopes.relefant.npmAuthToken $GITHUB_AUTH_TOKEN
+      env:
+        GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: yarn install --immutable
     - name: Build
