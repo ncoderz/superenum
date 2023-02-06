@@ -1,4 +1,4 @@
-[@relefant/superenum](../API.md) / [Exports](../modules.md) / FromValueOptions
+[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / FromValueOptions
 
 # Interface: FromValueOptions
 
@@ -20,4 +20,4 @@ Ignore case when validating the enum value
 
 #### Defined in
 
-[superenum.ts:73](https://github.com/relefant/superenum/blob/b61a8d6/src/superenum.ts#L73)
+[superenum.ts:73](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L73)
