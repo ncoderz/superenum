@@ -3,7 +3,7 @@
 [@relefant/superenum](../README.md)
 ================
 
-THIS LIBRARY IS CURRENTLY IN ALPHA - USE AT OWN RISK!
+THIS LIBRARY IS CURRENTLY IN BETA - USE AT OWN RISK!
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 

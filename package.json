@@ -1,6 +1,6 @@
 {
   "name": "@relefant/superenum",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
   "author": "Relefant",
   "license": "BSD-2-Clause",
