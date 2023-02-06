@@ -18,6 +18,7 @@ tsconfig.tsbuildinfo
 !**/.yarn/sdks
 **/yarn-error.log
 node_modules
+yarn.lock
 
 # Swap the comments on the following lines if you don't wish to use zero-installs
 # Documentation here: https://yarnpkg.com/features/zero-installs
