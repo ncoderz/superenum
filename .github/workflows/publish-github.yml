@@ -19,10 +19,10 @@ jobs:
         cache: 'yarn'
     - name: Setup Yarn
       run: |
-        yarn config set npmScopes.relefant.npmRegistryServer "https://npm.pkg.github.com"
-        yarn config set npmScopes.relefant.npmPublishRegistry "https://npm.pkg.github.com"
-        yarn config set npmScopes.relefant.npmAlwaysAuth true
-        yarn config set npmScopes.relefant.npmAuthToken $GITHUB_AUTH_TOKEN
+        yarn config set npmScopes.ncoderz.npmRegistryServer "https://npm.pkg.github.com"
+        yarn config set npmScopes.ncoderz.npmPublishRegistry "https://npm.pkg.github.com"
+        yarn config set npmScopes.ncoderz.npmAlwaysAuth true
+        yarn config set npmScopes.ncoderz.npmAuthToken $GITHUB_AUTH_TOKEN
       env:
         GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies

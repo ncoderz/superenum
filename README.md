@@ -1,18 +1,16 @@
-@relefant/superenum
+@ncoderz/superenum
 ================
 
-![Build & Test](https://github.com/relefant/superenum/actions/workflows/build-test.yml/badge.svg?branch=master)
-
-THIS LIBRARY IS CURRENTLY IN BETA - PLEASE GIVE FEEDBACK!
+![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=master)
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
 
-## Why @relefant/superenum?
+## Why @ncoderz/superenum?
 
 The standard TypeScript enum implementation is over-complicated, missing basic features, and is not easily compatible with standard JavaScript enums.
 
-@relefant/superenum provides an alternative that is:
+@ncoderz/superenum provides an alternative that is:
 - an extension of standard JavaScript object enums
 - simple to use
 - type-safe
@@ -33,23 +31,23 @@ Additionally, the library is committed to:
 ## Installation
 
 ```sh
-yarn add @relefant/superenum
-npm install --save @relefant/superenum
+yarn add @ncoderz/superenum
+npm install --save @ncoderz/superenum
 ```
 
 ## Importing
-`@relefant/superenum` can be used via ES Module import, CommonJS, or as a script import directly in the browser.
+`@ncoderz/superenum` can be used via ES Module import, CommonJS, or as a script import directly in the browser.
 
 ```ts
-import { superenum, EnumType } from '@relefant/superenum';
+import { superenum, EnumType } from '@ncoderz/superenum';
 ```
 
 ```ts
-const { superenum, EnumType } = require('@relefant/superenum');
+const { superenum, EnumType } = require('@ncoderz/superenum');
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@relefant/superenum/dist/browser/superenum.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ncoderz/superenum/dist/browser/superenum.min.js"></script>
 <script
   const { superenum } = window.superenum;
 
@@ -147,7 +145,7 @@ switch (value) {
 ## Validation
 Validation is a common use case when reading data from an API, file or database.
 
-`@relefant/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
+`@ncoderz/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
 data does not match an enum value.
 
 ```ts
@@ -337,7 +335,7 @@ const desc = MyEnum.getMetadata(valueNode);   // 'Node.js is an open-source, cro
 
 ## Feature Comparison
 
-| Feature | `@relefant/enum` (numeric and string) | TypeScript `enum` (numeric) | TypeScript `enum` (string) |
+| Feature | `@ncoderz/enum` (numeric and string) | TypeScript `enum` (numeric) | TypeScript `enum` (string) |
 | ------- | ------------------------------------- | --------------------------- | -------------------------- |
 | Compatible with simple JS enums | Yes | X | X |
 | Mixed numeric and string keys | Yes | X | X |
@@ -368,7 +366,7 @@ If such a key is used, it will be overwitten with the extension function.
 
 ## License
 
-All open source code released by Relefant is licenced under the [BSD-2-Clause licence](https://opensource.org/licenses/BSD-2-Clause).
+This open source software is licenced under the [BSD-2-Clause licence](https://opensource.org/licenses/BSD-2-Clause).
 
 ## Alternatives
 

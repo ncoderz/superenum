@@ -1,4 +1,4 @@
-[@relefant/superenum](../API.md) / [Exports](../modules.md) / SetMetadataOptions
+[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / SetMetadataOptions
 
 # Interface: SetMetadataOptions
 

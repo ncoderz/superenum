@@ -1,8 +1,8 @@
 {
-  "name": "@relefant/superenum",
+  "name": "@nzcoderz/superenum",
   "version": "0.1.6",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
-  "author": "Relefant",
+  "author": "zx-nzcoderz",
   "license": "BSD-2-Clause",
   "main": "dist/cjs/superenum.js",
   "module": "dist/esm/superenum.js",
@@ -20,7 +20,8 @@
     "publish": "yarn npm publish",
     "prepublish": "run lint && run clean && run build && run test",
     "clean": "shx rm -rf ./dist",
-    "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'"
+    "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'",
+    "ncu": "yarn dlx npm-check-updates -i"
   },
   "packageManager": "yarn@3.2.4",
   "engines": {
@@ -44,7 +45,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/relefant/superenum.git"
+    "url": "git+https://github.com/ncoderz/superenum.git"
   },
   "devDependencies": {
     "@types/eslint-plugin-prettier": "^3.1.0",

@@ -1,4 +1,4 @@
-[@relefant/superenum](../API.md) / [Exports](../modules.md) / FromKeyOptions
+[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / FromKeyOptions
 
 # Interface: FromKeyOptions
 
@@ -20,4 +20,4 @@ Ignore case when getting the enum value from the key
 
 #### Defined in
 
-[superenum.ts:83](https://github.com/relefant/superenum/blob/b61a8d6/src/superenum.ts#L83)
+[superenum.ts:83](https://github.com/zx-ncoderz/superenum/blob/99a0ef7/src/superenum.ts#L83)

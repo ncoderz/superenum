@@ -1,7 +1,5 @@
-[@relefant/superenum](../README.md)
+[@ncoderz/superenum](../README.md)
 ================
-
-THIS LIBRARY IS CURRENTLY IN BETA - USE AT OWN RISK!
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
@@ -24,5 +22,4 @@ Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
 ## License
 
-All open source code released by Relefant is licenced under the [BSD-2-Clause licence](https://opensource.org/licenses/BSD-2-Clause).
-'NodeJS'
+This open source software is licenced under the [BSD-2-Clause licence](https://opensource.org/licenses/BSD-2-Clause).
