@@ -26,6 +26,6 @@ jobs:
       env:
         GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
-      run: yarn install --immutable
+      run: yarn install
     - name: Publish
       run: yarn npm publish
