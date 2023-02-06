@@ -33,7 +33,7 @@ jobs:
       env:
         GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
-      run: yarn install
+      run: yarn install --immutable
     - name: Build
       run: yarn build
     - name: Test
