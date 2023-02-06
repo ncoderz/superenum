@@ -1,4 +1,4 @@
-[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / Superenum
+[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / Superenum
 
 # Interface: Superenum
 

@@ -1,4 +1,4 @@
-@nzcoderz/superenum / [Exports](modules.md)
+@ncoderz/superenum / [Exports](modules.md)
 
 [@ncoderz/superenum](../README.md)
 ================

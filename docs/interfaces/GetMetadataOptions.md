@@ -1,4 +1,4 @@
-[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / GetMetadataOptions
+[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / GetMetadataOptions
 
 # Interface: GetMetadataOptions
 

@@ -1,4 +1,4 @@
-[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / KeyFromValueOptions
+[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / KeyFromValueOptions
 
 # Interface: KeyFromValueOptions
 

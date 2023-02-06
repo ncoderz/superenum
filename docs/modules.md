@@ -1,6 +1,6 @@
-[@nzcoderz/superenum](API.md) / Exports
+[@ncoderz/superenum](API.md) / Exports
 
-# @nzcoderz/superenum
+# @ncoderz/superenum
 
 ## Table of contents
 

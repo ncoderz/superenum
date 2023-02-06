@@ -836,9 +836,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nzcoderz/superenum@workspace:.":
+"@ncoderz/superenum@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@nzcoderz/superenum@workspace:."
+  resolution: "@ncoderz/superenum@workspace:."
   dependencies:
     "@types/eslint-plugin-prettier": ^3.1.0
     "@types/jest": ^29.2.0

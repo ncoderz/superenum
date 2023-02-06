@@ -1,4 +1,4 @@
-[@nzcoderz/superenum](../API.md) / [Exports](../modules.md) / EnumOptions
+[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / EnumOptions
 
 # Interface: EnumOptions
 
