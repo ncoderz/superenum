@@ -19,7 +19,7 @@ Options for the [Superenum](Superenum.md) and [fromArray](Superenum.md#fromArray
 
 #### Defined in
 
-[superenum.ts:62](https://github.com/zx-ncoderz/superenum/blob/99a0ef7/src/superenum.ts#L62)
+[superenum.ts:62](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L62)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[superenum.ts:63](https://github.com/zx-ncoderz/superenum/blob/99a0ef7/src/superenum.ts#L63)
+[superenum.ts:63](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L63)

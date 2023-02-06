@@ -1,6 +1,6 @@
 {
   "name": "@nzcoderz/superenum",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
   "author": "zx-nzcoderz",
   "license": "BSD-2-Clause",
