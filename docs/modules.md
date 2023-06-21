@@ -4,15 +4,6 @@
 
 ## Table of contents
 
-### Type Aliases
-
-- [EnumKey](modules.md#EnumKey)
-- [EnumValue](modules.md#EnumValue)
-- [ArrayEnum](modules.md#ArrayEnum)
-- [ObjectEnum](modules.md#ObjectEnum)
-- [ArrayEnumToObjectEnum](modules.md#ArrayEnumToObjectEnum)
-- [EnumType](modules.md#EnumType)
-
 ### Interfaces
 
 - [EnumOptions](interfaces/EnumOptions.md)
@@ -23,6 +14,15 @@
 - [GetMetadataOptions](interfaces/GetMetadataOptions.md)
 - [EnumExtensions](interfaces/EnumExtensions.md)
 - [Superenum](interfaces/Superenum.md)
+
+### Type Aliases
+
+- [EnumKey](modules.md#EnumKey)
+- [EnumValue](modules.md#EnumValue)
+- [ArrayEnum](modules.md#ArrayEnum)
+- [ObjectEnum](modules.md#ObjectEnum)
+- [ArrayEnumToObjectEnum](modules.md#ArrayEnumToObjectEnum)
+- [EnumType](modules.md#EnumType)
 
 ### Functions
 
@@ -38,7 +38,7 @@ Enum keys
 
 #### Defined in
 
-[superenum.ts:29](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L29)
+[superenum.ts:29](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L29)
 
 ___
 
@@ -50,7 +50,7 @@ Enum values
 
 #### Defined in
 
-[superenum.ts:34](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L34)
+[superenum.ts:34](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L34)
 
 ___
 
@@ -68,7 +68,7 @@ Array Enum declaration
 
 #### Defined in
 
-[superenum.ts:39](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L39)
+[superenum.ts:39](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L39)
 
 ___
 
@@ -87,7 +87,7 @@ Object enum declaration
 
 #### Defined in
 
-[superenum.ts:44](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L44)
+[superenum.ts:44](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L44)
 
 ___
 
@@ -105,7 +105,7 @@ Convert an ArrayEnum type to an ObjectEnum
 
 #### Defined in
 
-[superenum.ts:49](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L49)
+[superenum.ts:49](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L49)
 
 ___
 
@@ -123,7 +123,7 @@ Get the type of an enum from a superenum, removing the  [EnumExtensions](interfa
 
 #### Defined in
 
-[superenum.ts:56](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L56)
+[superenum.ts:56](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L56)
 
 ## Functions
 
@@ -158,4 +158,4 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:241](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L241)
+[superenum.ts:241](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L241)
