@@ -2,6 +2,8 @@
 
 # Interface: Superenum
 
+Interface to manage superenums
+
 ## Callable
 
 ### Superenum
@@ -35,7 +37,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:241](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L241)
+[superenum.ts:241](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L241)
 
 ## Table of contents
 
@@ -90,7 +92,7 @@ the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:268](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L268)
+[superenum.ts:268](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L268)
 
 ___
 
@@ -134,4 +136,4 @@ the plain array enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:292](https://github.com/zx-ncoderz/superenum/blob/0639e51/src/superenum.ts#L292)
+[superenum.ts:292](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L292)

@@ -1,7 +1,7 @@
 @ncoderz/superenum
 ================
 
-![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=master)
+![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
