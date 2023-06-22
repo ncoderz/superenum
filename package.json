@@ -1,6 +1,6 @@
 {
   "name": "@ncoderz/superenum",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
   "author": "zx-ncoderz",
   "license": "BSD-2-Clause",
@@ -23,6 +23,7 @@
     "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'",
     "ncu": "yarn dlx npm-check-updates -i"
   },
+  "packageManager": "yarn@3.2.4",
   "engines": {
     "node": ">=10",
     "npm": ">=6.8.0"

@@ -117,7 +117,7 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns the enum value, or undefined if the value cannot be matched to the enum
    */
-  fromValue(value: unknown | undefined, options?: FromValueOptions): V | undefined;
+  fromValue(value: unknown | null | undefined, options?: FromValueOptions): V | undefined;
 
   /**
    * Get an enum value from its key, returning the value if key valid, otherwise undefined.
@@ -129,7 +129,7 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns the enum represented by the key, or undefined if the key cannot be matched to the enum
    */
-  fromKey(key: EnumKey | number | undefined, options?: FromKeyOptions): V | undefined;
+  fromKey(key: EnumKey | number | null | undefined, options?: FromKeyOptions): V | undefined;
 
   /**
    * Get an enum key from its value, returning the key if value valid, otherwise undefined.
@@ -141,7 +141,7 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns the enum key represented by the value, or undefined if the value cannot be matched to the enum
    */
-  keyFromValue(value: unknown | undefined, options?: KeyFromValueOptions): string | undefined;
+  keyFromValue(value: unknown | null | undefined, options?: KeyFromValueOptions): string | undefined;
 
   /**
    * Store metadata for an enum value. If value is not valid, the metadata will not be stored.
@@ -151,7 +151,7 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns true if the metadata was associated with the value, otherwise false
    */
-  setMetadata<M>(value: V | undefined, metadata: M, options?: SetMetadataOptions): boolean;
+  setMetadata<M>(value: V | null | undefined, metadata: M, options?: SetMetadataOptions): boolean;
 
   /**
    * Retrieve metadata that was stored against an enum value.
@@ -162,7 +162,7 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns the metadata associated with the enum value
    */
-  getMetadata<M>(value: V | undefined, options?: GetMetadataOptions): M | undefined;
+  getMetadata<M>(value: V | null | undefined, options?: GetMetadataOptions): M | undefined;
 
   /**
    * Get an array of the enum values.
