@@ -17,7 +17,7 @@
   // "eslint.nodePath": ".yarn/sdks",
   "eslint.alwaysShowStatus": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "pasteImage.path": "${projectRoot}/packages/gatsby/static",
   "pasteImage.basePath": "${projectRoot}/packages/gatsby/static",
