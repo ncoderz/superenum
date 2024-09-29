@@ -1,5 +1,9 @@
-[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / GetMetadataOptions
+[**@ncoderz/superenum**](../README.md) • **Docs**
+
+***
+
+[@ncoderz/superenum](../globals.md) / GetMetadataOptions
 
 # Interface: GetMetadataOptions
 
-Options for the [getMetadata](EnumExtensions.md#getMetadata) function
+Options for the [EnumExtensions.getMetadata](EnumExtensions.md#getMetadata) function

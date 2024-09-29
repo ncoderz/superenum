@@ -1,24 +1,20 @@
-[@ncoderz/superenum](../README.md)
-================
-
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
 
 
 ## API
 
-- [`superenum(objEnum)`](./interfaces/Superenum.md)
-- [`superenum.fromObject(objEnum)`](./interfaces/Superenum.md#fromobject)
-- [`superenum.fromArray(arrEnum)`](./interfaces/Superenum.md#fromarray)
-- [`<enum>.fromValue(value, options?)`](./interfaces/EnumExtensions.md#fromvalue)
-- [`<enum>.fromKey(key, options?)`](./interfaces/EnumExtensions.md#fromkey)
-- [`<enum>.keyFromValue(key, options?)`](./interfaces/EnumExtensions.md#keyfromvalue)
-- [`<enum>.setMetadata(value, metadata, options?)`](./interfaces/EnumExtensions.md#setmetadata)
-- [`<enum>.getMetadata(value, options?)`](./interfaces/EnumExtensions.md#getmetadata)
-- [`<enum>.values()`](./interfaces/EnumExtensions.md#values)
-- [`<enum>.keys()`](./interfaces/EnumExtensions.md#keys)
-- [`<enum>.entries()`](./interfaces/EnumExtensions.md#entries)
-- [`<enum>[Symbol.iterator]()`](./interfaces/EnumExtensions.md#fromvalue)
+* {@link Superenum superenum(objEnum)}
+* {@link Superenum.fromObject superenum.fromObject(objEnum)}
+* {@link Superenum.fromArray superenum.fromArray(arrEnum)}
+* {@link EnumExtensions.fromValue [enum].fromValue(value, options?)}
+* {@link EnumExtensions.fromKey [enum].fromKey(key, options?)}
+* {@link EnumExtensions.keyFromValue [enum].keyFromValue(key, options?)}
+* {@link EnumExtensions.setMetadata [enum].setMetadata(value, metadata, options?)}
+* {@link EnumExtensions.getMetadata [enum].getMetadata(value, options?)}
+* {@link EnumExtensions.values [enum].values()}
+* {@link EnumExtensions.keys [enum].keys()}
+* {@link EnumExtensions.entries [enum].entries()}
 
 ## License
 

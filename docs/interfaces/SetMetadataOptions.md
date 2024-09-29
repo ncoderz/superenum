@@ -1,5 +1,9 @@
-[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / SetMetadataOptions
+[**@ncoderz/superenum**](../README.md) • **Docs**
+
+***
+
+[@ncoderz/superenum](../globals.md) / SetMetadataOptions
 
 # Interface: SetMetadataOptions
 
-Options for the [setMetadata](EnumExtensions.md#setMetadata) function
+Options for the [EnumExtensions.setMetadata](EnumExtensions.md#setMetadata) function
