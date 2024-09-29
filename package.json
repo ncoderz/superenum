@@ -23,7 +23,7 @@
     "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'",
     "ncu": "yarn dlx npm-check-updates -i"
   },
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@4.5.0",
   "engines": {
     "node": ">=10",
     "npm": ">=6.8.0"

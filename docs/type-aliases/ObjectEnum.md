@@ -18,4 +18,4 @@ Object enum declaration
 
 ## Defined in
 
-[superenum.ts:44](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L44)
+[superenum.ts:44](https://github.com/ncoderz/superenum/blob/d33bc410e0367e18d55ed211c0ba0541eb217d41/src/superenum.ts#L44)

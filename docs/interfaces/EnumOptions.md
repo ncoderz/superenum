@@ -16,7 +16,7 @@ Options for the [Superenum](Superenum.md) and [Superenum.fromArray](Superenum.md
 
 #### Defined in
 
-[superenum.ts:62](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L62)
+[superenum.ts:62](https://github.com/ncoderz/superenum/blob/d33bc410e0367e18d55ed211c0ba0541eb217d41/src/superenum.ts#L62)
 
 ***
 
@@ -26,4 +26,4 @@ Options for the [Superenum](Superenum.md) and [Superenum.fromArray](Superenum.md
 
 #### Defined in
 
-[superenum.ts:63](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L63)
+[superenum.ts:63](https://github.com/ncoderz/superenum/blob/d33bc410e0367e18d55ed211c0ba0541eb217d41/src/superenum.ts#L63)
