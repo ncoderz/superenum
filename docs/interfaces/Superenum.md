@@ -1,139 +1,138 @@
-[@ncoderz/superenum](../API.md) / [Exports](../modules.md) / Superenum
+[**@ncoderz/superenum**](../README.md) • **Docs**
 
-# Interface: Superenum
+***
+
+[@ncoderz/superenum](../globals.md) / Superenum
+
+# Interface: Superenum()
 
 Interface to manage superenums
 
-## Callable
+> **Superenum**\<`K`, `V`, `T`\>(`enumeration`, `options`?): `Readonly`\<`T`\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<`T`\>\>
 
-### Superenum
+Interface to manage superenums
 
-▸ **Superenum**<`K`, `V`, `T`\>(`enumeration`, `options?`): `Readonly`<`T`\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<`T`\>\>
+## Type Parameters
 
-Create a superenum from a plain JavaScript object.
+• **K** *extends* `string`
 
-Alias of [fromObject](Superenum.md#fromObject).
+• **V** *extends* [`EnumValue`](../type-aliases/EnumValue.md)
 
-#### Type parameters
+• **T** *extends* [`ObjectEnum`](../type-aliases/ObjectEnum.md)\<`K`, `V`\>
 
-| Name | Type |
-| :------ | :------ |
-| `K` | extends `string` |
-| `V` | extends [`EnumValue`](../modules.md#EnumValue) |
-| `T` | extends [`ObjectEnum`](../modules.md#ObjectEnum)<`K`, `V`\> |
+## Parameters
 
-#### Parameters
+• **enumeration**: `T`
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `enumeration` | `T` | the plain JavaScript object enum to enhance |
-| `options?` | [`EnumOptions`](EnumOptions.md) | options for the enum enhancement |
+the plain JavaScript object enum to enhance
 
-#### Returns
+• **options?**: [`EnumOptions`](EnumOptions.md)
 
-`Readonly`<`T`\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<`T`\>\>
+options for the enum enhancement
+
+## Returns
+
+`Readonly`\<`T`\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<`T`\>\>
 
 the plain object enum converted to a superenum
 
-#### Defined in
+## Defined in
 
-[superenum.ts:241](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L241)
-
-## Table of contents
-
-### Methods
-
-- [fromObject](Superenum.md#fromObject)
-- [fromArray](Superenum.md#fromArray)
+[superenum.ts:241](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L241)
 
 ## Methods
 
-### fromObject
+### fromObject()
 
-▸ **fromObject**<`K`, `V`, `T`\>(`enumeration`, `options?`): `Readonly`<`T`\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<`T`\>\>
+> **fromObject**\<`K`, `V`, `T`\>(`enumeration`, `options`?): `Readonly`\<`T`\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<`T`\>\>
 
 Create a superenum from a plain JavaScript object.
 
 The plain JavaScript object will be enhanced with [EnumExtensions](EnumExtensions.md).
 
 Note: Item / iteration order is guaranteed unless the enum is initialised using [Superenum](Superenum.md) or
-[fromObject](Superenum.md#fromObject) and it contains keys which can be converted to integers. In this case it will
+[Superenum.fromObject](Superenum.md#fromObject) and it contains keys which can be converted to integers. In this case it will
 follow the rules of the JavaScript engine which may vary. In order to guarantee the item / iteration order
-in the case of integer keys, use [fromArray](Superenum.md#fromArray) to initialise the enum, or pass in an array
-of keys to [iterationKeys](EnumOptions.md#iterationKeys) to represent the desired item / iteration order.
+in the case of integer keys, use [Superenum.fromArray](Superenum.md#fromArray) to initialise the enum, or pass in an array
+of keys to [EnumOptions.iterationKeys](EnumOptions.md#iterationKeys) to represent the desired item / iteration order.
 
 Note: If the object has duplicate values, or duplicate keys or values when lower-cased, the initialisation will
 still succeed. However, the behaviour of
-[fromValue](EnumExtensions.md#fromValue),
-[fromKey](EnumExtensions.md#fromKey),
-[keyFromValue](EnumExtensions.md#keyFromValue)
+[EnumExtensions.fromValue](EnumExtensions.md#fromValue),
+[EnumExtensions.fromKey](EnumExtensions.md#fromKey),
+[EnumExtensions.keyFromValue](EnumExtensions.md#keyFromValue)
 will be indeterminate in cases where the keys / values clash.
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `K` | extends `string` |
-| `V` | extends [`EnumValue`](../modules.md#EnumValue) |
-| `T` | extends [`ObjectEnum`](../modules.md#ObjectEnum)<`K`, `V`\> |
+• **K** *extends* `string`
+
+• **V** *extends* [`EnumValue`](../type-aliases/EnumValue.md)
+
+• **T** *extends* [`ObjectEnum`](../type-aliases/ObjectEnum.md)\<`K`, `V`\>
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `enumeration` | `T` | the plain JavaScript object enum to enhance |
-| `options?` | [`EnumOptions`](EnumOptions.md) | options for the enum enhancement |
+• **enumeration**: `T`
+
+the plain JavaScript object enum to enhance
+
+• **options?**: [`EnumOptions`](EnumOptions.md)
+
+options for the enum enhancement
 
 #### Returns
 
-`Readonly`<`T`\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<`T`\>\>
+`Readonly`\<`T`\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<`T`\>\>
 
 the plain object enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:268](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L268)
+[superenum.ts:268](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L268)
 
-___
+***
 
-### fromArray
+### fromArray()
 
-▸ **fromArray**<`V`, `T`\>(`enumeration`, `options?`): `Readonly`<[`ArrayEnumToObjectEnum`](../modules.md#ArrayEnumToObjectEnum)<`T`\>\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<[`ArrayEnumToObjectEnum`](../modules.md#ArrayEnumToObjectEnum)<`T`\>\>\>
+> **fromArray**\<`V`, `T`\>(`enumeration`, `options`?): `Readonly`\<[`ArrayEnumToObjectEnum`](../type-aliases/ArrayEnumToObjectEnum.md)\<`T`\>\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<[`ArrayEnumToObjectEnum`](../type-aliases/ArrayEnumToObjectEnum.md)\<`T`\>\>\>
 
 Create a superenum from a plain JavaScript array.
 
 The array will be converted to a plain JavaScript object will be enhanced with [EnumExtensions](EnumExtensions.md).
 
 Note: Iteration order is guaranteed to be that of the items in the array. A different iteration order can be
-specified using [iterationKeys](EnumOptions.md#iterationKeys) to represent the desired iteration order.
+specified using [EnumOptions.iterationKeys](EnumOptions.md#iterationKeys) to represent the desired iteration order.
 
 Note: If the array has duplicate values, the initialisation will not fail. Instead the duplicate values will
 be ignored and the resultant enum will contain just one of the values.
 
 Note: If the array has duplicate values when lower-cased, the data returned when
-calling [fromKey](EnumExtensions.md#fromKey) and [keyFromValue](EnumExtensions.md#keyFromValue) with
+calling [EnumExtensions.fromKey](EnumExtensions.md#fromKey) and [EnumExtensions.keyFromValue](EnumExtensions.md#keyFromValue) with
 *ignoreCase* set will be indeterminate for duplicate keys / values.
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `V` | extends [`EnumValue`](../modules.md#EnumValue) |
-| `T` | extends `V`[] |
+• **V** *extends* [`EnumValue`](../type-aliases/EnumValue.md)
+
+• **T** *extends* [`ArrayEnum`](../type-aliases/ArrayEnum.md)\<`V`\>
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `enumeration` | `T` | the plain JavaScript array to convert and enhance |
-| `options?` | [`EnumOptions`](EnumOptions.md) | options for the enum enhancement |
+• **enumeration**: `T`
+
+the plain JavaScript array to convert and enhance
+
+• **options?**: [`EnumOptions`](EnumOptions.md)
+
+options for the enum enhancement
 
 #### Returns
 
-`Readonly`<[`ArrayEnumToObjectEnum`](../modules.md#ArrayEnumToObjectEnum)<`T`\>\> & [`EnumExtensions`](EnumExtensions.md)<[`EnumType`](../modules.md#EnumType)<[`ArrayEnumToObjectEnum`](../modules.md#ArrayEnumToObjectEnum)<`T`\>\>\>
+`Readonly`\<[`ArrayEnumToObjectEnum`](../type-aliases/ArrayEnumToObjectEnum.md)\<`T`\>\> & [`EnumExtensions`](EnumExtensions.md)\<[`EnumType`](../type-aliases/EnumType.md)\<[`ArrayEnumToObjectEnum`](../type-aliases/ArrayEnumToObjectEnum.md)\<`T`\>\>\>
 
 the plain array enum converted to a superenum
 
 #### Defined in
 
-[superenum.ts:292](https://github.com/ncoderz/superenum/blob/c1cfdf9/src/superenum.ts#L292)
+[superenum.ts:292](https://github.com/ncoderz/superenum/blob/2ce698cc608b8a9eb1339af0ae362b09ca3bb157/src/superenum.ts#L292)

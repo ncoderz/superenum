@@ -1,6 +1,6 @@
 /*
 
-Copyright ©2022 zx-ncoderz (Richard Sewell)
+Copyright ©2022-24 Ncoderz Ltd
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 following conditions are met:
