@@ -57,6 +57,7 @@ export default [
         {
           vars: 'all',
           args: 'none',
+          caughtErrors: 'none',
         },
       ],
 
