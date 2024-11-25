@@ -167,9 +167,13 @@ const superenumTests = (superenum: Superenum) => {
         ).toBe('somethingOther');
 
         // Error cases
+        expect(Enum.fromValue('')).toBeUndefined();
         expect(Enum.fromValue('1')).toBeUndefined();
         expect(Enum.fromValue('something')).toBeUndefined();
         expect(Enum.fromValue(5)).toBeUndefined();
+        expect(Enum.fromValue(0)).toBeUndefined();
+        expect(Enum.fromValue(null)).toBeUndefined();
+        expect(Enum.fromValue(undefined)).toBeUndefined();
         expect(
           Enum.fromValue(5, {
             ignoreCase: true,
@@ -201,9 +205,13 @@ const superenumTests = (superenum: Superenum) => {
         ).toBe('thing');
 
         // Error cases
+        expect(Enum.fromKey('')).toBeUndefined();
         expect(Enum.fromKey('98')).toBeUndefined();
         expect(Enum.fromKey('somethingOther')).toBeUndefined();
         expect(Enum.fromKey(5)).toBeUndefined();
+        expect(Enum.fromKey(0)).toBeUndefined();
+        expect(Enum.fromKey(null)).toBeUndefined();
+        expect(Enum.fromKey(undefined)).toBeUndefined();
         expect(Enum.fromKey('tHiNg')).toBeUndefined();
       });
     });
