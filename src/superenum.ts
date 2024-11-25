@@ -359,7 +359,7 @@ function fromObject(enumeration: any, options?: EnumOptions) {
       if (options?.ignoreCase && typeof value === 'string') {
         return keyValueMap.get(lcValueKeyMap.get(value.toLowerCase()) as EnumKey);
       }
-      if (value && !valueKeyMap.has(value)) return undefined;
+      if (!valueKeyMap.has(value)) return undefined;
       return value;
     }
 
@@ -380,7 +380,7 @@ function fromObject(enumeration: any, options?: EnumOptions) {
     function setMetadata(value: EnumValue, metadata: unknown, options?: SetMetadataOptions) {
       options;
       const v = fromValue(value);
-      if (v) metadataMap.set(v, metadata);
+      if (v != null) metadataMap.set(v, metadata);
     }
 
     function getMetadata(value: EnumValue, options?: GetMetadataOptions) {
