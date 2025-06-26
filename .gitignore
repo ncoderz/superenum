@@ -24,5 +24,8 @@ node_modules
 # !/.yarn/cache
 **/.pnp.*
 
+# VSCODE
+.vscode/mise-tools
+
 # PACKAGE SPECIFIC
 
