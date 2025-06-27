@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
-  "editor.rulers": [120],
-  "editor.wordWrapColumn": 120,
+  "editor.rulers": [100],
+  "editor.wordWrapColumn": 100,
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
   "files.eol": "\n",
@@ -12,22 +12,24 @@
     "watchFile": "useFsEventsOnParentDirectory",
     "watchDirectory": "useFsEvents"
   },
-  "npm.packageManager": "yarn",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-  // "eslint.nodePath": ".yarn/sdks",
+  "eslint.format.enable": true,
   "eslint.alwaysShowStatus": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "pasteImage.path": "${projectRoot}/packages/gatsby/static",
-  "pasteImage.basePath": "${projectRoot}/packages/gatsby/static",
-  "pasteImage.forceUnixStyleSeparator": true,
-  "pasteImage.prefix": "/",
+  "npm.packageManager": "npm",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "search.exclude": {
     "**/.yarn": true,
     "**/dist": true
-  }
+  },
+  "mise.configureExtensionsUseSymLinks": true,
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "${workspaceFolder}/.vscode/mise-tools/node"
+  },
+  "python.defaultInterpreterPath": "${workspaceFolder}/.vscode/mise-tools/python"
   // "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
   // "jest.jestCommandLine": "yarn test"
 }
