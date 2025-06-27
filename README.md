@@ -1,4 +1,4 @@
-# @ncoderz/superenum
+# @ncoderz/superenum 🚀
 
 ![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
 ![npm version](https://img.shields.io/npm/v/@ncoderz/superenum)
@@ -11,7 +11,7 @@ Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 
 ## Table of Contents
 
-- [@ncoderz/superenum](#ncoderzsuperenum)
+- [@ncoderz/superenum 🚀](#ncoderzsuperenum-)
   - [Table of Contents](#table-of-contents)
   - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
   - [Installation](#installation)
@@ -37,22 +37,22 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 
 @ncoderz/superenum provides an alternative that is:
 
-- An extension of standard JavaScript object enums
-- Simple to use
-- Type-safe
-- Full IDE autocompletion
-- Iteration order guaranteed
-- Input validation
-- Interoperable with standard JavaScript enums
-- Works in NodeJS, Deno, Bun, or the browser
-- Has a very small code footprint (< 1kB minified + gzipped)
+- 🚀 An extension of standard JavaScript object enums, fully-interoperable with JavaScript
+- ✨ Simple to use
+- 🔒 Type-safe
+- 💡 Full IDE autocompletion
+- 🔄 Iteration order guaranteed
+- ✅ Input validation
+- 🌐 Interoperable with standard JavaScript enums
+- 🖥️ Works in NodeJS, Deno, Bun, or the browser
+- 📦 Has a very small code footprint (< 1kB minified + gzipped)
 
 Additionally, the library is committed to:
 
-- An API that will always remain backwards compatible
-- No dependencies
-- Permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
-- Fixing bugs
+- 🔄 An API that will always remain backwards compatible
+- 🛠️ No dependencies
+- 📜 Permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
+- 🐛 Fixing bugs
 
 ---
 
