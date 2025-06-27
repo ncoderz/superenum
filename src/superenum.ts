@@ -61,6 +61,7 @@ export type EnumType<T> = T[keyof Omit<T, keyof EnumExtensions<EnumValue>>];
 export interface EnumOptions {
   iterationKeys?: ArrayEnum<EnumValue>;
   noFreeze?: boolean;
+  noTSEnumReverseMapping?: boolean;
 }
 
 /**
@@ -357,6 +358,19 @@ function fromTsEnum<T extends Record<string, string | number>>(tsEnum: T, option
 }
 
 function fromObject(enumeration: any, options?: EnumOptions) {
+  // Remove any keys that are numbers - these are the reverse mapping keys from TypeScript enums
+  const sanitisedEnumeration: Record<string, EnumValue> = Object.assign({}, enumeration);
+  for (const key in enumeration) {
+    const nkey = Number(key);
+    const isMaybeReverseKey = !isNaN(nkey);
+    if (isMaybeReverseKey) {
+      const v = enumeration[nkey];
+      const isReverseKey = enumeration[v] === nkey;
+      if (isReverseKey) delete sanitisedEnumeration[nkey];
+    }
+  }
+  enumeration = sanitisedEnumeration;
+
   // For reducing code size when minified
   const Object_freeze = Object.freeze;
   const Object_defineProperty = Object.defineProperty;
@@ -373,14 +387,6 @@ function fromObject(enumeration: any, options?: EnumOptions) {
   const lcValueKeyMap = new Map<EnumValue, EnumKey>();
   const metadataMap = new Map<EnumValue, unknown>();
   const iterationKeys = (options?.iterationKeys ?? Object.keys(enumeration)).map((k) => `${k}`);
-
-  // Remove any keys that are numbers - these are the reverse mapping keys from TypeScript enums
-  const sanitisedEnumeration: Record<string, EnumValue> = Object.assign({}, enumeration);
-  for (const key in enumeration) {
-    const isReverseKey = !isNaN(Number(key));
-    if (isReverseKey) delete sanitisedEnumeration[key];
-  }
-  enumeration = sanitisedEnumeration;
 
   // Fill keyValueMap and lcKeyValueMap
   for (const [key, value] of Object.entries(enumeration)) {
@@ -462,17 +468,19 @@ function fromObject(enumeration: any, options?: EnumOptions) {
 
     // For each numberValues, add a non-eumerable property to the superEn object
     // This is the equivalent of the TS enum "reverse mapping"
-    for (const num of numberValues) {
-      Object_defineProperty(
-        superEn,
-        num,
-        Object_assign(
-          {
-            value: valueKeyMap.get(num),
-          },
-          definePropertyOptions,
-        ),
-      );
+    if (!options?.noTSEnumReverseMapping) {
+      for (const num of numberValues) {
+        Object_defineProperty(
+          superEn,
+          num,
+          Object_assign(
+            {
+              value: valueKeyMap.get(num),
+            },
+            definePropertyOptions,
+          ),
+        );
+      }
     }
 
     // Add helper functions to the enum but so they cannot be enumerated

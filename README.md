@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Minified Size](https://img.shields.io/bundlephobia/min/@ncoderz/superenum)
 
-Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
+Better typesafe enums in TypeScript, compatible with standard TypeScript and JavaScript enums.
 
 ---
 
@@ -14,19 +14,18 @@ Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 - [@ncoderz/superenum 🚀](#ncoderzsuperenum-)
   - [Table of Contents](#table-of-contents)
   - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
-  - [Why NOT TypeScript enums? ❌](#why-not-typescript-enums-)
+  - [Why NOT TypeScript enums?](#why-not-typescript-enums)
   - [Installation](#installation)
   - [Importing](#importing)
   - [Enum Declaration](#enum-declaration)
   - [Basic Usage](#basic-usage)
   - [Validation](#validation)
   - [Iteration / forEach / map / reduce](#iteration--foreach--map--reduce)
-    - [Iteration Order](#iteration-order)
+  - [Iteration Order](#iteration-order)
   - [Enum value from enum key](#enum-value-from-enum-key)
   - [Enum key from enum value](#enum-key-from-enum-value)
-  - [TypeScript Enum Revese Lookup](#typescript-enum-revese-lookup)
+  - [TypeScript Enum Revese Mapping](#typescript-enum-revese-mapping)
   - [Metadata](#metadata)
-  - [API](#api)
   - [Feature Comparison](#feature-comparison)
   - [Limitations](#limitations)
   - [License](#license)
@@ -60,7 +59,7 @@ Additionally, the library is committed to:
 
 ---
 
-## Why NOT TypeScript enums? ❌
+## Why NOT TypeScript enums?
 
 TypeScript enums are ok, but are missing some key features:
 
@@ -68,10 +67,11 @@ TypeScript enums are ok, but are missing some key features:
 - Not iterable in a sensible way
 - No input validation
 - Numeric and String enums are not consistent
+- Lots of boilerplate needed
 
 These missing features mean boilerplate code is almost always required with TypeScript enums.
 
-Save the boilerplate, use `@ncoderz/superenum` instead.
+Save the confusion and boilerplate while staying compatible, use `@ncoderz/superenum` instead.
 
 ---
 
@@ -127,12 +127,6 @@ const { superenum, EnumType } = require('@ncoderz/superenum');
 Enums are declared as JavaScript objects or arrays wrapped with the `superenum()` function.
 
 ```ts
-superenum(enumObject | enumArray);
-```
-
-As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then the enum will be typesafe and IDE auto-completion will work.
-
-```ts
 // String enum
 const MyEnum = superenum({
   node: 'node',
@@ -161,6 +155,11 @@ const MyMixedEnum = superenum({
 });
 type MyMixedEnumType = EnumType<typeof MyMixedEnum>; // Optional type declaration
 ```
+
+As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then the enum will be typesafe and IDE auto-completion will work.
+
+- keys: must be strings
+- values: strings or numbers or a mix of either
 
 ---
 
@@ -298,7 +297,7 @@ for (const value of MyNumericEnum.entries()) {
 // [ 'safari': 2 ]
 ```
 
-### Iteration Order
+## Iteration Order
 
 The order of iteration is guaranteed to be the order of the items in the enum declaration.
 
@@ -385,7 +384,7 @@ const invalid = MyEnum.keyFromValue('node'); // undefined
 
 ---
 
-## TypeScript Enum Revese Lookup
+## TypeScript Enum Revese Mapping
 
 If the enum has any numeric values, these will be available via reverse lookup in the same way as standard TypeScript enums.
 
@@ -405,6 +404,10 @@ console.log(MyEnum[1]); // 'chrome'
 console.log(MyEnum[2]); // 'safari'
 console.log(MyEnum[3]); // undefined
 ```
+
+However, it is recommended to use `<enum>.keyFromValue()` as it works for both strings and numbers.
+
+TypeScript enum like reverse mappings can be disabled with the `noTSEnumReverseMapping` option. Even with this option, reverse mappings are still available via `<enum>.keyFromValue()`
 
 ---
 
@@ -429,11 +432,12 @@ const valueNode = MyEnum.fromValue('node'); // MyEnum.node / 'node'
 const desc = MyEnum.getMetadata(valueNode); // 'Node.js is an open-source, cross-platform...'
 ```
 
----
+<!--
 
 ## API
 
 [API Documentation](dist/docs/API.md)
+-->
 
 ---
 

@@ -9,11 +9,11 @@ const superenumTests = (superenum: Superenum) => {
     thing: 'thing',
     other: 'other',
     something: 'somethingOther',
-    99: 1,
+    '99': 1,
   };
-  const ENUM_OBJ1_IT_KEYS = ['thing', 'other', 'something', 99];
+  const ENUM_OBJ1_IT_KEYS = ['99', 'thing', 'other', 'something'];
 
-  const ENUM_ARR1 = ['thing', 'other', 'somethingOther', 1];
+  const ENUM_ARR1 = ['thing', 'other', 'somethingOther', '1'];
 
   const EnumObj1 = superenum(ENUM_OBJ1, {
     iterationKeys: ENUM_OBJ1_IT_KEYS,
@@ -31,7 +31,7 @@ const superenumTests = (superenum: Superenum) => {
         expect(Enum.thing).toBe('thing');
         expect(Enum.other).toBe('other');
         expect(Enum.something).toBe('somethingOther');
-        expect(Enum[99]).toBe(1);
+        expect(Enum['99']).toBe(1);
         expect(Enum.fromValue).toBeDefined();
         expect(Enum.fromKey).toBeDefined();
         expect(Enum.keyFromValue).toBeDefined();
@@ -53,7 +53,7 @@ const superenumTests = (superenum: Superenum) => {
         expect(Enum.thing).toBe('thing');
         expect(Enum.other).toBe('other');
         expect(Enum.somethingOther).toBe('somethingOther');
-        expect(Enum[1]).toBe(1);
+        expect(Enum['1']).toBe('1');
         expect(Enum.fromValue).toBeDefined();
         expect(Enum.fromKey).toBeDefined();
         expect(Enum.keyFromValue).toBeDefined();
@@ -266,12 +266,12 @@ const superenumTests = (superenum: Superenum) => {
       test('should be able to store and retrieve metadata against an enum value', async () => {
         const Enum = superenum(ENUM_OBJ1);
 
-        Enum.setMetadata(Enum[99], 'meta99');
+        Enum.setMetadata(Enum['99'], 'meta99');
         Enum.setMetadata(Enum.other, 'metaOther');
         Enum.setMetadata(Enum.something, 'metaSomething');
 
         // Expected cases
-        expect(Enum.getMetadata(Enum[99])).toBe('meta99');
+        expect(Enum.getMetadata(Enum['99'])).toBe('meta99');
         expect(Enum.getMetadata(Enum.other)).toBe('metaOther');
         expect(Enum.getMetadata(Enum.something)).toBe('metaSomething');
 
@@ -290,16 +290,16 @@ const superenumTests = (superenum: Superenum) => {
         for (const value of Enum) {
           switch (i) {
             case 0:
-              expect(value).toBe(Enum.thing);
+              expect(value).toBe(Enum[99]);
               break;
             case 1:
-              expect(value).toBe(Enum.other);
+              expect(value).toBe(Enum.thing);
               break;
             case 2:
-              expect(value).toBe(Enum.something);
+              expect(value).toBe(Enum.other);
               break;
             case 3:
-              expect(value).toBe(Enum[99]);
+              expect(value).toBe(Enum.something);
               break;
             default:
               throw new Error(`Unexpected value: ${value}`);
@@ -406,16 +406,16 @@ const superenumTests = (superenum: Superenum) => {
         for (const value of Enum) {
           switch (i) {
             case 0:
-              expect(value).toBe(Enum.thing);
+              expect(value).toBe(Enum[99]);
               break;
             case 1:
-              expect(value).toBe(Enum.other);
+              expect(value).toBe(Enum.thing);
               break;
             case 2:
-              expect(value).toBe(Enum.something);
+              expect(value).toBe(Enum.other);
               break;
             case 3:
-              expect(value).toBe(Enum[99]);
+              expect(value).toBe(Enum.something);
               break;
             default:
               throw new Error(`Unexpected value: ${value}`);
@@ -434,16 +434,16 @@ const superenumTests = (superenum: Superenum) => {
         for (const value of Enum.values()) {
           switch (i) {
             case 0:
-              expect(value).toBe(Enum.thing);
+              expect(value).toBe(Enum[99]);
               break;
             case 1:
-              expect(value).toBe(Enum.other);
+              expect(value).toBe(Enum.thing);
               break;
             case 2:
-              expect(value).toBe(Enum.something);
+              expect(value).toBe(Enum.other);
               break;
             case 3:
-              expect(value).toBe(Enum[99]);
+              expect(value).toBe(Enum.something);
               break;
             default:
               throw new Error(`Unexpected value: ${value}`);
@@ -550,16 +550,16 @@ const superenumTests = (superenum: Superenum) => {
         for (const key of Enum.keys()) {
           switch (i) {
             case 0:
-              expect(key).toBe('thing');
+              expect(key).toBe('99');
               break;
             case 1:
-              expect(key).toBe('other');
+              expect(key).toBe('thing');
               break;
             case 2:
-              expect(key).toBe('something');
+              expect(key).toBe('other');
               break;
             case 3:
-              expect(key).toBe('99');
+              expect(key).toBe('something');
               break;
             default:
               throw new Error(`Unexpected key: ${key}`);
@@ -666,20 +666,20 @@ const superenumTests = (superenum: Superenum) => {
         for (const [key, value] of Enum.entries()) {
           switch (i) {
             case 0:
+              expect(key).toBe('99');
+              expect(value).toBe(Enum[99]);
+              break;
+            case 1:
               expect(key).toBe('thing');
               expect(value).toBe(Enum.thing);
               break;
-            case 1:
+            case 2:
               expect(key).toBe('other');
               expect(value).toBe(Enum.other);
               break;
-            case 2:
+            case 3:
               expect(key).toBe('something');
               expect(value).toBe(Enum.something);
-              break;
-            case 3:
-              expect(key).toBe('99');
-              expect(value).toBe(Enum[99]);
               break;
             default:
               throw new Error(`Unexpected value: ${value}`);
@@ -788,6 +788,55 @@ const superenumTests = (superenum: Superenum) => {
           }
           i++;
         }
+      });
+    });
+
+    describe('initialising enum from TypeScript native enum', () => {
+      enum StringEnum {
+        Red = 'red',
+        Green = 'green',
+        Blue = 'blue',
+      }
+      const StringSuper = superenum(StringEnum);
+
+      test('string enum values and helpers', () => {
+        expect(StringSuper.Red).toBe('red');
+        expect(StringSuper.Green).toBe('green');
+        expect(StringSuper.Blue).toBe('blue');
+        expect(StringSuper.fromValue('green')).toBe('green');
+        expect(StringSuper.fromValue('GREEN', { ignoreCase: true })).toBe('green');
+        expect(StringSuper.fromKey('Blue')).toBe('blue');
+        expect(StringSuper.keyFromValue('red')).toBe('Red');
+        expect(StringSuper.values()).toEqual(['red', 'green', 'blue']);
+        expect(StringSuper.keys()).toEqual(['Red', 'Green', 'Blue']);
+        expect(StringSuper.entries()).toEqual([
+          ['Red', 'red'],
+          ['Green', 'green'],
+          ['Blue', 'blue'],
+        ]);
+      });
+
+      enum NumericEnum {
+        One = 1,
+        Two = 2,
+        Three = 3,
+      }
+      const NumericSuper = superenum(NumericEnum);
+
+      test('numeric enum values and reverse lookup', () => {
+        expect(NumericSuper.One).toBe(1);
+        expect(NumericSuper.Two).toBe(2);
+        expect(NumericSuper.Three).toBe(3);
+        // reverse mapping
+        expect(NumericSuper[1]).toBe('One');
+        expect(NumericSuper[2]).toBe('Two');
+        // helpers
+        expect(NumericSuper.fromValue(2)).toBe(2);
+        expect(NumericSuper.keyFromValue(3)).toBe('Three');
+        expect(NumericSuper.fromKey('One')).toBe(1);
+        // iteration order
+        expect(NumericSuper.values()).toEqual([1, 2, 3]);
+        expect(NumericSuper.keys()).toEqual(['One', 'Two', 'Three']);
       });
     });
   });
