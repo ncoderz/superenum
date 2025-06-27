@@ -10,22 +10,22 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js 22.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22.x'
-        registry-url: 'https://npm.pkg.github.com'
-        cache: 'yarn'
-    - name: Setup Yarn
-      run: |
-        yarn config set npmScopes.ncoderz.npmRegistryServer "https://npm.pkg.github.com"
-        yarn config set npmScopes.ncoderz.npmPublishRegistry "https://npm.pkg.github.com"
-        yarn config set npmScopes.ncoderz.npmAlwaysAuth true
-        yarn config set npmScopes.ncoderz.npmAuthToken $GITHUB_AUTH_TOKEN
-      env:
-        GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install dependencies
-      run: yarn install --immutable
-    - name: Publish
-      run: yarn npm publish
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > ~/.npmrc
+          echo "@ncoderz:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
