@@ -265,10 +265,9 @@ export interface Superenum {
    *
    * The plain JavaScript object will be enhanced with {@link EnumExtensions}.
    *
-   * Note: Item / iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
+   * Note: Item / iteration order is guaranteed unless the enum contains keys which can be converted to integers. In this case it will
    * follow the rules of the JavaScript engine which may vary. In order to guarantee the item / iteration order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
+   * in the case of integer keys, pass in an array
    * of keys to {@link EnumOptions.iterationKeys} to represent the desired item / iteration order.
    *
    * Note: If the object has duplicate values, or duplicate keys or values when lower-cased, the initialisation will
@@ -280,7 +279,7 @@ export interface Superenum {
    *
    * @param enumeration - the plain JavaScript object enum to enhance
    * @param options - options for the enum enhancement
-   * @returns the plain object enum converted to a superenum
+   * @returns the plain object enum enhanced to a superenum
    */
   fromObject<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>>(
     enumeration: T,
@@ -304,12 +303,36 @@ export interface Superenum {
    *
    * @param enumeration - the plain JavaScript array to convert and enhance
    * @param options - options for the enum enhancement
-   * @returns the plain array enum converted to a superenum
+   * @returns the plain array enhanced to a superenum
    */
   fromArray<V extends EnumValue, T extends ArrayEnum<V>>(
     enumeration: T,
     options?: EnumOptions,
   ): Readonly<ArrayEnumToObjectEnum<T>> & EnumExtensions<EnumType<ArrayEnumToObjectEnum<T>>>;
+
+  /**
+   * Create a superenum from a TypeScript enum.
+   *
+   * The TypeScript enum will be enhanced with {@link EnumExtensions}.
+   *
+   * Note: Iteration order is guaranteed to be that of the items in the enum. A different iteration order can be
+   * specified using {@link EnumOptions.iterationKeys} to represent the desired iteration order.
+   *
+   * Note: If the enum has duplicate keys or values when lower-cased, the initialisation will
+   * still succeed. However, the behaviour of
+   * {@link EnumExtensions.fromValue},
+   * {@link EnumExtensions.fromKey},
+   * {@link EnumExtensions.keyFromValue}
+   * will be indeterminate in cases where the keys / values clash.
+   *
+   * @param enumeration - the TypeScript enum to enhance
+   * @param options - options for the enum enhancement
+   * @returns the TypeScript enum enhanced to a superenum
+   */
+  fromTsEnum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>>(
+    enumeration: T,
+    options?: EnumOptions,
+  ): Readonly<T> & EnumExtensions<EnumType<T>>;
 }
 
 function fromArray(arr: any, options?: EnumOptions) {
@@ -329,6 +352,10 @@ function fromArray(arr: any, options?: EnumOptions) {
   return fromObject(enumeration, options);
 }
 
+function fromTsEnum<T extends Record<string, string | number>>(tsEnum: T, options?: EnumOptions) {
+  return superenum.fromObject(tsEnum, options) as Readonly<T> & EnumExtensions<EnumType<T>>;
+}
+
 function fromObject(enumeration: any, options?: EnumOptions) {
   // For reducing code size when minified
   const Object_freeze = Object.freeze;
@@ -336,6 +363,8 @@ function fromObject(enumeration: any, options?: EnumOptions) {
   const Object_assign = Object.assign;
   const definePropertyOptions = {
     enumerable: false,
+    writable: false,
+    configurable: false,
   };
 
   const keyValueMap = new Map<EnumKey, EnumValue>();
@@ -344,6 +373,14 @@ function fromObject(enumeration: any, options?: EnumOptions) {
   const lcValueKeyMap = new Map<EnumValue, EnumKey>();
   const metadataMap = new Map<EnumValue, unknown>();
   const iterationKeys = (options?.iterationKeys ?? Object.keys(enumeration)).map((k) => `${k}`);
+
+  // Remove any keys that are numbers - these are the reverse mapping keys from TypeScript enums
+  const sanitisedEnumeration: Record<string, EnumValue> = Object.assign({}, enumeration);
+  for (const key in enumeration) {
+    const isReverseKey = !isNaN(Number(key));
+    if (isReverseKey) delete sanitisedEnumeration[key];
+  }
+  enumeration = sanitisedEnumeration;
 
   // Fill keyValueMap and lcKeyValueMap
   for (const [key, value] of Object.entries(enumeration)) {
@@ -363,6 +400,7 @@ function fromObject(enumeration: any, options?: EnumOptions) {
 
   const values = iterationKeys.map((k) => keyValueMap.get(k));
   const entries = iterationKeys.map((k) => [k, keyValueMap.get(k)]);
+  const numberValues = values.filter((v) => typeof v === 'number') as number[];
 
   const init = (options?: EnumOptions) => {
     let superEn = enumeration;
@@ -420,6 +458,21 @@ function fromObject(enumeration: any, options?: EnumOptions) {
           };
         },
       };
+    }
+
+    // For each numberValues, add a non-eumerable property to the superEn object
+    // This is the equivalent of the TS enum "reverse mapping"
+    for (const num of numberValues) {
+      Object_defineProperty(
+        superEn,
+        num,
+        Object_assign(
+          {
+            value: valueKeyMap.get(num),
+          },
+          definePropertyOptions,
+        ),
+      );
     }
 
     // Add helper functions to the enum but so they cannot be enumerated
@@ -546,5 +599,6 @@ const superenum: Superenum = ((enumeration: any, options?: EnumOptions) => {
 
 superenum.fromObject = fromObject;
 superenum.fromArray = fromArray;
+superenum.fromTsEnum = fromTsEnum;
 
 export { superenum };

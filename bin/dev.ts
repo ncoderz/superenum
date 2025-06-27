@@ -116,3 +116,136 @@ logTestEnumArr(
   nineArr,
   tenArr,
 );
+
+enum TestEnum {
+  ONE = 'one',
+  TWO = 'two',
+  THREE = 'three',
+  FOUR = 'four',
+  FIVE = 'five',
+  SIX = NaN,
+  SEVEN = 7,
+  EIGHT = 8,
+  NINE = 9,
+  TEN = '10',
+}
+
+const oneRawTs = TestEnum.ONE;
+const twoRawTs = TestEnum.TWO;
+const threeRawTs = TestEnum.THREE;
+const fourRawTs = TestEnum.FOUR;
+const fiveRawTs = TestEnum.FIVE;
+const sixRawTs = TestEnum.SIX;
+const sevenRawTs = TestEnum.SEVEN;
+const eightRawTs = TestEnum.EIGHT;
+const nineRawTs = TestEnum.NINE;
+const tenRawTs = TestEnum.TEN;
+
+const TestEnumTs = superenum(TestEnum);
+
+type TestEnumTsType = EnumType<typeof TestEnumTs>;
+
+const oneTs = TestEnumTs.ONE;
+const twoTs = TestEnumTs.fromValue('two') ?? TestEnumTs.ONE;
+const threeTs = TestEnumTs.THREE;
+const fourTs = TestEnumTs.FOUR;
+const fiveTs = TestEnumTs.FIVE;
+const sixTs = TestEnumTs.SIX;
+const sevenTs = TestEnumTs.SEVEN;
+const eightTs = TestEnumTs.EIGHT;
+const nineTs = TestEnumTs.NINE;
+const tenTs = TestEnumTs.TEN;
+
+function logTestEnumRawTs(
+  rawEnum: typeof TestEnum,
+  one: TestEnumTsType,
+  two: TestEnumTsType,
+  three: TestEnumTsType,
+  four: TestEnumTsType,
+  five: TestEnumTsType,
+  six: TestEnumTsType,
+  seven: TestEnumTsType,
+  eight: TestEnumTsType,
+  nine: TestEnumTsType,
+  ten: TestEnumTsType,
+) {
+  console.log('--- TestEnumRawTs ---');
+
+  console.log('TestEnumRawTs:', rawEnum);
+  console.log('One:', one);
+  console.log('Two:', two);
+  console.log('Three:', three);
+  console.log('Four:', four);
+  console.log('Five:', five);
+  console.log('Six:', six);
+  console.log('Seven:', seven);
+  console.log('Eight:', eight);
+  console.log('Nine:', nine);
+  console.log('Ten:', ten);
+  for (const key in TestEnum) {
+    console.log(
+      `Key: ${key}, Value: ${TestEnum[key]}, KeyType: ${typeof key}, ValueType: ${typeof TestEnum[key]}`,
+    );
+  }
+  console.log('Symbol.iterator:', rawEnum[Symbol.iterator]);
+
+  console.log('TestEnum[7]', TestEnum[7]);
+}
+logTestEnumRawTs(
+  TestEnum,
+  oneRawTs,
+  twoRawTs,
+  threeRawTs,
+  fourRawTs,
+  fiveRawTs,
+  sixRawTs,
+  sevenRawTs,
+  eightRawTs,
+  nineRawTs,
+  tenRawTs,
+);
+
+function logTestEnumTs(
+  obj: typeof TestEnumTs,
+  one: TestEnumTsType,
+  two: TestEnumTsType,
+  three: TestEnumTsType,
+  four: TestEnumTsType,
+  five: TestEnumTsType,
+  six: TestEnumTsType,
+  seven: TestEnumTsType,
+  eight: TestEnumTsType,
+  nine: TestEnumTsType,
+  ten: TestEnumTsType,
+) {
+  console.log('--- TestEnumTs ---');
+  console.log('TestEnumTs:', obj);
+  console.log('One:', one);
+  console.log('Two:', two);
+  console.log('Three:', three);
+  console.log('Four:', four);
+  console.log('Five:', five);
+  console.log('Six:', six);
+  console.log('Seven:', seven);
+  console.log('Eight:', eight);
+  console.log('Nine:', nine);
+  console.log('Ten:', ten);
+  console.log('Keys:', obj.keys());
+  console.log('Values:', obj.values());
+  console.log('Entries:', obj.entries());
+  console.log('Symbol.iterator:', obj[Symbol.iterator]);
+  console.log('obj[7]', obj[7]);
+}
+logTestEnumTs(
+  TestEnumTs,
+  oneTs,
+  twoTs,
+  threeTs,
+  fourTs,
+  fiveTs,
+  sixTs,
+  sevenTs,
+  eightTs,
+  nineTs,
+  tenTs,
+);

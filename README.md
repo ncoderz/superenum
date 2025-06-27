@@ -14,15 +14,17 @@ Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 - [@ncoderz/superenum 🚀](#ncoderzsuperenum-)
   - [Table of Contents](#table-of-contents)
   - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
-  - [Why NOT TypeScript enums? ](#why-not-typescript-enums-)
+  - [Why NOT TypeScript enums? ❌](#why-not-typescript-enums-)
   - [Installation](#installation)
   - [Importing](#importing)
   - [Enum Declaration](#enum-declaration)
   - [Basic Usage](#basic-usage)
   - [Validation](#validation)
   - [Iteration / forEach / map / reduce](#iteration--foreach--map--reduce)
+    - [Iteration Order](#iteration-order)
   - [Enum value from enum key](#enum-value-from-enum-key)
   - [Enum key from enum value](#enum-key-from-enum-value)
+  - [TypeScript Enum Revese Lookup](#typescript-enum-revese-lookup)
   - [Metadata](#metadata)
   - [API](#api)
   - [Feature Comparison](#feature-comparison)
@@ -38,13 +40,14 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 
 @ncoderz/superenum provides an alternative that is:
 
-- 🚀 An extension of standard JavaScript object enums, fully-interoperable with JavaScript
+- 🚀 An extension of standard enums
 - ✨ Simple to use
 - 🔒 Type-safe
 - 💡 Full IDE autocompletion
-- 🔄 Iteration order guaranteed
+- 🔄 Iterable, iteration order guaranteed
 - ✅ Input validation
-- 🌐 Interoperable with standard JavaScript enums
+- 🔄 key <--> value conversion
+- 🌐 Interoperable with standard TypeScript and JavaScript enums
 - 🖥️ Works in NodeJS, Deno, Bun, or the browser
 - 📦 Has a very small code footprint (< 1kB minified + gzipped)
 
@@ -59,16 +62,16 @@ Additionally, the library is committed to:
 
 ## Why NOT TypeScript enums? ❌
 
-TypeScript enums are broken:
+TypeScript enums are ok, but are missing some key features:
 
-- 🚫 **Confusing syntax** that doesn't look like JavaScript
-- 🔄 **JavaScript incompatible** - breaks existing codebases
-- 🐢 **Performance overhead** in critical applications
-- 🔍 **Debugging nightmare** with unreadable compiled output
-- ❌ **No mixed keys** - artificially limited
-- 🔒 **Type coercion bugs** that break at runtime
+- No key <--> value conversion for string enums
+- Not iterable in a sensible way
+- No input validation
+- Numeric and String enums are not consistent
 
-Stop fighting TypeScript enums. Use `@ncoderz/superenum` instead.
+These missing features mean boilerplate code is almost always required with TypeScript enums.
+
+Save the boilerplate, use `@ncoderz/superenum` instead.
 
 ---
 
@@ -295,28 +298,30 @@ for (const value of MyNumericEnum.entries()) {
 // [ 'safari': 2 ]
 ```
 
-The order of iteration is guaranteed usually when using `superenum()` to initialise the enum.
+### Iteration Order
 
-The only exception is when using an object enum, with mixed string and numeric keys. In this
-case the order can be modified by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
+The order of iteration is guaranteed to be the order of the items in the enum declaration.
+
+However the order can be modified by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
 
 ```ts
-// Ensure iteration order when using integer keys mixed with strings and creating
-// the object with `superenum() / superenum.fromObject()
+// Define a custom iteration order
 //
-// In this case if iterationKeys was not used, the iteration order would be defined
-// by the JavaScript engine and would probably be:
-// 1, 2, node, safari
+// The iteration order will be:
+// deno, node, bun, safari
+//
+// If iterationKeys was not used, the iteration order would be
+// node, bun, safari deno
 
 const MyMixedEnum = superenum(
   {
     node: 0,
-    1: 1,
+    bun: 1,
     safari: 2,
-    '2': 'two',
+    deno: 'two',
   },
   {
-    iterationKeys: ['node', 1, 'safari', '2'],
+    iterationKeys: ['deno', 'node', 'bun', 'safari'],
   },
 );
 
@@ -324,10 +329,10 @@ const MyMixedEnum = superenum(
 for (const value of MyMixedEnum.keys()) {
   console.log(value);
 }
+// deno
 // node
-// 1
+// bun
 // safari
-// 2
 ```
 
 ---
@@ -380,6 +385,29 @@ const invalid = MyEnum.keyFromValue('node'); // undefined
 
 ---
 
+## TypeScript Enum Revese Lookup
+
+If the enum has any numeric values, these will be available via reverse lookup in the same way as standard TypeScript enums.
+
+This is possible with `<enum>[number]`
+
+```ts
+const MyEnum = superenum({
+  node: 0,
+  chrome: 1,
+  safari: 2,
+});
+
+// End enum declaration
+
+console.log(MyEnum[0]); // 'node'
+console.log(MyEnum[1]); // 'chrome'
+console.log(MyEnum[2]); // 'safari'
+console.log(MyEnum[3]); // undefined
+```
+
+---
+
 ## Metadata
 
 Want to associate some data with a particular enum value? An example might be to store a set of description strings
@@ -413,7 +441,8 @@ const desc = MyEnum.getMetadata(valueNode); // 'Node.js is an open-source, cross
 
 | Feature                                       | `@ncoderz/enum` (numeric and string)          | TypeScript `enum` (numeric)                                                        | TypeScript `enum` (string)                                                                                                   |
 | --------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Compatible with simple JS enums               | Yes                                           | X                                                                                  | X                                                                                                                            |
+| Compatible with simple JS enums               | Yes                                           | X                                                                                  | Yes                                                                                                                          |
+| Compatible with TS enums                      | Yes                                           | Yes                                                                                | Yes                                                                                                                          |
 | Mixed numeric and string keys                 | Yes                                           | X                                                                                  | X                                                                                                                            |
 | Compare value                                 | `value === Enum.key`                          | `Enum[value] === Enum[Enum.key]`                                                   | `value === Enum.key`                                                                                                         |
 | Validate external data to valid typed enum    | `const val: EnumType = Enum.fromValue(value)` | `const val: Enum = ((Enum[value] === Enum[Enum.key]) ? value : undefined) as Enum` | `const val: Enum = ((value === Enum.key) ? value : undefined) as Enum`                                                       |
