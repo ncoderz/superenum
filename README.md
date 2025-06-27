@@ -1,8 +1,36 @@
-# @ncoderz/superenum
+# @ncoderz/superenum 🚀
 
 ![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
+![npm version](https://img.shields.io/npm/v/@ncoderz/superenum)
+![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Minified Size](https://img.shields.io/bundlephobia/min/@ncoderz/superenum)
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
+
+---
+
+## Table of Contents
+
+- [@ncoderz/superenum 🚀](#ncoderzsuperenum-)
+  - [Table of Contents](#table-of-contents)
+  - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
+  - [Why NOT TypeScript enums? ](#why-not-typescript-enums-)
+  - [Installation](#installation)
+  - [Importing](#importing)
+  - [Enum Declaration](#enum-declaration)
+  - [Basic Usage](#basic-usage)
+  - [Validation](#validation)
+  - [Iteration / forEach / map / reduce](#iteration--foreach--map--reduce)
+  - [Enum value from enum key](#enum-value-from-enum-key)
+  - [Enum key from enum value](#enum-key-from-enum-value)
+  - [Metadata](#metadata)
+  - [API](#api)
+  - [Feature Comparison](#feature-comparison)
+  - [Limitations](#limitations)
+  - [License](#license)
+  - [Alternatives](#alternatives)
+
+---
 
 ## Why @ncoderz/superenum?
 
@@ -10,21 +38,39 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 
 @ncoderz/superenum provides an alternative that is:
 
-- an extension of standard JavaScript object enums
-- simple to use
-- type-safe
-- supports IDE autocompletion
-- iteration order can be guaranteed
-- is interoperable with standard JavaScript enums
-- works in node or the browser
-- has a very small code footprint (< 1kB minified + gzipped)
+- 🚀 An extension of standard JavaScript object enums, fully-interoperable with JavaScript
+- ✨ Simple to use
+- 🔒 Type-safe
+- 💡 Full IDE autocompletion
+- 🔄 Iteration order guaranteed
+- ✅ Input validation
+- 🌐 Interoperable with standard JavaScript enums
+- 🖥️ Works in NodeJS, Deno, Bun, or the browser
+- 📦 Has a very small code footprint (< 1kB minified + gzipped)
 
 Additionally, the library is committed to:
 
-- an API that will always remain backwards compatible
-- no dependencies
-- permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
-- fixing bugs
+- 🔄 An API that will always remain backwards compatible
+- 🛠️ No dependencies
+- 📜 Permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
+- 🐛 Fixing bugs
+
+---
+
+## Why NOT TypeScript enums? ❌
+
+TypeScript enums are broken:
+
+- 🚫 **Confusing syntax** that doesn't look like JavaScript
+- 🔄 **JavaScript incompatible** - breaks existing codebases
+- 🐢 **Performance overhead** in critical applications
+- 🔍 **Debugging nightmare** with unreadable compiled output
+- ❌ **No mixed keys** - artificially limited
+- 🔒 **Type coercion bugs** that break at runtime
+
+Stop fighting TypeScript enums. Use `@ncoderz/superenum` instead.
+
+---
 
 ## Installation
 
@@ -50,6 +96,8 @@ Using unpkg CDN (ES6 IFFE module):
 
 Replace `latest` with a specific version in either of the URLs above to use a specific version.
 
+---
+
 ## Importing
 
 `@ncoderz/superenum` can be used via ES Module import, CommonJS, or as a script import directly in the browser.
@@ -64,25 +112,26 @@ const { superenum, EnumType } = require('@ncoderz/superenum');
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@ncoderz/superenum@latest/dist/browser/superenum.global.js"></script>
-<script
+<script>
   const { superenum } = window.superenum;
-
 </script>
 ```
 
+---
+
 ## Enum Declaration
 
-Enums are declared as JavaScript objects wrapped with the `superenum.fromObject(enumObject)` function.
+Enums are declared as JavaScript objects or arrays wrapped with the `superenum()` function.
 
-As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then
-the enum will be typesafe and IDE auto-completion will work.
+```ts
+superenum(enumObject | enumArray);
+```
 
-Enums can also be declared as JavaScript arrays using `superenum.fromArray(enumArray)`. These will be expanded to objects with the same keys as values, and they will behave as if they had be declared as such.
+As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then the enum will be typesafe and IDE auto-completion will work.
 
 ```ts
 // String enum
 const MyEnum = superenum({
-  // ALIAS: superenum.fromObject({
   node: 'node',
   chrome: 'chrome',
   safari: 'safari',
@@ -90,7 +139,7 @@ const MyEnum = superenum({
 type MyEnumType = EnumType<typeof MyEnum>; // Optional type declaration
 
 // Equivalent declaration using an array
-const MyEnumFromArray = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnumFromArray = superenum(['node', 'chrome', 'safari']);
 type MyEnumFromArrayType = EnumType<typeof MyEnumFromArray>; // Optional type declaration
 
 // Numeric enum
@@ -109,6 +158,8 @@ const MyMixedEnum = superenum({
 });
 type MyMixedEnumType = EnumType<typeof MyMixedEnum>; // Optional type declaration
 ```
+
+---
 
 ## Basic Usage
 
@@ -156,15 +207,16 @@ switch (value) {
 }
 ```
 
+---
+
 ## Validation
 
-Validation is a common use case when reading data from an API, file or database.
+Validation is a common use case when reading data from an API, file, or database.
 
-`@ncoderz/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
-data does not match an enum value.
+`@ncoderz/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the data does not match an enum value.
 
 ```ts
-const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnum = superenum(['node', 'chrome', 'safari']);
 
 // End enum declaration
 
@@ -178,14 +230,15 @@ const invalid2 = MyEnum.fromValue(undefined); // undefined
 const validOrDefault = MyEnum.fromValue('invalid') ?? MyEnum.node; // MyEnum.node / 'node'
 ```
 
+---
+
 ## Iteration / forEach / map / reduce
 
-It is easy to iterate the enum values, keys or entries.
+It is easy to iterate the enum values, keys, or entries.
 
 The `<enum>` itself is iterable and will iterate the values in the defined key order.
 
-The `<enum>.values()`, `<enum>.keys()`, `<enum>.entries()` functions return arrays in the defined key order which
-can be iterated, mapped, reduced, etc.
+The `<enum>.values()`, `<enum>.keys()`, `<enum>.entries()` functions return arrays in the defined key order which can be iterated, mapped, reduced, etc.
 
 ```ts
 const MyNumericEnum = superenum({
@@ -242,7 +295,10 @@ for (const value of MyNumericEnum.entries()) {
 // [ 'safari': 2 ]
 ```
 
-The order of iteration is guaranteed unless an enum key can be converted to an integer. In this case it can be guaranteed by using `superenum.fromArray()` to initialise the enum, or by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
+The order of iteration is guaranteed usually when using `superenum()` to initialise the enum.
+
+The only exception is when using an object enum, with mixed string and numeric keys. In this
+case the order can be modified by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
 
 ```ts
 // Ensure iteration order when using integer keys mixed with strings and creating
@@ -274,6 +330,8 @@ for (const value of MyMixedEnum.keys()) {
 // 2
 ```
 
+---
+
 ## Enum value from enum key
 
 There are use-cases where you might want to get an enum value from the enum key.
@@ -297,6 +355,8 @@ const nodeValue2 = MyEnum.fromKey('NoDe', {
 }); // MyEnum.node / 0
 ```
 
+---
+
 ## Enum key from enum value
 
 There are use-cases where you might want to get an enum key from the enum value. An example might be for
@@ -318,6 +378,8 @@ const nodeKey2 = MyEnum.keyFromValue(MyEnum.node); // 'node'
 const invalid = MyEnum.keyFromValue('node'); // undefined
 ```
 
+---
+
 ## Metadata
 
 Want to associate some data with a particular enum value? An example might be to store a set of description strings
@@ -326,7 +388,7 @@ against a set of keys... the possibilities are endless.
 This is possible with `<enum>.setMetadata()` and `<enum>.getMetadata()`
 
 ```ts
-const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnum = superenum(['node', 'chrome', 'safari']);
 
 MyEnum.setMetadata(MyEnum.node, 'Node.js is an open-source, cross-platform...');
 MyEnum.setMetadata(MyEnum.chrome, 'Chrome is faster than fast – it’s engine...');
@@ -339,9 +401,13 @@ const valueNode = MyEnum.fromValue('node'); // MyEnum.node / 'node'
 const desc = MyEnum.getMetadata(valueNode); // 'Node.js is an open-source, cross-platform...'
 ```
 
+---
+
 ## API
 
 [API Documentation](dist/docs/API.md)
+
+---
 
 ## Feature Comparison
 
@@ -363,6 +429,8 @@ const desc = MyEnum.getMetadata(valueNode); // 'Node.js is an open-source, cross
 | Bloat code?                                   | < 1kB                                         | Built-in                                                                           | Built-in                                                                                                                     |
 | Fast?                                         | Yes                                           | Workarounds involve looping                                                        | Workarounds involve looping                                                                                                  |
 
+---
+
 ## Limitations
 
 Enums may not use the keys:
@@ -373,9 +441,13 @@ as these clash with the extension functions.
 
 If such a key is used, it will be overwitten with the extension function.
 
+---
+
 ## License
 
-This open source software is licenced under the [BSD-2-Clause licence](https://opensource.org/licenses/BSD-2-Clause).
+This open source software is licensed under the [BSD-2-Clause license](https://opensource.org/licenses/BSD-2-Clause).
+
+---
 
 ## Alternatives
 

@@ -2,7 +2,7 @@
 
 import { describe, expect, test } from 'vitest';
 
-import { Superenum } from '../src/superenum';
+import { Superenum } from '../src';
 
 const superenumTests = (superenum: Superenum) => {
   const ENUM_OBJ1 = {
@@ -20,7 +20,7 @@ const superenumTests = (superenum: Superenum) => {
   });
   // type EnumObj1Type = EnumType<typeof EnumObj1>;
 
-  const EnumArr1 = superenum.fromArray(ENUM_ARR1);
+  const EnumArr1 = superenum(ENUM_ARR1);
   // type EnumArr1Type = EnumType<typeof EnumObj1>;
 
   describe('superenum', () => {
@@ -43,25 +43,12 @@ const superenumTests = (superenum: Superenum) => {
         expect(Enum[Symbol.iterator]).toBeDefined();
 
         // Error cases
-        expect(Enum[98]).toBe(undefined);
-        expect(Enum['somethingOther']).toBe(undefined);
+        expect(Enum[98]).toBeUndefined();
+        expect(Enum['somethingOther']).toBeUndefined();
       };
 
-      test('initialising enum from object (superenum() alias)', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-
-        test1Checks(Enum);
-      });
-
-      test('initialising enum from object (superenum.fromObject())', async () => {
-        const Enum = superenum.fromObject(ENUM_OBJ1);
-
-        test1Checks(Enum);
-      });
-
-      test('initialising enum from array (superenum.fromArray())', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1);
-
+      // test2Checks
+      const test2Checks = (Enum: any) => {
         // Expected cases
         expect(Enum.thing).toBe('thing');
         expect(Enum.other).toBe('other');
@@ -80,6 +67,30 @@ const superenumTests = (superenum: Superenum) => {
         // Error cases
         expect(Enum[98]).toBeUndefined();
         expect(Enum['something']).toBeUndefined();
+      };
+
+      test('initialising enum from object (superenum() alias)', async () => {
+        const Enum = superenum(ENUM_OBJ1);
+
+        test1Checks(Enum);
+      });
+
+      test('initialising enum from object (superenum.fromObject())', async () => {
+        const Enum = superenum.fromObject(ENUM_OBJ1);
+
+        test1Checks(Enum);
+      });
+
+      test('initialising enum from array (superenum() alias)', async () => {
+        const Enum = superenum(ENUM_ARR1);
+
+        test2Checks(Enum);
+      });
+
+      test('initialising enum from array (superenum.fromArray())', async () => {
+        const Enum = superenum.fromArray(ENUM_ARR1);
+
+        test2Checks(Enum);
       });
 
       test('initialising enum from array (superenum.fromArray()) with non-array input', async () => {

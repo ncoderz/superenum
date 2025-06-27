@@ -249,6 +249,20 @@ export interface Superenum {
   /**
    * Create a superenum from a plain JavaScript object.
    *
+   * Alias of {@link Superenum.fromArray}.
+   *
+   * @param enumeration - the plain JavaScript array to convert and enhance
+   * @param options - options for the enum enhancement
+   * @returns the plain array enum converted to a superenum
+   */
+  <V extends EnumValue, T extends ArrayEnum<V>>(
+    enumeration: T,
+    options?: EnumOptions,
+  ): Readonly<ArrayEnumToObjectEnum<T>> & EnumExtensions<EnumType<ArrayEnumToObjectEnum<T>>>;
+
+  /**
+   * Create a superenum from a plain JavaScript object.
+   *
    * The plain JavaScript object will be enhanced with {@link EnumExtensions}.
    *
    * Note: Item / iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
@@ -523,7 +537,13 @@ function fromObject(enumeration: any, options?: EnumOptions) {
   return init(options);
 }
 
-const superenum: Superenum = fromObject as any;
+const superenum: Superenum = ((enumeration: any, options?: EnumOptions) => {
+  if (Array.isArray(enumeration)) {
+    return fromArray(enumeration, options);
+  }
+  return fromObject(enumeration, options);
+}) as Superenum;
+
 superenum.fromObject = fromObject;
 superenum.fromArray = fromArray;
 
