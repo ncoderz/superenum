@@ -14,6 +14,7 @@ Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
 - [@ncoderz/superenum 🚀](#ncoderzsuperenum-)
   - [Table of Contents](#table-of-contents)
   - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
+  - [Why NOT TypeScript enums? ](#why-not-typescript-enums-)
   - [Installation](#installation)
   - [Importing](#importing)
   - [Enum Declaration](#enum-declaration)
@@ -53,6 +54,21 @@ Additionally, the library is committed to:
 - 🛠️ No dependencies
 - 📜 Permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
 - 🐛 Fixing bugs
+
+---
+
+## Why NOT TypeScript enums? ❌
+
+TypeScript enums are broken:
+
+- 🚫 **Confusing syntax** that doesn't look like JavaScript
+- 🔄 **JavaScript incompatible** - breaks existing codebases
+- 🐢 **Performance overhead** in critical applications
+- 🔍 **Debugging nightmare** with unreadable compiled output
+- ❌ **No mixed keys** - artificially limited
+- 🔒 **Type coercion bugs** that break at runtime
+
+Stop fighting TypeScript enums. Use `@ncoderz/superenum` instead.
 
 ---
 
