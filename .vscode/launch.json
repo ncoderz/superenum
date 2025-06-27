@@ -7,34 +7,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Jest: ALL  Tests",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": ["-i"],
-      // "preLaunchTask": "build",
-      "console": "integratedTerminal",
-      // "disableOptimisticBPs": true,
-      // "internalConsoleOptions": "openOnSessionStart",
-      // "outFiles": ["${workspaceRoot}/dist/**/*"],
-      // "envFile": "${workspaceRoot}/.env",
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      }
+      "name": "Vitest: ALL Tests",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run"],
+      "console": "integratedTerminal"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Jest: Current file",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": ["${fileBasenameNoExtension}"],
-      // "preLaunchTask": "build",
-      "console": "integratedTerminal",
-      // "disableOptimisticBPs": true,
-      // "internalConsoleOptions": "openOnSessionStart",
-      // "outFiles": ["${workspaceRoot}/dist/**/*"],
-      // "envFile": "${workspaceRoot}/.env",
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      }
+      "name": "Vitest: Current file",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${fileBasenameNoExtension}"],
+      "console": "integratedTerminal"
     }
   ]
 }

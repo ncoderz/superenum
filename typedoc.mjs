@@ -2,9 +2,9 @@
 /**
  * @type {import('typedoc').TypeDocOptions}
  */
-module.exports = {
+export default {
   entryPoints: ['src/superenum.ts'],
-  out: 'docs',
+  out: 'dist/docs',
   plugin: ['typedoc-plugin-markdown'],
   // entryDocument: 'API.md',
   // project: 'src/doc/API.md',

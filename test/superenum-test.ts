@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { describe, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 
 import { Superenum } from '../src/superenum';
 
@@ -102,22 +102,22 @@ const superenumTests = (superenum: Superenum) => {
     });
 
     describe('enum should be read-only', () => {
-      test.failing('<enum>', async () => {
+      test.fails('<enum>', async () => {
         const Enum = superenum(ENUM_OBJ1);
         (Enum as any)[99] = 'Should Fail';
       });
 
-      test.failing('<enum>.values() ', async () => {
+      test.fails('<enum>.values() ', async () => {
         const Enum = superenum(ENUM_OBJ1);
         (Enum.values() as any[]).push('Should fail');
       });
 
-      test.failing('<enum>.keys() ', async () => {
+      test.fails('<enum>.keys() ', async () => {
         const Enum = superenum(ENUM_OBJ1);
         (Enum.keys() as any[]).push('Should fail');
       });
 
-      test.failing('<enum>.entries() ', async () => {
+      test.fails('<enum>.entries() ', async () => {
         const Enum = superenum(ENUM_OBJ1);
         (Enum.entries() as any[]).push('Should fail');
       });

@@ -1,57 +1,37 @@
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
-import tsParser from '@typescript-eslint/parser';
-import arca from 'eslint-plugin-arca';
-import json from 'eslint-plugin-json';
-import prettier from 'eslint-plugin-prettier';
+import jsonPlugin from 'eslint-plugin-json';
+import prettierPlugin from 'eslint-plugin-prettier';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import tseslint from 'typescript-eslint';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-// eslint-disable-next-line arca/no-default-export
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   {
-    ignores: ['**/.yarn', '**/node_modules', '**/dist', '**/docs', '**/coverage'],
+    ignores: ['**/node_modules', '**/dist', '**/docs', '**/coverage', '**/*.d.ts'],
   },
-  ...compat.extends('eslint:recommended', 'plugin:prettier/recommended', 'prettier'),
+
+  // Base JS rules
+  js.configs.recommended,
+
+  // Global config for both JS and TS
   {
     plugins: {
-      prettier,
-      json,
-      arca,
+      prettier: prettierPlugin,
+      json: jsonPlugin,
+      'simple-import-sort': simpleImportSort,
     },
-
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
       },
-
       ecmaVersion: 2021,
       sourceType: 'module',
-
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: false,
-        },
-      },
     },
-
-    settings: {
-      react: {
-        version: '16',
-      },
-    },
-
     rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
       'no-unused-vars': [
         1,
         {
@@ -60,41 +40,25 @@ export default [
           caughtErrors: 'none',
         },
       ],
-
-      'arca/import-ordering': [
-        2,
-        {
-          hoistOneliners: true,
-        },
-      ],
-
-      'arca/newline-after-import-section': [
-        2,
-        {
-          enableOnelinerSections: true,
-        },
-      ],
-
-      'arca/no-default-export': [2],
+      'prettier/prettier': 'error',
     },
   },
-  ...compat.extends('plugin:@typescript-eslint/recommended').map((config) => ({
+
+  // TypeScript rules
+  ...tseslint.configs.recommended.map((config) => ({
     ...config,
     files: ['**/*.ts', '**/*.tsx'],
   })),
+
+  // TS-specific overrides
   {
     files: ['**/*.ts', '**/*.tsx'],
-
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 5,
-      sourceType: 'script',
-
+      parser: tseslint.parser,
       parserOptions: {
-        project: ['tsconfig.eslint.json'],
+        project: ['./tsconfig.eslint.json'],
       },
     },
-
     rules: {
       '@typescript-eslint/no-unused-vars': [
         1,
@@ -104,18 +68,13 @@ export default [
           caughtErrors: 'none',
         },
       ],
-
-      '@typescript-eslint/no-unused-expressions': 0,
-
+      '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-empty-object-type': [
         2,
         {
           allowInterfaces: 'always',
-          // allowObjectTypes?: 'always' | 'never';
-          // allowWithName?: string;
         },
       ],
-
       '@typescript-eslint/no-inferrable-types': [
         1,
         {
@@ -123,8 +82,7 @@ export default [
           ignoreProperties: true,
         },
       ],
-
-      '@typescript-eslint/no-floating-promises': ['error'],
+      '@typescript-eslint/no-floating-promises': 'error',
     },
   },
 ];

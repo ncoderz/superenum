@@ -1,16 +1,15 @@
-@ncoderz/superenum
-================
+# @ncoderz/superenum
 
 ![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
 
 Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript.
-
 
 ## Why @ncoderz/superenum?
 
 The standard TypeScript enum implementation is over-complicated, missing basic features, and is not easily compatible with standard JavaScript enums.
 
 @ncoderz/superenum provides an alternative that is:
+
 - an extension of standard JavaScript object enums
 - simple to use
 - type-safe
@@ -21,21 +20,38 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 - has a very small code footprint (< 1kB minified + gzipped)
 
 Additionally, the library is committed to:
+
 - an API that will always remain backwards compatible
 - no dependencies
 - permissive license ([BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause))
 - fixing bugs
 
-
-
 ## Installation
 
 ```sh
+npm install @ncoderz/superenum
+pnpm install @ncoderz/superenum
 yarn add @ncoderz/superenum
-npm install --save @ncoderz/superenum
+deno add @ncoderz/superenum
+bun add @ncoderz/superenum
 ```
 
+Using jsDelivr CDN (ES6 IFFE module):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@ncoderz/superenum@latest/dist/browser/superenum.global.js"></script>
+```
+
+Using unpkg CDN (ES6 IFFE module):
+
+```html
+<script src="https://unpkg.com/@ncoderz/superenum@latest/dist/browser/superenum.global.js"></script>
+```
+
+Replace `latest` with a specific version in either of the URLs above to use a specific version.
+
 ## Importing
+
 `@ncoderz/superenum` can be used via ES Module import, CommonJS, or as a script import directly in the browser.
 
 ```ts
@@ -47,7 +63,7 @@ const { superenum, EnumType } = require('@ncoderz/superenum');
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@ncoderz/superenum/dist/browser/superenum.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ncoderz/superenum@latest/dist/browser/superenum.global.js"></script>
 <script
   const { superenum } = window.superenum;
 
@@ -55,6 +71,7 @@ const { superenum, EnumType } = require('@ncoderz/superenum');
 ```
 
 ## Enum Declaration
+
 Enums are declared as JavaScript objects wrapped with the `superenum.fromObject(enumObject)` function.
 
 As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then
@@ -64,7 +81,8 @@ Enums can also be declared as JavaScript arrays using `superenum.fromArray(enumA
 
 ```ts
 // String enum
-const MyEnum = superenum({ // ALIAS: superenum.fromObject({
+const MyEnum = superenum({
+  // ALIAS: superenum.fromObject({
   node: 'node',
   chrome: 'chrome',
   safari: 'safari',
@@ -72,12 +90,8 @@ const MyEnum = superenum({ // ALIAS: superenum.fromObject({
 type MyEnumType = EnumType<typeof MyEnum>; // Optional type declaration
 
 // Equivalent declaration using an array
-const MyEnumFromArray = superenum.fromArray([
-  'node',
-  'chrome',
-  'safari',
-]);
-type MyEnumFromArrayType = EnumType<typeof MyEnumFromArray>  // Optional type declaration
+const MyEnumFromArray = superenum.fromArray(['node', 'chrome', 'safari']);
+type MyEnumFromArrayType = EnumType<typeof MyEnumFromArray>; // Optional type declaration
 
 // Numeric enum
 const MyNumericEnum = superenum({
@@ -85,7 +99,7 @@ const MyNumericEnum = superenum({
   chrome: 1,
   safari: 2,
 });
-type MyNumericEnumType = EnumType<typeof MyNumericEnum>  // Optional type declaration
+type MyNumericEnumType = EnumType<typeof MyNumericEnum>; // Optional type declaration
 
 // Mixed enum with different values as string keys
 const MyMixedEnum = superenum({
@@ -93,7 +107,7 @@ const MyMixedEnum = superenum({
   chrome: 1,
   safari: 'MacOSSafari',
 });
-type MyMixedEnumType = EnumType<typeof MyMixedEnum> // Optional type declaration
+type MyMixedEnumType = EnumType<typeof MyMixedEnum>; // Optional type declaration
 ```
 
 ## Basic Usage
@@ -111,63 +125,61 @@ type MyEnumType = EnumType<typeof MyEnum>;
 // Basic variable and comparison
 const value: MyEnumType = MyEnum.node;
 
-console.assert(value === MyEnum.node)    // true
-console.assert(value === 'node')         // true
-console.assert(value === MyEnum.chrome)  // false
-console.assert(value === 'firefox')      // false
+console.assert(value === MyEnum.node); // true
+console.assert(value === 'node'); // true
+console.assert(value === MyEnum.chrome); // false
+console.assert(value === 'firefox'); // false
 
 // Switch statements
 switch (value) {
-  case MyEnum.node:        // true
+  case MyEnum.node: // true
     break;
-  case MyEnum.chrome:      // false
+  case MyEnum.chrome: // false
     break;
-  case MyEnum.safari:      // false
+  case MyEnum.safari: // false
     break;
   default:
 }
 
 switch (value) {
-  case 'node':             // true
+  case 'node': // true
     break;
-  case 'chrome':           // false
+  case 'chrome': // false
     break;
-  case 'MacOSSafari':      // false
+  case 'MacOSSafari': // false
     break;
-  case 'safari':           // TS compiler error
+  case 'safari': // TS compiler error
     break;
-  case 'something else':   // TS compiler error
+  case 'something else': // TS compiler error
     break;
   default:
 }
 ```
 
 ## Validation
+
 Validation is a common use case when reading data from an API, file or database.
 
 `@ncoderz/superenum` makes this easy with `<enum>.fromValue()` which returns a typed enum or undefined if the
 data does not match an enum value.
 
 ```ts
-const MyEnum = superenum.fromArray([
-  'node',
-  'chrome',
-  'safari',
-]);
+const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
 
 // End enum declaration
 
 // Input values could come from external data / API
-const valueNode = MyEnum.fromValue('node');         // MyEnum.node / 'node'
-const valueChrome = MyEnum.fromValue('chrome');     // MyEnum.chrome / 'chrome'
-const invalid = MyEnum.fromValue('surfari');        // undefined
-const invalid2 = MyEnum.fromValue(undefined);       // undefined
+const valueNode = MyEnum.fromValue('node'); // MyEnum.node / 'node'
+const valueChrome = MyEnum.fromValue('chrome'); // MyEnum.chrome / 'chrome'
+const invalid = MyEnum.fromValue('surfari'); // undefined
+const invalid2 = MyEnum.fromValue(undefined); // undefined
 
 // Validate with default of MyEnum.node
-const validOrDefault = MyEnum.fromValue('invalid') ?? MyEnum.node;  // MyEnum.node / 'node'
+const validOrDefault = MyEnum.fromValue('invalid') ?? MyEnum.node; // MyEnum.node / 'node'
 ```
 
 ## Iteration / forEach / map / reduce
+
 It is easy to iterate the enum values, keys or entries.
 
 The `<enum>` itself is iterable and will iterate the values in the defined key order.
@@ -186,28 +198,28 @@ const MyNumericEnum = superenum({
 
 // Iterate enum values
 for (const value of MyNumericEnum) {
-  console.log(value)
+  console.log(value);
 }
 // 0
 // 1
 // 2
 
 for (const value of MyNumericEnum.values()) {
-  console.log(value)
+  console.log(value);
 }
 // 0
 // 1
 // 2
 
 MyNumericEnum.values().forEach((value) => {
-  console.log(value)
+  console.log(value);
 });
 // 0
 // 1
 // 2
 
 MyNumericEnum.values().map((value) => {
-  console.log(value + 1)
+  console.log(value + 1);
 });
 // 1
 // 2
@@ -215,7 +227,7 @@ MyNumericEnum.values().map((value) => {
 
 // Iterate enum keys (forEach, map, etc also work on keys())
 for (const value of MyNumericEnum.keys()) {
-  console.log(value)
+  console.log(value);
 }
 // node
 // chrome
@@ -223,7 +235,7 @@ for (const value of MyNumericEnum.keys()) {
 
 // Iterate enum entries (forEach, map, etc also work on entries())
 for (const value of MyNumericEnum.entries()) {
-  console.log(value)
+  console.log(value);
 }
 // [ 'node', 0 ]
 // [ 'chrome': 1 ]
@@ -240,28 +252,30 @@ The order of iteration is guaranteed unless an enum key can be converted to an i
 // by the JavaScript engine and would probably be:
 // 1, 2, node, safari
 
-const MyMixedEnum = superenum({
-  node: 0,
-  1: 1,
-  safari: 2,
-  '2': 'two'
-}, {
-  iterationKeys: ['node', 1, 'safari', '2']
-});
+const MyMixedEnum = superenum(
+  {
+    node: 0,
+    1: 1,
+    safari: 2,
+    '2': 'two',
+  },
+  {
+    iterationKeys: ['node', 1, 'safari', '2'],
+  },
+);
 
 // Iterate enum keys
 for (const value of MyMixedEnum.keys()) {
-  console.log(value)
+  console.log(value);
 }
 // node
 // 1
 // safari
 // 2
-
 ```
 
-
 ## Enum value from enum key
+
 There are use-cases where you might want to get an enum value from the enum key.
 An example might be where the key is stored in a configuration file, and matched to a value in code.
 
@@ -276,15 +290,15 @@ const MyEnum = superenum({
 
 // End enum declaration
 
-const nodeValue = MyEnum.fromKey('node');       // MyEnum.node / 0
-const invalidValue = MyEnum.fromKey('NoDe');    // undefined
+const nodeValue = MyEnum.fromKey('node'); // MyEnum.node / 0
+const invalidValue = MyEnum.fromKey('NoDe'); // undefined
 const nodeValue2 = MyEnum.fromKey('NoDe', {
   ignoreCase: true,
-});                                             // MyEnum.node / 0
-
+}); // MyEnum.node / 0
 ```
 
 ## Enum key from enum value
+
 There are use-cases where you might want to get an enum key from the enum value. An example might be for
 logging purposes.
 
@@ -299,23 +313,20 @@ const MyEnum = superenum({
 
 // End enum declaration
 
-const nodeKey = MyEnum.keyFromValue('NodeJS');        // 'node'
-const nodeKey2 = MyEnum.keyFromValue(MyEnum.node);  // 'node'
-const invalid = MyEnum.keyFromValue('node');          // undefined
+const nodeKey = MyEnum.keyFromValue('NodeJS'); // 'node'
+const nodeKey2 = MyEnum.keyFromValue(MyEnum.node); // 'node'
+const invalid = MyEnum.keyFromValue('node'); // undefined
 ```
 
 ## Metadata
+
 Want to associate some data with a particular enum value? An example might be to store a set of description strings
 against a set of keys... the possibilities are endless.
 
-This is possible with `<enum>.setMetadata()` and  `<enum>.getMetadata()`
+This is possible with `<enum>.setMetadata()` and `<enum>.getMetadata()`
 
 ```ts
-const MyEnum = superenum.fromArray([
-  'node',
-  'chrome',
-  'safari',
-]);
+const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
 
 MyEnum.setMetadata(MyEnum.node, 'Node.js is an open-source, cross-platform...');
 MyEnum.setMetadata(MyEnum.chrome, 'Chrome is faster than fast – it’s engine...');
@@ -324,35 +335,33 @@ MyEnum.setMetadata(MyEnum.safari, 'Safari is the best way to experience the...')
 // End enum declaration
 
 // Input value could come from external data / API
-const valueNode = MyEnum.fromValue('node');   // MyEnum.node / 'node'
-const desc = MyEnum.getMetadata(valueNode);   // 'Node.js is an open-source, cross-platform...'
-
+const valueNode = MyEnum.fromValue('node'); // MyEnum.node / 'node'
+const desc = MyEnum.getMetadata(valueNode); // 'Node.js is an open-source, cross-platform...'
 ```
 
 ## API
 
-[API Documentation](docs/API.md)
+[API Documentation](dist/docs/API.md)
 
 ## Feature Comparison
 
-| Feature | `@ncoderz/enum` (numeric and string) | TypeScript `enum` (numeric) | TypeScript `enum` (string) |
-| ------- | ------------------------------------- | --------------------------- | -------------------------- |
-| Compatible with simple JS enums | Yes | X | X |
-| Mixed numeric and string keys | Yes | X | X |
-| Compare value | `value === Enum.key` | `Enum[value] === Enum[Enum.key]` | `value === Enum.key`
-| Validate external data to valid typed enum | `const val: EnumType = Enum.fromValue(value)` | `const val: Enum = ((Enum[value] === Enum[Enum.key]) ? value : undefined) as Enum` | `const val: Enum = ((value === Enum.key) ? value : undefined) as Enum`
-| Value from key | `const val: EnumType = Enum.fromKey(key)` | `Enum[key]` - only if key is const; not very useful | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (k === key) return v; }, '')` - not typed (is string) |
-| Value from key safe? | Safe | No, will return key for invalid input which happens to be a valid value | Safe, but see above! |
-| Key from value | `Enum.keyFromValue(value)` | `Enum[value]` | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (v === value) return k; }, '')` |
-| Key from value safe? | Safe | No, will return value for invalid input which happens to be a valid key | Safe, but see above! |
-| Iterate values? | `Enum.values()` | `Object.values(Enum).filter((v) => isNaN(Number(v))` | `Object.values(Enum)`
-| Iterate keys? | `Enum.keys()` | `Object.keys(Enum).filter((k) => !isNaN(Number(k))` | `Object.keys(Enum)` |
-| Iterate entries? | `Enum.entries()` | `Object.entries(Enum).filter(([k,v]) => isNaN(Number(k)))` | `Object.entries(Enum)` |
-| Associate metadata with an enum value | Yes | X | X |
-| Declare just first number value and increment | X | Yes | N/A |
-| Bloat code? | < 1kB | Built-in | Built-in |
-| Fast? | Yes | Workarounds involve looping | Workarounds involve looping |
-
+| Feature                                       | `@ncoderz/enum` (numeric and string)          | TypeScript `enum` (numeric)                                                        | TypeScript `enum` (string)                                                                                                   |
+| --------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Compatible with simple JS enums               | Yes                                           | X                                                                                  | X                                                                                                                            |
+| Mixed numeric and string keys                 | Yes                                           | X                                                                                  | X                                                                                                                            |
+| Compare value                                 | `value === Enum.key`                          | `Enum[value] === Enum[Enum.key]`                                                   | `value === Enum.key`                                                                                                         |
+| Validate external data to valid typed enum    | `const val: EnumType = Enum.fromValue(value)` | `const val: Enum = ((Enum[value] === Enum[Enum.key]) ? value : undefined) as Enum` | `const val: Enum = ((value === Enum.key) ? value : undefined) as Enum`                                                       |
+| Value from key                                | `const val: EnumType = Enum.fromKey(key)`     | `Enum[key]` - only if key is const; not very useful                                | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (k === key) return v; }, '')` - not typed (is string) |
+| Value from key safe?                          | Safe                                          | No, will return key for invalid input which happens to be a valid value            | Safe, but see above!                                                                                                         |
+| Key from value                                | `Enum.keyFromValue(value)`                    | `Enum[value]`                                                                      | `Object.entries(Enum).reduce((acc, [k,v]) => { if (acc) return acc; if (v === value) return k; }, '')`                       |
+| Key from value safe?                          | Safe                                          | No, will return value for invalid input which happens to be a valid key            | Safe, but see above!                                                                                                         |
+| Iterate values?                               | `Enum.values()`                               | `Object.values(Enum).filter((v) => isNaN(Number(v))`                               | `Object.values(Enum)`                                                                                                        |
+| Iterate keys?                                 | `Enum.keys()`                                 | `Object.keys(Enum).filter((k) => !isNaN(Number(k))`                                | `Object.keys(Enum)`                                                                                                          |
+| Iterate entries?                              | `Enum.entries()`                              | `Object.entries(Enum).filter(([k,v]) => isNaN(Number(k)))`                         | `Object.entries(Enum)`                                                                                                       |
+| Associate metadata with an enum value         | Yes                                           | X                                                                                  | X                                                                                                                            |
+| Declare just first number value and increment | X                                             | Yes                                                                                | N/A                                                                                                                          |
+| Bloat code?                                   | < 1kB                                         | Built-in                                                                           | Built-in                                                                                                                     |
+| Fast?                                         | Yes                                           | Workarounds involve looping                                                        | Workarounds involve looping                                                                                                  |
 
 ## Limitations
 
@@ -371,4 +380,3 @@ This open source software is licenced under the [BSD-2-Clause licence](https://o
 ## Alternatives
 
 - [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html)
-

@@ -141,7 +141,10 @@ export interface EnumExtensions<V extends EnumValue> {
    * @param options - options for the function
    * @returns the enum key represented by the value, or undefined if the value cannot be matched to the enum
    */
-  keyFromValue(value: unknown | null | undefined, options?: KeyFromValueOptions): string | undefined;
+  keyFromValue(
+    value: unknown | null | undefined,
+    options?: KeyFromValueOptions,
+  ): string | undefined;
 
   /**
    * Store metadata for an enum value. If value is not valid, the metadata will not be stored.

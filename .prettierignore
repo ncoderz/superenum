@@ -1,6 +1,5 @@
 node_modules
-lib
-.pnp.*
-.yarn/
-dist/
-docs/
+*.lock
+dist
+docs
+coverage
