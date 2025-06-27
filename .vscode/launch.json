@@ -7,6 +7,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "bin/dev.ts",
+      "runtimeExecutable": "tsx",
+      "args": ["bin/dev.ts"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Vitest: ALL Tests",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "args": ["run"],

@@ -30,6 +30,4 @@
     "pwa-node": "${workspaceFolder}/.vscode/mise-tools/node"
   },
   "python.defaultInterpreterPath": "${workspaceFolder}/.vscode/mise-tools/python"
-  // "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
-  // "jest.jestCommandLine": "yarn test"
 }

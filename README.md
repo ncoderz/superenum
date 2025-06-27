@@ -13,10 +13,11 @@ The standard TypeScript enum implementation is over-complicated, missing basic f
 - an extension of standard JavaScript object enums
 - simple to use
 - type-safe
-- supports IDE autocompletion
-- iteration order can be guaranteed
-- is interoperable with standard JavaScript enums
-- works in node or the browser
+- full IDE autocompletion
+- iteration order guaranteed
+- input validation
+- interoperable with standard JavaScript enums
+- works in NodeJS, Deno, Bun or the browser
 - has a very small code footprint (< 1kB minified + gzipped)
 
 Additionally, the library is committed to:
@@ -72,17 +73,17 @@ const { superenum, EnumType } = require('@ncoderz/superenum');
 
 ## Enum Declaration
 
-Enums are declared as JavaScript objects wrapped with the `superenum.fromObject(enumObject)` function.
+Enums are declared as JavaScript objects or arrays wrapped with the `superenum()` function.
 
-As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then
-the enum will be typesafe and IDE auto-completion will work.
+```
+superenum(enumObject|enumArray)
+```
 
-Enums can also be declared as JavaScript arrays using `superenum.fromArray(enumArray)`. These will be expanded to objects with the same keys as values, and they will behave as if they had be declared as such.
+As long as the keys and values of the object are constants, or TypeScript can infer a constant value, then the enum will be typesafe and IDE auto-completion will work.
 
 ```ts
 // String enum
 const MyEnum = superenum({
-  // ALIAS: superenum.fromObject({
   node: 'node',
   chrome: 'chrome',
   safari: 'safari',
@@ -90,7 +91,7 @@ const MyEnum = superenum({
 type MyEnumType = EnumType<typeof MyEnum>; // Optional type declaration
 
 // Equivalent declaration using an array
-const MyEnumFromArray = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnumFromArray = superenum(['node', 'chrome', 'safari']);
 type MyEnumFromArrayType = EnumType<typeof MyEnumFromArray>; // Optional type declaration
 
 // Numeric enum
@@ -164,7 +165,7 @@ Validation is a common use case when reading data from an API, file or database.
 data does not match an enum value.
 
 ```ts
-const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnum = superenum(['node', 'chrome', 'safari']);
 
 // End enum declaration
 
@@ -242,7 +243,10 @@ for (const value of MyNumericEnum.entries()) {
 // [ 'safari': 2 ]
 ```
 
-The order of iteration is guaranteed unless an enum key can be converted to an integer. In this case it can be guaranteed by using `superenum.fromArray()` to initialise the enum, or by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
+The order of iteration is guaranteed usually when using `superenum()` to initialise the enum.
+
+The only exception is when using an object enum, with mixed string and numeric keys. In this
+case the order can be modified by setting `EnumOptions.iterationKeys` to represent the desired iteration order.
 
 ```ts
 // Ensure iteration order when using integer keys mixed with strings and creating
@@ -326,7 +330,7 @@ against a set of keys... the possibilities are endless.
 This is possible with `<enum>.setMetadata()` and `<enum>.getMetadata()`
 
 ```ts
-const MyEnum = superenum.fromArray(['node', 'chrome', 'safari']);
+const MyEnum = superenum(['node', 'chrome', 'safari']);
 
 MyEnum.setMetadata(MyEnum.node, 'Node.js is an open-source, cross-platform...');
 MyEnum.setMetadata(MyEnum.chrome, 'Chrome is faster than fast – it’s engine...');
