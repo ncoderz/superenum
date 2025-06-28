@@ -34,6 +34,26 @@ export interface KeyFromValueOptions {
 }
 
 /**
+ * Options for the {@link EnumExtensions.hasKey} function
+ */
+export interface HasKeyOptions {
+  /**
+   * Ignore case when getting the enum key from the value
+   */
+  ignoreCase?: boolean;
+}
+
+/**
+ * Options for the {@link EnumExtensions.hasValue} function
+ */
+export interface HasValueOptions {
+  /**
+   * Ignore case when getting the enum key from the value
+   */
+  ignoreCase?: boolean;
+}
+
+/**
  * Options for the {@link EnumExtensions.setMetadata} function
  */
 export interface SetMetadataOptions {}
@@ -51,11 +71,11 @@ export interface EnumExtensions<
   /**
    * Validate an enum value, returning the value if valid, otherwise undefined.
    *
-   * Since a superenum is just the value, then all this function does is check to see if the value exists, and if
-   * so returns it, otherwise it returns undefined.
+   * Since an enum value is just the value, then all this function does is check to see if the value exists on the enum, and if
+   * so returns it cast to the enum type, otherwise it returns undefined.
    *
-   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
-   * {@link FromValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   * Note: If the enum has duplicate values when lower-cased and
+   * {@link FromValueOptions.ignoreCase} is true, the data returned when when values clash will be indeterminate.
    *
    * @param value - the enum value to validate
    * @param options - options for the function
@@ -66,7 +86,7 @@ export interface EnumExtensions<
   /**
    * Get an enum value from its key, returning the value if key valid, otherwise undefined.
    *
-   * Note: If the enum has duplicate keys when lower-cased if
+   * Note: If the enum has duplicate keys when lower-cased and
    * {@link FromKeyOptions.ignoreCase} is true, the data returned when when keys clash will be indeterminate.
    *
    * @param key - the enum key to convert to enum value
@@ -81,8 +101,8 @@ export interface EnumExtensions<
   /**
    * Get an enum key from its value, returning the key if value valid, otherwise undefined.
    *
-   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
-   * {@link KeyFromValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   * Note: If the enum has duplicate values when lower-cased and
+   * {@link FromValueOptions.ignoreCase} is true, the data returned when when values clash will be indeterminate.
    *
    * @param value - the enum value to convert to enum key
    * @param options - options for the function
@@ -94,32 +114,28 @@ export interface EnumExtensions<
   ): string | undefined;
 
   /**
-   * Store metadata for an enum value. If value is not valid, the metadata will not be stored.
+   * Check if an enum has a value, returning true if yes, otherwise false.
    *
-   * @param value - the value for which to store metadata
-   * @param metadata - the metadata to store
+   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
+   * {@link HasValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   *
+   * @param value - the enum value to check
    * @param options - options for the function
-   * @returns true if the metadata was associated with the value, otherwise false
+   * @returns true if the enum has the value, otherwise false
    */
-  setMetadata<M>(
-    value: EnumType<T> | null | undefined,
-    metadata: M,
-    options?: SetMetadataOptions,
-  ): boolean;
+  hasValue(value: EnumType<T> | null | undefined, options?: HasValueOptions): boolean;
 
   /**
-   * Retrieve metadata that was stored against an enum value.
+   * Check if an enum has a key, returning true if yes, otherwise false.
    *
-   * If no metadata is found, or the value is invalid, undefined will be returned.
+   * Note: If the enum has duplicate keys when lower-cased and
+   * {@link FromKeyOptions.ignoreCase} is true, the data returned when when keys clash will be indeterminate.
    *
-   * @param value - the value for which to retrieve metadata
+   * @param key - the enum key to check
    * @param options - options for the function
-   * @returns the metadata associated with the enum value
+   * @returns true if the enum has the key, otherwise false
    */
-  getMetadata<M>(
-    value: EnumType<T> | null | undefined,
-    options?: GetMetadataOptions,
-  ): M | undefined;
+  hasKey(key: EnumKey | null | undefined, options?: HasKeyOptions): boolean;
 
   /**
    * Get an array of the enum values.
@@ -195,7 +211,6 @@ interface Cache {
   valueKeyMap: Record<EnumValue, EnumKey>;
   lcKeyValueMap: Record<EnumKey, EnumValue>;
   lcValueKeyMap: Record<EnumValue, EnumKey>;
-  metadataMap: Record<EnumValue, unknown>;
   keys: EnumKey[];
   values: (EnumValue | undefined)[];
   entries: [EnumKey, EnumValue | undefined][];
@@ -217,7 +232,6 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
       valueKeyMap: Object_create(null),
       lcKeyValueMap: Object_create(null),
       lcValueKeyMap: Object_create(null),
-      metadataMap: Object_create(null),
       keys: [],
       values: [],
       entries: [],
@@ -266,7 +280,7 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
     return value;
   }
 
-  function fromKey(key: EnumKey | number, options?: FromKeyOptions) {
+  function fromKey(key: EnumKey, options?: FromKeyOptions) {
     const { keyValueMap, lcKeyValueMap } = cache;
     if (options?.ignoreCase && typeof key === 'string') {
       return lcKeyValueMap[key.toLowerCase()];
@@ -282,17 +296,12 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
     return valueKeyMap[value];
   }
 
-  function setMetadata(value: EnumValue, metadata: unknown, options?: SetMetadataOptions) {
-    const { metadataMap } = cache;
-    options;
-    const v = fromValue(value);
-    if (v != null) metadataMap[v] = metadata;
+  function hasKey(key: EnumKey, options?: HasKeyOptions) {
+    return fromKey(key, options) != null;
   }
 
-  function getMetadata(value: EnumValue, options?: GetMetadataOptions) {
-    const { metadataMap } = cache;
-    options;
-    return metadataMap[value];
+  function hasValue(value: EnumValue, options?: HasValueOptions) {
+    return fromValue(value, options) != null;
   }
 
   function* valueIterator() {
@@ -305,8 +314,8 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
     fromValue,
     fromKey,
     keyFromValue,
-    setMetadata,
-    getMetadata,
+    hasKey,
+    hasValue,
     keys: () => cache.keys,
     values: () => cache.values,
     entries: () => cache.entries,
