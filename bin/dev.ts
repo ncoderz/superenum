@@ -1,11 +1,27 @@
-import { EnumType, superenum } from '../src';
+import { Enum, EnumType } from '../src';
 
-enum Enum1 {
-  ONE = 1,
-  TWO = 'two',
-}
+// enum Enum1 {
+//   ONE = 1,
+//   TWO = 'two',
+// }
 
-const test: Enum1 = Enum1.ONE; // This should be valid
+const Enum1 = Enum.fromArray(['ONE', 'TWO']);
+type Enum1 = EnumType<typeof Enum1>;
+
+const test = Enum1.ONE;
+test;
+
+Enum(Enum1).setAllLabels({
+  [Enum1.ONE]: { en: 'One', es: 'Uno' },
+  [Enum1.TWO]: { en: 'Two', es: 'Dos' },
+});
+
+const values = Enum(Enum1).values();
+const keys = Enum(Enum1).keys();
+const entries = Enum(Enum1).entries();
+console.log('Values:', values);
+console.log('Keys:', keys);
+console.log('Entries:', entries);
 
 function logEnum1(obj: typeof Enum1, one: Enum1, two: Enum1, one2: Enum1, two2: Enum1) {
   console.log('--- Enum1 ---');
@@ -14,20 +30,24 @@ function logEnum1(obj: typeof Enum1, one: Enum1, two: Enum1, one2: Enum1, two2: 
   console.log('Two:', two);
   console.log('One2:', one2);
   console.log('Two2:', two2);
-  console.log('Symbol.iterator:', superenum(obj)[Symbol.iterator]);
-  console.log('Keys:', superenum(obj).keys());
-  console.log('Values:', superenum(obj).values());
-  console.log('Entries:', superenum(obj).entries());
+  console.log('Labels for One:', Enum(obj).getLabels(one));
+  console.log('Labels for Two:', Enum(obj).getLabels(two));
+  console.log('Label for One:', Enum(obj).getLabel(one, 'en'));
+  console.log('Label for Two:', Enum(obj).getLabel(two, 'en'));
+  console.log('Label for One (es):', Enum(obj).getLabel(one, 'es'));
+  console.log('Label for Two (es):', Enum(obj).getLabel(two, 'es'));
+  console.log('Symbol.iterator:', Enum(obj)[Symbol.iterator]);
+  console.log('Keys:', Enum(obj).keys());
+  console.log('Values:', Enum(obj).values());
+  console.log('Entries:', Enum(obj).entries());
 
-  for (const v of superenum(obj)) {
+  for (const v of Enum(obj)) {
     console.log('Value from iterator:', v);
   }
 }
-const one2: Enum1 = superenum(Enum1).fromValue('two') ?? Enum1.ONE; // Bad
+const one2: Enum1 = Enum(Enum1).fromValue('two') ?? Enum1.ONE; // Bad
 const two2: Enum1 = Enum1.TWO; // OK
 logEnum1(Enum1, Enum1.ONE, Enum1.TWO, one2, two2);
-
-// import { type EnumType, superenum } from '../src';
 
 // const TestEnumObj = superenum({
 //   ONE: 'one',

@@ -2,9 +2,9 @@
 
 import { describe, expect, test } from 'vitest';
 
-import { Superenum } from '../src';
+import { type Superenum } from '../src';
 
-const superenumTests = (superenum: Superenum) => {
+const superenumTests = (superenum: typeof Enum) => {
   const ENUM_OBJ1 = {
     thing: 'thing',
     other: 'other',

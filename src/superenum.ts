@@ -4,7 +4,7 @@
 export type EnumType<T> = T[keyof T];
 
 /**
- * Options for the {@link EnumExtensions.fromValue} function
+ * Options for the {@link Superenum.fromValue} function
  */
 export interface FromValueOptions {
   /**
@@ -14,7 +14,7 @@ export interface FromValueOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.fromKey} function
+ * Options for the {@link Superenum.fromKey} function
  */
 export interface FromKeyOptions {
   /**
@@ -24,7 +24,7 @@ export interface FromKeyOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.keyFromValue} function
+ * Options for the {@link Superenum.keyFromValue} function
  */
 export interface KeyFromValueOptions {
   /**
@@ -34,7 +34,7 @@ export interface KeyFromValueOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.hasKey} function
+ * Options for the {@link Superenum.hasKey} function
  */
 export interface HasKeyOptions {
   /**
@@ -44,7 +44,7 @@ export interface HasKeyOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.hasValue} function
+ * Options for the {@link Superenum.hasValue} function
  */
 export interface HasValueOptions {
   /**
@@ -54,22 +54,27 @@ export interface HasValueOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.setMetadata} function
+ * i18n labels for enum values.
  */
-export interface SetMetadataOptions {}
+export interface Labels {
+  [key: string]: string;
+}
 
 /**
- * Options for the {@link EnumExtensions.getMetadata} function
+ * Array Enum declaration
  */
-export interface GetMetadataOptions {}
+export type ArrayEnum<KV extends EnumKey> = ReadonlyArray<KV>;
 
-export interface EnumExtensions<
-  K extends EnumKey,
-  V extends EnumValue,
-  T extends ObjectEnum<K, V>,
-> {
+/**
+ * Convert an ArrayEnum type to an ObjectEnum
+ */
+export type ArrayEnumToObjectEnum<T extends ReadonlyArray<string>> = {
+  [K in T[number]]: K;
+};
+
+export interface Superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>> {
   /**
-   * Validate an enum value, returning the value if valid, otherwise undefined.
+   * Validate a possible enum value, returning the enum value if valid, otherwise undefined.
    *
    * Since an enum value is just the value, then all this function does is check to see if the value exists on the enum, and if
    * so returns it cast to the enum type, otherwise it returns undefined.
@@ -140,14 +145,6 @@ export interface EnumExtensions<
   /**
    * Get an array of the enum values.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
   values(): readonly EnumType<T>[];
@@ -155,65 +152,77 @@ export interface EnumExtensions<
   /**
    * Get an array of the enum keys.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  keys(): readonly ExtractEnumKey<K>[];
+  keys(): readonly ExtractEnumKey<K, V, T>[];
 
   /**
    * Get an array of the enum entries.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  entries(): readonly [ExtractEnumKey<K>, EnumType<T>][];
+  entries(): readonly [ExtractEnumKey<K, V, T>, EnumType<T>][];
 
   /**
    * An iterator that iterates the enum values.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
   [Symbol.iterator](): IterableIterator<EnumType<T>>;
+
+  /**
+   * Set i18n labels for all enum values.
+   *
+   * @param allLabels - an object containing i18n labels for each enum value
+   */
+  setAllLabels(allLabels: { [key: EnumValue]: Labels }): void;
+
+  /**
+   * Set i18n labels for a specific enum value.
+   *
+   * @param value - the enum value to set i18n labels for
+   * @param labels - an object containing i18n labels for the enum value
+   */
+  setLabels(value: EnumType<T>, labels: Labels): void;
+
+  /**
+   * Get i18n labels for a specific enum value.
+   *
+   * @param value - the enum value to get i18n labels for
+   * @returns an object containing i18n labels for the enum value
+   */
+  getLabels(value: EnumType<T>): Labels;
+
+  /**
+   * Get a label for a specific enum value in a specific locale.
+   *
+   * If no locale is provided, it will return the first label that was set.
+   * If no label is found for the value, it will return the value as a string.
+   *
+   * @param value - the enum value to get the label for
+   * @param locale - the locale to get the label for
+   * @returns the label for the enum value in the specified locale
+   */
+  getLabel(value: EnumType<T>, locale?: string): string;
 }
 
 type EnumKey = string;
 type EnumValue = string | number;
-type ExtractEnumKey<T> = keyof T;
+type ExtractEnumKey<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>> = keyof T;
 
 type GenericEnum = Readonly<Record<EnumKey, EnumValue>>;
 
 type ObjectEnum<K extends EnumKey, V extends EnumValue> = { [key in K]: V };
 
 interface Cache {
-  keyValueMap: Record<EnumKey, EnumValue>;
-  valueKeyMap: Record<EnumValue, EnumKey>;
-  lcKeyValueMap: Record<EnumKey, EnumValue>;
-  lcValueKeyMap: Record<EnumValue, EnumKey>;
   keys: EnumKey[];
-  values: (EnumValue | undefined)[];
-  entries: [EnumKey, EnumValue | undefined][];
+  valueKeyMap: Record<EnumValue, EnumKey>;
+  keyValueMap?: Record<EnumKey, EnumValue>;
+  lcValueKeyMap?: Record<EnumValue, EnumKey>;
+  lcKeyValueMap?: Record<EnumKey, EnumValue>;
+  valueLabelMap?: Record<EnumValue, Labels>;
+  values?: (EnumValue | undefined)[];
+  entries?: [EnumKey, EnumValue | undefined][];
 }
 
 const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
@@ -222,24 +231,15 @@ const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
 const Object_create = Object.create;
 
 // Implementation of superenum
-function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>>(
+function Enum<K extends string, V extends string | number, T extends ObjectEnum<K, V>>(
   enm: T,
-): EnumExtensions<K, V, T> {
+): Superenum<K, V, T> {
   let cache: Cache = CACHED_ENUMS.get(enm) as Cache;
+
+  // Get the enum as a generic object
+  const enmAny = enm as unknown as Record<string, EnumValue>;
+
   if (!cache) {
-    const newCache: Cache = {
-      keyValueMap: Object_create(null),
-      valueKeyMap: Object_create(null),
-      lcKeyValueMap: Object_create(null),
-      lcValueKeyMap: Object_create(null),
-      keys: [],
-      values: [],
-      entries: [],
-    } as Cache;
-
-    // Get the enum as a generic object
-    const enmAny = enm as unknown as Record<string, EnumValue>;
-
     // Get iteration keys from the enum object (ignore reverse mapped integers)
     const enmKeys: EnumKey[] = [];
     for (const key in enm) {
@@ -250,50 +250,96 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
         enmKeys.push(key);
       }
     }
-    newCache.keys = enmKeys;
+
+    const newCache: Cache = {
+      keys: enmKeys,
+      valueKeyMap: Object_create(null),
+    } as Cache;
 
     // Fill keyValueMap and lcKeyValueMap, valueKeyMap and lcValueKeyMap
     for (const key of newCache.keys) {
       const value = enmAny[key];
-      newCache.keyValueMap[key] = value as EnumValue;
-      newCache.lcKeyValueMap[key.toLowerCase()] = value as EnumValue;
-
-      const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
       newCache.valueKeyMap[value] = key;
-      newCache.lcValueKeyMap[lcValue] = key;
     }
-
-    newCache.values = newCache.keys.map((k) => newCache.keyValueMap[k]);
-    newCache.entries = newCache.keys.map((k) => [k, newCache.keyValueMap[k]]);
 
     CACHED_ENUMS.set(enm, newCache);
     cache = newCache;
   }
 
+  function createKeyValueMap(): Record<EnumKey, EnumValue> {
+    const newMap = Object_create(null);
+    for (const key of cache.keys) {
+      const value = enmAny[key];
+      newMap[key] = value as EnumValue;
+    }
+    cache.valueKeyMap = newMap;
+    return newMap;
+  }
+
+  function createLowerCaseValueKeyMap(): Record<EnumValue, EnumKey> {
+    const newMap = Object_create(null);
+    for (const key of cache.keys) {
+      const value = enmAny[key];
+      const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
+      newMap[lcValue] = key;
+    }
+    cache.lcValueKeyMap = newMap;
+
+    return newMap;
+  }
+
+  function createLowerCaseKeyValueMap(): Record<EnumKey, EnumValue> {
+    const newMap = Object_create(null);
+    for (const key of cache.keys) {
+      const value = enmAny[key];
+      newMap[key.toLowerCase()] = value as EnumValue;
+    }
+    cache.lcKeyValueMap = newMap;
+    return newMap;
+  }
+
+  function createValueLabelMap(): Record<EnumValue, Labels> {
+    const newMap = Object_create(null);
+    cache.valueLabelMap = newMap;
+    return newMap;
+  }
+
+  function createValues() {
+    const keyValueMap = cache.keyValueMap ?? createKeyValueMap();
+    return cache.keys.map((k) => keyValueMap[k]);
+  }
+
+  function createEntries() {
+    const keyValueMap = cache.keyValueMap ?? createKeyValueMap();
+    return cache.keys.map((k) => [k, keyValueMap[k]]);
+  }
+
   function fromValue(value: EnumValue, options?: FromValueOptions) {
-    const { keyValueMap, valueKeyMap, lcValueKeyMap } = cache;
     if (options?.ignoreCase && typeof value === 'string') {
+      const keyValueMap = cache.keyValueMap ?? createKeyValueMap();
+      const lcValueKeyMap = cache.lcValueKeyMap ?? createLowerCaseValueKeyMap();
       const key = lcValueKeyMap[value.toLowerCase()];
       return keyValueMap[key];
     }
-    if (!Object.prototype.hasOwnProperty.call(valueKeyMap, value)) return undefined;
+    if (!Object.prototype.hasOwnProperty.call(cache.valueKeyMap, value)) return undefined;
     return value;
   }
 
   function fromKey(key: EnumKey, options?: FromKeyOptions) {
-    const { keyValueMap, lcKeyValueMap } = cache;
+    const keyValueMap = cache.keyValueMap ?? createKeyValueMap();
     if (options?.ignoreCase && typeof key === 'string') {
+      const lcKeyValueMap = cache.lcKeyValueMap ?? createLowerCaseKeyValueMap();
       return lcKeyValueMap[key.toLowerCase()];
     }
     return keyValueMap[`${key}`];
   }
 
   function keyFromValue(value: EnumValue, options?: KeyFromValueOptions) {
-    const { valueKeyMap, lcValueKeyMap } = cache;
     if (options?.ignoreCase && typeof value === 'string') {
+      const lcValueKeyMap = cache.lcValueKeyMap ?? createLowerCaseValueKeyMap();
       return lcValueKeyMap[value.toLowerCase()];
     }
-    return valueKeyMap[value];
+    return cache.valueKeyMap[value];
   }
 
   function hasKey(key: EnumKey, options?: HasKeyOptions) {
@@ -304,10 +350,53 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
     return fromValue(value, options) != null;
   }
 
+  function keys() {
+    return cache.keys;
+  }
+
+  function values() {
+    return cache.values ?? createValues();
+  }
+
+  function entries() {
+    return cache.entries ?? createEntries();
+  }
+
   function* valueIterator() {
-    for (const v of cache.values) {
+    for (const v of values()) {
       yield v;
     }
+  }
+
+  function setAllLabels(allLabels: { [key: EnumValue]: Labels }): void {
+    const valueLabelMap = cache.valueLabelMap ?? createValueLabelMap();
+    for (const [v, labels] of Object.entries(allLabels)) {
+      const value = fromValue(v);
+      if (value != null) {
+        valueLabelMap[value] = labels;
+      }
+    }
+  }
+
+  function setLabels(value: EnumValue, labels: Labels): void {
+    const valueLabelMap = cache.valueLabelMap ?? createValueLabelMap();
+    valueLabelMap[value] = labels;
+  }
+
+  function getLabels(value: EnumValue): Labels {
+    const valueLabelMap = cache.valueLabelMap ?? createValueLabelMap();
+    return valueLabelMap[value] ?? {};
+  }
+
+  function getLabel(value: EnumValue, locale?: string): string {
+    const valueLabelMap = cache.valueLabelMap ?? createValueLabelMap();
+    const labels = valueLabelMap[value];
+    if (!locale) {
+      for (const label of Object.values(labels)) {
+        return label ?? `${value}`;
+      }
+    }
+    return labels[locale as string] ?? `${value}`;
   }
 
   return {
@@ -316,11 +405,29 @@ function superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<
     keyFromValue,
     hasKey,
     hasValue,
-    keys: () => cache.keys,
-    values: () => cache.values,
-    entries: () => cache.entries,
+    keys: () => keys(),
+    values: () => values(),
+    entries: () => entries(),
     [Symbol.iterator]: valueIterator,
-  } as unknown as EnumExtensions<K, V, T>;
+    setAllLabels,
+    setLabels,
+    getLabels,
+    getLabel,
+  } as unknown as Superenum<K, V, T>;
 }
 
-export { superenum };
+Enum.fromArray = <KV extends Readonly<EnumKey>, T extends ArrayEnum<KV>>(
+  enumeration: T,
+): ArrayEnumToObjectEnum<T> => {
+  let arr: ArrayEnum<KV> = enumeration;
+  if (!Array.isArray(arr)) arr = [];
+
+  const enm = arr.reduce((acc, v) => {
+    acc[v] = v;
+    return acc;
+  }, {});
+
+  return enm as ArrayEnumToObjectEnum<T>;
+};
+
+export { Enum };
