@@ -2,841 +2,488 @@
 
 import { describe, expect, test } from 'vitest';
 
-import { type Superenum } from '../src';
+import { type EnumFunc } from '../src';
 
-const superenumTests = (superenum: typeof Enum) => {
-  const ENUM_OBJ1 = {
+const superenumTests = (Enum: EnumFunc) => {
+  enum Enum1 {
+    thing = 'thing',
+    other = 'other',
+    something = 'somethingOther',
+    ninetynine = 1,
+  }
+
+  const EnumObj1 = {
     thing: 'thing',
     other: 'other',
     something: 'somethingOther',
     '99': 1,
   };
-  const ENUM_OBJ1_IT_KEYS = ['99', 'thing', 'other', 'something'];
-
-  const ENUM_ARR1 = ['thing', 'other', 'somethingOther', '1'];
-
-  const EnumObj1 = superenum(ENUM_OBJ1, {
-    iterationKeys: ENUM_OBJ1_IT_KEYS,
-  });
   // type EnumObj1Type = EnumType<typeof EnumObj1>;
 
-  const EnumArr1 = superenum(ENUM_ARR1);
+  const EnumArr1 = Enum.fromArray(['thing', 'other', 'somethingOther', '1']);
   // type EnumArr1Type = EnumType<typeof EnumObj1>;
 
   describe('superenum', () => {
     describe('initialisation', () => {
-      // test1Checks
-      const test1Checks = (Enum: any) => {
-        // Expected cases
-        expect(Enum.thing).toBe('thing');
-        expect(Enum.other).toBe('other');
-        expect(Enum.something).toBe('somethingOther');
-        expect(Enum['99']).toBe(1);
-        expect(Enum.fromValue).toBeDefined();
-        expect(Enum.fromKey).toBeDefined();
-        expect(Enum.keyFromValue).toBeDefined();
-        expect(Enum.setMetadata).toBeDefined();
-        expect(Enum.getMetadata).toBeDefined();
-        expect(Enum.values).toBeDefined();
-        expect(Enum.keys).toBeDefined();
-        expect(Enum.entries).toBeDefined();
-        expect(Enum[Symbol.iterator]).toBeDefined();
-
-        // Error cases
-        expect(Enum[98]).toBeUndefined();
-        expect(Enum['somethingOther']).toBeUndefined();
-      };
-
-      // test2Checks
-      const test2Checks = (Enum: any) => {
-        // Expected cases
-        expect(Enum.thing).toBe('thing');
-        expect(Enum.other).toBe('other');
-        expect(Enum.somethingOther).toBe('somethingOther');
-        expect(Enum['1']).toBe('1');
-        expect(Enum.fromValue).toBeDefined();
-        expect(Enum.fromKey).toBeDefined();
-        expect(Enum.keyFromValue).toBeDefined();
-        expect(Enum.setMetadata).toBeDefined();
-        expect(Enum.getMetadata).toBeDefined();
-        expect(Enum.values).toBeDefined();
-        expect(Enum.keys).toBeDefined();
-        expect(Enum.entries).toBeDefined();
-        expect(Enum[Symbol.iterator]).toBeDefined();
-
-        // Error cases
-        expect(Enum[98]).toBeUndefined();
-        expect(Enum['something']).toBeUndefined();
-      };
-
-      test('initialising enum from object (superenum() alias)', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-
-        test1Checks(Enum);
-      });
-
-      test('initialising enum from object (superenum.fromObject())', async () => {
-        const Enum = superenum.fromObject(ENUM_OBJ1);
-
-        test1Checks(Enum);
-      });
-
-      test('initialising enum from array (superenum() alias)', async () => {
-        const Enum = superenum(ENUM_ARR1);
-
-        test2Checks(Enum);
-      });
-
-      test('initialising enum from array (superenum.fromArray())', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1);
-
-        test2Checks(Enum);
-      });
-
-      test('initialising enum from array (superenum.fromArray()) with non-array input', async () => {
-        const Enum = superenum.fromArray(undefined as any);
-
-        // Expected cases
-        expect(Enum[0]).toBeUndefined();
-        expect(Enum.fromValue).toBeDefined();
-        expect(Enum.fromKey).toBeDefined();
-        expect(Enum.keyFromValue).toBeDefined();
-        expect(Enum.setMetadata).toBeDefined();
-        expect(Enum.getMetadata).toBeDefined();
-        expect(Enum.values).toBeDefined();
-        expect(Enum.keys).toBeDefined();
-        expect(Enum.entries).toBeDefined();
-        expect(Enum[Symbol.iterator]).toBeDefined();
-
-        // Error cases
-      });
-    });
-
-    describe('enum should be read-only', () => {
-      test.fails('<enum>', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-        (Enum as any)[99] = 'Should Fail';
-      });
-
-      test.fails('<enum>.values() ', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-        (Enum.values() as any[]).push('Should fail');
-      });
-
-      test.fails('<enum>.keys() ', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-        (Enum.keys() as any[]).push('Should fail');
-      });
-
-      test.fails('<enum>.entries() ', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-        (Enum.entries() as any[]).push('Should fail');
-      });
-    });
-
-    describe('enum should NOT be read-only when noFreeze set', () => {
-      test('<enum>', async () => {
-        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
-        (Enum as any)[99] = 'Should succeed';
-      });
-
-      test('<enum>.values() ', async () => {
-        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
-        (Enum.values() as any[]).push('Should succeed');
-      });
-
-      test('<enum>.keys() ', async () => {
-        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
-        (Enum.keys() as any[]).push('Should succeed');
-      });
-
-      test('<enum>.entries() ', async () => {
-        const Enum = superenum(ENUM_OBJ1, { noFreeze: true });
-        (Enum.entries() as any[]).push('Should succeed');
-      });
-    });
-
-    describe('<enum>.fromValue()', () => {
-      test('should be able to validate external data enum value as enum value', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        expect(Enum.fromValue(Enum[99])).toBe(1);
-        expect(
-          Enum.fromValue(1, {
-            ignoreCase: true,
-          }),
-        ).toBe(1);
-        expect(Enum.fromValue(Enum['99'])).toBe(1);
-        expect(Enum.fromValue(1)).toBe(1);
-        expect(Enum.fromValue(Enum.something)).toBe('somethingOther');
-        expect(Enum.fromValue('somethingOther')).toBe('somethingOther');
-        expect(
-          Enum.fromValue('someThingother', {
-            ignoreCase: true,
-          }),
-        ).toBe('somethingOther');
-
-        // Error cases
-        expect(Enum.fromValue('')).toBeUndefined();
-        expect(Enum.fromValue('1')).toBeUndefined();
-        expect(Enum.fromValue('something')).toBeUndefined();
-        expect(Enum.fromValue(5)).toBeUndefined();
-        expect(Enum.fromValue(0)).toBeUndefined();
-        expect(Enum.fromValue(null)).toBeUndefined();
-        expect(Enum.fromValue(undefined)).toBeUndefined();
-        expect(
-          Enum.fromValue(5, {
-            ignoreCase: true,
-          }),
-        ).toBeUndefined();
-        expect(Enum.fromValue('someThingother')).toBeUndefined();
-      });
-    });
-
-    describe('<enum>.fromKey()', () => {
-      test('should be able to convert external data enum key to the enum value', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        // debugger;
-        expect(Enum.fromKey(99)).toBe(1);
-        expect(Enum.fromKey('99')).toBe(1);
-        expect(
-          Enum.fromKey(99, {
-            ignoreCase: true,
-          }),
-        ).toBe(1);
-        expect(Enum.fromKey('something')).toBe('somethingOther');
-        expect(Enum.fromKey('thing')).toBe('thing');
-        expect(
-          Enum.fromKey('tHiNg', {
-            ignoreCase: true,
-          }),
-        ).toBe('thing');
-
-        // Error cases
-        expect(Enum.fromKey('')).toBeUndefined();
-        expect(Enum.fromKey('98')).toBeUndefined();
-        expect(Enum.fromKey('somethingOther')).toBeUndefined();
-        expect(Enum.fromKey(5)).toBeUndefined();
-        expect(Enum.fromKey(0)).toBeUndefined();
-        expect(Enum.fromKey(null)).toBeUndefined();
-        expect(Enum.fromKey(undefined)).toBeUndefined();
-        expect(Enum.fromKey('tHiNg')).toBeUndefined();
-      });
-    });
-
-    describe('<enum>.keyFromValue()', () => {
-      test('should be able to convert external data enum value to the enum key', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        expect(Enum.keyFromValue(Enum[99])).toBe('99');
-        expect(
-          Enum.keyFromValue(1, {
-            ignoreCase: true,
-          }),
-        ).toBe('99');
-        expect(Enum.keyFromValue(Enum['99'])).toBe('99');
-        expect(Enum.keyFromValue(1)).toBe('99');
-        expect(Enum.keyFromValue(Enum.something)).toBe('something');
-        expect(Enum.keyFromValue('somethingOther')).toBe('something');
-        expect(
-          Enum.keyFromValue('someThingother', {
-            ignoreCase: true,
-          }),
-        ).toBe('something');
-
-        // Error cases
-        expect(Enum.keyFromValue(Enum[99])).not.toBe(99);
-        expect(Enum.keyFromValue('1')).toBeUndefined();
-        expect(Enum.keyFromValue('something')).toBeUndefined();
-        expect(Enum.keyFromValue(5)).toBeUndefined();
-        expect(
-          Enum.keyFromValue(5, {
-            ignoreCase: true,
-          }),
-        ).toBeUndefined();
-        expect(Enum.keyFromValue('someThingother')).toBeUndefined();
-      });
-    });
-
-    describe('<enum>.setMetadata(), <enum>.getMetadata()', () => {
-      test('should be able to store and retrieve metadata against an enum value', async () => {
-        const Enum = superenum(ENUM_OBJ1);
-
-        Enum.setMetadata(Enum['99'], 'meta99');
-        Enum.setMetadata(Enum.other, 'metaOther');
-        Enum.setMetadata(Enum.something, 'metaSomething');
-
-        // Expected cases
-        expect(Enum.getMetadata(Enum['99'])).toBe('meta99');
-        expect(Enum.getMetadata(Enum.other)).toBe('metaOther');
-        expect(Enum.getMetadata(Enum.something)).toBe('metaSomething');
-
-        // Error cases
-        expect(Enum.getMetadata(Enum.thing)).toBeUndefined();
-        expect(Enum.getMetadata('badKey')).toBeUndefined();
-      });
-    });
-
-    describe('should be able to iterate the enum values (directly on object)', () => {
-      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum[99]);
-              break;
-            case 1:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 2:
-              expect(value).toBe(Enum.other);
-              break;
-            case 3:
-              expect(value).toBe(Enum.something);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
-      });
-
-      test('in the correct order (using Superenum.fromArray)', async () => {
-        const Enum = EnumArr1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 1:
-              expect(value).toBe(Enum.other);
-              break;
-            case 2:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 3:
-              expect(value).toBe(Enum[1]);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
-      });
-
-      test('in a specific order (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 1, 'thing', 'somethingOther'],
+      describe('from TS enum', () => {
+        test('should initialise correctly', async () => {
+          expect(Enum1.thing).toBe('thing');
+          expect(Enum1.other).toBe('other');
+          expect(Enum1.something).toBe('somethingOther');
+          expect(Enum1.ninetynine).toBe(1);
+          expect(Enum1[1]).toBe('ninetynine');
+          expect(Enum1[98]).toBeUndefined();
+          expect(Enum1['somethingOther']).toBeUndefined();
         });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(value).toBe(Enum[1]);
-              break;
-            case 2:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 3:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
       });
-
-      test('in EnumOptions.iterationKeys returning undefined (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 'invalid', 99, 'thing', 'somethingOther', 'anotherinvalid'],
+      describe('from object', () => {
+        test('should initialise correctly', async () => {
+          expect(EnumObj1.thing).toBe('thing');
+          expect(EnumObj1.other).toBe('other');
+          expect(EnumObj1.something).toBe('somethingOther');
+          expect(EnumObj1['99']).toBe(1);
+          expect(EnumObj1[1]).toBeUndefined();
+          expect(EnumObj1[98]).toBeUndefined();
+          expect(EnumObj1['somethingOther']).toBeUndefined();
         });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(value).toBeUndefined();
-              break;
-            case 2:
-              expect(value).toBe(Enum[99]);
-              break;
-            case 3:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 4:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 5:
-              expect(value).toBeUndefined();
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
+      });
+      describe('from array (Enum.fromArray())', () => {
+        test('should initialise correctly', async () => {
+          expect(EnumArr1.thing).toBe('thing');
+          expect(EnumArr1.other).toBe('other');
+          expect(EnumArr1.somethingOther).toBe('somethingOther');
+          expect(EnumArr1['1']).toBe('1');
+          expect(EnumArr1[98]).toBeUndefined();
+          expect(EnumArr1['something']).toBeUndefined();
+        });
       });
     });
 
-    describe('should be able to iterate the enum values (using <enum> iterator)', () => {
-      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum[99]);
-              break;
-            case 1:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 2:
-              expect(value).toBe(Enum.other);
-              break;
-            case 3:
-              expect(value).toBe(Enum.something);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
+    describe('read-only behaviour', () => {
+      test.fails('<enum> assignment', async () => {
+        (Enum(Enum1) as any)[99] = 'Should Fail';
+      });
+      test.fails('<enum>.values() mutation', async () => {
+        (Enum(Enum1).values() as any[]).push('Should fail');
+      });
+      test.fails('<enum>.keys() mutation', async () => {
+        (Enum(Enum1).keys() as any[]).push('Should fail');
+      });
+      test.fails('<enum>.entries() mutation', async () => {
+        (Enum(Enum1).entries() as any[]).push('Should fail');
       });
     });
 
-    describe('should be able to iterate the enum values (using <enum>.values())', () => {
-      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.values()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum[99]);
-              break;
-            case 1:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 2:
-              expect(value).toBe(Enum.other);
-              break;
-            case 3:
-              expect(value).toBe(Enum.something);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
+    describe('enum value validation', () => {
+      test('fromValue', async () => {
+        expect(Enum(Enum1).fromValue(Enum[99])).toBe(1);
+        expect(Enum(Enum1).fromValue(1, { ignoreCase: true })).toBe(1);
+        expect(Enum(Enum1).fromValue(Enum1['99'])).toBe(1);
+        expect(Enum(Enum1).fromValue(1)).toBe(1);
+        expect(Enum(Enum1).fromValue(Enum1.something)).toBe('somethingOther');
+        expect(Enum(Enum1).fromValue('somethingOther')).toBe('somethingOther');
+        expect(Enum(Enum1).fromValue('someThingother', { ignoreCase: true })).toBe(
+          'somethingOther',
+        );
+        expect(Enum(Enum1).fromValue('')).toBeUndefined();
+        expect(Enum(Enum1).fromValue('1')).toBeUndefined();
+        expect(Enum(Enum1).fromValue('something')).toBeUndefined();
+        expect(Enum(Enum1).fromValue(5)).toBeUndefined();
+        expect(Enum(Enum1).fromValue(0)).toBeUndefined();
+        expect(Enum(Enum1).fromValue(null)).toBeUndefined();
+        expect(Enum(Enum1).fromValue(undefined)).toBeUndefined();
+        expect(Enum(Enum1).fromValue(5, { ignoreCase: true })).toBeUndefined();
+        expect(Enum(Enum1).fromValue('someThingother')).toBeUndefined();
       });
-
-      test('in the correct order (using Superenum.fromArray)', async () => {
-        const Enum = EnumArr1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.values()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 1:
-              expect(value).toBe(Enum.other);
-              break;
-            case 2:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 3:
-              expect(value).toBe(Enum[1]);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
+      test('fromKey', async () => {
+        expect(Enum(Enum1).fromKey(99)).toBe(1);
+        expect(Enum(Enum1).fromKey('99')).toBe(1);
+        expect(Enum(Enum1).fromKey(99, { ignoreCase: true })).toBe(1);
+        expect(Enum(Enum1).fromKey('something')).toBe('somethingOther');
+        expect(Enum(Enum1).fromKey('thing')).toBe('thing');
+        expect(Enum(Enum1).fromKey('tHiNg', { ignoreCase: true })).toBe('thing');
+        expect(Enum(Enum1).fromKey('')).toBeUndefined();
+        expect(Enum(Enum1).fromKey('98')).toBeUndefined();
+        expect(Enum(Enum1).fromKey('somethingOther')).toBeUndefined();
+        expect(Enum(Enum1).fromKey(5)).toBeUndefined();
+        expect(Enum(Enum1).fromKey(0)).toBeUndefined();
+        expect(Enum(Enum1).fromKey(null)).toBeUndefined();
+        expect(Enum(Enum1).fromKey(undefined)).toBeUndefined();
+        expect(Enum(Enum1).fromKey('tHiNg')).toBeUndefined();
       });
-
-      test('in a specific order (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 1, 'thing', 'somethingOther'],
-        });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.values()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(value).toBe(Enum[1]);
-              break;
-            case 2:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 3:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
-      });
-
-      test('in EnumOptions.iterationKeys returning undefined (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 'invalid', 99, 'thing', 'somethingOther', 'anotherinvalid'],
-        });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.values()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(value).toBeUndefined();
-              break;
-            case 2:
-              expect(value).toBe(Enum[99]);
-              break;
-            case 3:
-              expect(value).toBe(Enum.thing);
-              break;
-            case 4:
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 5:
-              expect(value).toBeUndefined();
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
+      test('keyFromValue', async () => {
+        expect(Enum(Enum1).keyFromValue(Enum1[99])).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(1, { ignoreCase: true })).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(Enum1['99'])).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(1)).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(Enum1.something)).toBe('something');
+        expect(Enum(Enum1).keyFromValue('somethingOther')).toBe('something');
+        expect(Enum(Enum1).keyFromValue('someThingother', { ignoreCase: true })).toBe('something');
+        expect(Enum(Enum1).keyFromValue(Enum1[99])).not.toBe(99);
+        expect(Enum(Enum1).keyFromValue('1')).toBeUndefined();
+        expect(Enum(Enum1).keyFromValue('something')).toBeUndefined();
+        expect(Enum(Enum1).keyFromValue(5)).toBeUndefined();
+        expect(Enum(Enum1).keyFromValue(5, { ignoreCase: true })).toBeUndefined();
+        expect(Enum(Enum1).keyFromValue('someThingother')).toBeUndefined();
       });
     });
 
-    describe('should be able to iterate the enum keys (using <enum>.keys())', () => {
-      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        let i = 0;
-        for (const key of Enum.keys()) {
-          switch (i) {
-            case 0:
-              expect(key).toBe('99');
-              break;
-            case 1:
-              expect(key).toBe('thing');
-              break;
-            case 2:
-              expect(key).toBe('other');
-              break;
-            case 3:
-              expect(key).toBe('something');
-              break;
-            default:
-              throw new Error(`Unexpected key: ${key}`);
-          }
-          i++;
-        }
-      });
-
-      test('in the correct order (using Superenum.fromArray())', async () => {
-        const Enum = EnumArr1;
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.keys()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe('thing');
-              break;
-            case 1:
-              expect(value).toBe('other');
-              break;
-            case 2:
-              expect(value).toBe('somethingOther');
-              break;
-            case 3:
-              expect(value).toBe('1');
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
-      });
-
-      test('in a specific order (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 1, 'thing', 'somethingOther'],
+    describe('labels', () => {
+      describe('setAllLabels/getLabels', () => {
+        test('should store and retrieve', async () => {
+          Enum(Enum1).setAllLabels({
+            [Enum1.ninetynine]: { en: 'Ninety Nine', es: 'Noventa y Nueve' },
+            [Enum1.other]: { en: 'Other', es: 'Otro' },
+            [Enum1.something]: { en: 'Something Other', es: 'Algo Más' },
+          });
+          expect(Enum(Enum1).getLabels(Enum1.other)).toEqual({ en: 'Other', es: 'Otro' });
+          expect(Enum(Enum1).getLabel(Enum1.other)).toBe('Other');
+          expect(Enum(Enum1).getLabel(Enum1.other, 'es')).toBe('Otro');
+          expect(Enum(Enum1).getLabel(Enum1.something, 'en')).toBe('Something Other');
+          expect(Enum(Enum1).getLabel(Enum1.thing)).toBeUndefined();
+          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBeUndefined();
         });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.keys()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe('other');
-              break;
-            case 1:
-              expect(value).toBe('1');
-              break;
-            case 2:
-              expect(value).toBe('thing');
-              break;
-            case 3:
-              expect(value).toBe('somethingOther');
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
       });
-
-      test('in EnumOptions.iterationKeys returning undefined (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 'invalid', 99, 'thing', 'somethingOther', 'anotherinvalid'],
+      describe('setLabels/getLabels', () => {
+        test('should store and retrieve labels', async () => {
+          Enum(Enum1).setLabels(Enum1.ninetynine, { en: 'Ninety Nine', es: 'Noventa y Nueve' });
+          Enum(Enum1).setLabels(Enum1.other, { en: 'Other', es: 'Otro' });
+          Enum(Enum1).setLabels(Enum1.something, { en: 'Something Other', es: 'Algo Más' });
+          expect(Enum(Enum1).getLabels(Enum1.other)).toEqual({ en: 'Other', es: 'Otro' });
+          expect(Enum(Enum1).getLabel(Enum1.other)).toBe('Other');
+          expect(Enum(Enum1).getLabel(Enum1.other, 'en')).toBe('Other');
+          expect(Enum(Enum1).getLabel(Enum1.something, 'es')).toBe('Algo Más');
+          expect(Enum(Enum1).getLabel(Enum1.thing)).toBeUndefined();
+          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBeUndefined();
         });
-
-        // Expected cases
-        let i = 0;
-        for (const value of Enum.keys()) {
-          switch (i) {
-            case 0:
-              expect(value).toBe('other');
-              break;
-            case 1:
-              expect(value).toBe('invalid');
-              break;
-            case 2:
-              expect(value).toBe('99');
-              break;
-            case 3:
-              expect(value).toBe('thing');
-              break;
-            case 4:
-              expect(value).toBe('somethingOther');
-              break;
-            case 5:
-              expect(value).toBe('anotherinvalid');
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
       });
     });
 
-    describe('should be able to iterate the enum entries (using <enum>.entries())', () => {
-      test('in the correct order (using EnumOptions.iterationKeys)', async () => {
-        const Enum = EnumObj1;
-
-        // Expected cases
-        let i = 0;
-        for (const [key, value] of Enum.entries()) {
-          switch (i) {
-            case 0:
-              expect(key).toBe('99');
-              expect(value).toBe(Enum[99]);
-              break;
-            case 1:
-              expect(key).toBe('thing');
-              expect(value).toBe(Enum.thing);
-              break;
-            case 2:
-              expect(key).toBe('other');
-              expect(value).toBe(Enum.other);
-              break;
-            case 3:
-              expect(key).toBe('something');
-              expect(value).toBe(Enum.something);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
+    describe('iteration', () => {
+      describe('directly on object', () => {
+        test('Enum(Enum1) order', async () => {
+          let i = 0;
+          for (const value of Enum(Enum1)) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(Enum1.thing);
+                break;
+              case 1:
+                expect(value).toBe(Enum1.other);
+                break;
+              case 2:
+                expect(value).toBe(Enum1.something);
+                break;
+              case 3:
+                expect(value).toBe(Enum1.ninetynine);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
           }
-          i++;
-        }
-      });
-
-      test('in the correct order (using Superenum.fromArray)', async () => {
-        const Enum = EnumArr1;
-
-        // Expected cases
-        let i = 0;
-        for (const [key, value] of Enum.entries()) {
-          switch (i) {
-            case 0:
-              expect(key).toBe('thing');
-              expect(value).toBe(Enum.thing);
-              break;
-            case 1:
-              expect(key).toBe('other');
-              expect(value).toBe(Enum.other);
-              break;
-            case 2:
-              expect(key).toBe('somethingOther');
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 3:
-              expect(key).toBe('1');
-              expect(value).toBe(Enum[1]);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
-          }
-          i++;
-        }
-      });
-
-      test('in a specific order (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 1, 'thing', 'somethingOther'],
         });
-
-        // Expected cases
-        let i = 0;
-        for (const [key, value] of Enum.entries()) {
-          switch (i) {
-            case 0:
-              expect(key).toBe('other');
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(key).toBe('1');
-              expect(value).toBe(Enum[1]);
-              break;
-            case 2:
-              expect(key).toBe('thing');
-              expect(value).toBe(Enum.thing);
-              break;
-            case 3:
-              expect(key).toBe('somethingOther');
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
+        test('Enum.fromArray order', async () => {
+          let i = 0;
+          for (const value of Enum(EnumArr1)) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(EnumArr1.thing);
+                break;
+              case 1:
+                expect(value).toBe(EnumArr1.other);
+                break;
+              case 2:
+                expect(value).toBe(EnumArr1.somethingOther);
+                break;
+              case 3:
+                expect(value).toBe(EnumArr1['1']);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
           }
-          i++;
-        }
-      });
-
-      test('in EnumOptions.iterationKeys returning undefined (using Superenum.fromArray / EnumOptions.iterationKeys)', async () => {
-        const Enum = superenum.fromArray(ENUM_ARR1, {
-          iterationKeys: ['other', 'invalid', 99, 'thing', 'somethingOther', 'anotherinvalid'],
         });
-
-        // Expected cases
-        let i = 0;
-        for (const [key, value] of Enum.entries()) {
-          switch (i) {
-            case 0:
-              expect(key).toBe('other');
-              expect(value).toBe(Enum.other);
-              break;
-            case 1:
-              expect(key).toBe('invalid');
-              expect(value).toBeUndefined();
-              break;
-            case 2:
-              expect(key).toBe('99');
-              expect(value).toBeUndefined();
-              break;
-            case 3:
-              expect(key).toBe('thing');
-              expect(value).toBe(Enum.thing);
-              break;
-            case 4:
-              expect(key).toBe('somethingOther');
-              expect(value).toBe(Enum.somethingOther);
-              break;
-            case 5:
-              expect(key).toBe('anotherinvalid');
-              expect(value).toBeUndefined();
-              break;
-            default:
-              throw new Error(`Unexpected value: ${value}`);
+      });
+      describe('using .values()', () => {
+        test('EnumObj1 order', async () => {
+          let i = 0;
+          for (const value of Enum(EnumObj1).values()) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(Enum1.thing);
+                break;
+              case 1:
+                expect(value).toBe(Enum1.other);
+                break;
+              case 2:
+                expect(value).toBe(Enum1.something);
+                break;
+              case 3:
+                expect(value).toBe(Enum1.ninetynine);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
           }
-          i++;
-        }
+        });
+        test('EnumArr1 order', async () => {
+          let i = 0;
+          for (const value of Enum(EnumArr1).values()) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(EnumArr1.thing);
+                break;
+              case 1:
+                expect(value).toBe(EnumArr1.other);
+                break;
+              case 2:
+                expect(value).toBe(EnumArr1.somethingOther);
+                break;
+              case 3:
+                expect(value).toBe(EnumArr1['1']);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+      });
+      describe('using .keys()', () => {
+        test('Enum1 order', async () => {
+          let i = 0;
+          for (const key of Enum(Enum1).keys()) {
+            switch (i) {
+              case 0:
+                expect(key).toBe('thing');
+                break;
+              case 1:
+                expect(key).toBe('other');
+                break;
+              case 2:
+                expect(key).toBe('something');
+                break;
+              case 3:
+                expect(key).toBe('ninetynine');
+                break;
+              default:
+                throw new Error(`Unexpected key: ${key}`);
+            }
+            i++;
+          }
+        });
+        test('EnumArr1 order', async () => {
+          let i = 0;
+          for (const value of Enum(EnumArr1).keys()) {
+            switch (i) {
+              case 0:
+                expect(value).toBe('thing');
+                break;
+              case 1:
+                expect(value).toBe('other');
+                break;
+              case 2:
+                expect(value).toBe('somethingOther');
+                break;
+              case 3:
+                expect(value).toBe('1');
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+      });
+      describe('using .entries()', () => {
+        test('Enum1 order', async () => {
+          let i = 0;
+          for (const [key, value] of Enum(Enum1).entries()) {
+            switch (i) {
+              case 0:
+                expect(key).toBe('thing');
+                expect(value).toBe(Enum1.thing);
+                break;
+              case 1:
+                expect(key).toBe('other');
+                expect(value).toBe(Enum1.other);
+                break;
+              case 2:
+                expect(key).toBe('something');
+                expect(value).toBe(Enum1.something);
+                break;
+              case 3:
+                expect(key).toBe('ninetynine');
+                expect(value).toBe(Enum1.ninetynine);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+        test('EnumArr1 order', async () => {
+          let i = 0;
+          for (const [key, value] of Enum(EnumArr1).entries()) {
+            switch (i) {
+              case 0:
+                expect(key).toBe('thing');
+                expect(value).toBe(EnumArr1.thing);
+                break;
+              case 1:
+                expect(key).toBe('other');
+                expect(value).toBe(EnumArr1.other);
+                break;
+              case 2:
+                expect(key).toBe('somethingOther');
+                expect(value).toBe(EnumArr1.somethingOther);
+                break;
+              case 3:
+                expect(key).toBe('1');
+                expect(value).toBe(EnumArr1['1']);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
       });
     });
 
-    describe('initialising enum from TypeScript native enum', () => {
+    describe('TypeScript native enum initialisation', () => {
       enum StringEnum {
         Red = 'red',
         Green = 'green',
         Blue = 'blue',
       }
-      const StringSuper = superenum(StringEnum);
-
       test('string enum values and helpers', () => {
-        expect(StringSuper.Red).toBe('red');
-        expect(StringSuper.Green).toBe('green');
-        expect(StringSuper.Blue).toBe('blue');
-        expect(StringSuper.fromValue('green')).toBe('green');
-        expect(StringSuper.fromValue('GREEN', { ignoreCase: true })).toBe('green');
-        expect(StringSuper.fromKey('Blue')).toBe('blue');
-        expect(StringSuper.keyFromValue('red')).toBe('Red');
-        expect(StringSuper.values()).toEqual(['red', 'green', 'blue']);
-        expect(StringSuper.keys()).toEqual(['Red', 'Green', 'Blue']);
-        expect(StringSuper.entries()).toEqual([
+        expect(StringEnum.Red).toBe('red');
+        expect(StringEnum.Green).toBe('green');
+        expect(StringEnum.Blue).toBe('blue');
+        expect(Enum(StringEnum).fromValue('green')).toBe('green');
+        expect(Enum(StringEnum).fromValue('GREEN', { ignoreCase: true })).toBe('green');
+        expect(Enum(StringEnum).fromKey('Blue')).toBe('blue');
+        expect(Enum(StringEnum).keyFromValue('red')).toBe('Red');
+        expect(Enum(StringEnum).values()).toEqual(['red', 'green', 'blue']);
+        expect(Enum(StringEnum).keys()).toEqual(['Red', 'Green', 'Blue']);
+        expect(Enum(StringEnum).entries()).toEqual([
           ['Red', 'red'],
           ['Green', 'green'],
           ['Blue', 'blue'],
         ]);
       });
-
       enum NumericEnum {
         One = 1,
         Two = 2,
         Three = 3,
       }
-      const NumericSuper = superenum(NumericEnum);
-
       test('numeric enum values and reverse lookup', () => {
-        expect(NumericSuper.One).toBe(1);
-        expect(NumericSuper.Two).toBe(2);
-        expect(NumericSuper.Three).toBe(3);
-        // reverse mapping
-        expect(NumericSuper[1]).toBe('One');
-        expect(NumericSuper[2]).toBe('Two');
-        // helpers
-        expect(NumericSuper.fromValue(2)).toBe(2);
-        expect(NumericSuper.keyFromValue(3)).toBe('Three');
-        expect(NumericSuper.fromKey('One')).toBe(1);
-        // iteration order
-        expect(NumericSuper.values()).toEqual([1, 2, 3]);
-        expect(NumericSuper.keys()).toEqual(['One', 'Two', 'Three']);
+        expect(NumericEnum.One).toBe(1);
+        expect(NumericEnum.Two).toBe(2);
+        expect(NumericEnum.Three).toBe(3);
+        expect(NumericEnum[1]).toBe('One');
+        expect(NumericEnum[2]).toBe('Two');
+        expect(Enum(NumericEnum).fromValue(2)).toBe(2);
+        expect(Enum(NumericEnum).keyFromValue(3)).toBe('Three');
+        expect(Enum(NumericEnum).fromKey('One')).toBe(1);
+        expect(Enum(NumericEnum).values()).toEqual([1, 2, 3]);
+      });
+    });
+
+    describe('<enum> (object)', () => {
+      test('should be able to validate external data enum value as enum value', async () => {
+        expect(Enum(EnumObj1).fromValue(EnumObj1['99'])).toBe(1);
+        expect(Enum(EnumObj1).fromValue(1)).toBe(1);
+        expect(Enum(EnumObj1).fromValue(EnumObj1.something)).toBe('somethingOther');
+        expect(Enum(EnumObj1).fromValue('somethingOther')).toBe('somethingOther');
+        expect(Enum(EnumObj1).fromValue('thing')).toBe('thing');
+        expect(Enum(EnumObj1).fromValue('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumObj1).fromValue('')).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue('1')).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue('something')).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue(5)).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue(0)).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue(null)).toBeUndefined();
+        expect(Enum(EnumObj1).fromValue(undefined)).toBeUndefined();
+      });
+      test('should be able to convert external data enum key to the enum value', async () => {
+        expect(Enum(EnumObj1).fromKey('99')).toBe(1);
+        expect(Enum(EnumObj1).fromKey('something')).toBe('somethingOther');
+        expect(Enum(EnumObj1).fromKey('thing')).toBe('thing');
+        expect(Enum(EnumObj1).fromKey('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumObj1).fromKey('')).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey('98')).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey('somethingOther')).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey(5)).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey(0)).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey(null)).toBeUndefined();
+        expect(Enum(EnumObj1).fromKey(undefined)).toBeUndefined();
+      });
+      test('should be able to convert external data enum value to the enum key', async () => {
+        expect(Enum(EnumObj1).keyFromValue(EnumObj1['99'])).toBe('99');
+        expect(Enum(EnumObj1).keyFromValue(1)).toBe('99');
+        expect(Enum(EnumObj1).keyFromValue(EnumObj1.something)).toBe('something');
+        expect(Enum(EnumObj1).keyFromValue('somethingOther')).toBe('something');
+        expect(Enum(EnumObj1).keyFromValue('thing')).toBe('thing');
+        expect(Enum(EnumObj1).keyFromValue('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumObj1).keyFromValue('1')).toBeUndefined();
+        expect(Enum(EnumObj1).keyFromValue('something')).toBeUndefined();
+        expect(Enum(EnumObj1).keyFromValue(5)).toBeUndefined();
+        expect(Enum(EnumObj1).keyFromValue(null)).toBeUndefined();
+        expect(Enum(EnumObj1).keyFromValue(undefined)).toBeUndefined();
+      });
+    });
+    describe('<enum> (fromArray)', () => {
+      test('should be able to validate external data enum value as enum value', async () => {
+        expect(Enum(EnumArr1).fromValue(EnumArr1['1'])).toBe('1');
+        expect(Enum(EnumArr1).fromValue('1')).toBe('1');
+        expect(Enum(EnumArr1).fromValue(EnumArr1.somethingOther)).toBe('somethingOther');
+        expect(Enum(EnumArr1).fromValue('somethingOther')).toBe('somethingOther');
+        expect(Enum(EnumArr1).fromValue('thing')).toBe('thing');
+        expect(Enum(EnumArr1).fromValue('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumArr1).fromValue('')).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue(1)).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue('something')).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue(5)).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue(0)).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue(null)).toBeUndefined();
+        expect(Enum(EnumArr1).fromValue(undefined)).toBeUndefined();
+      });
+      test('should be able to convert external data enum key to the enum value', async () => {
+        expect(Enum(EnumArr1).fromKey('1')).toBe('1');
+        expect(Enum(EnumArr1).fromKey('somethingOther')).toBe('somethingOther');
+        expect(Enum(EnumArr1).fromKey('thing')).toBe('thing');
+        expect(Enum(EnumArr1).fromKey('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumArr1).fromKey('')).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey('98')).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey('something')).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey(5)).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey(0)).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey(null)).toBeUndefined();
+        expect(Enum(EnumArr1).fromKey(undefined)).toBeUndefined();
+      });
+      test('should be able to convert external data enum value to the enum key', async () => {
+        expect(Enum(EnumArr1).keyFromValue(EnumArr1['1'])).toBe('1');
+        expect(Enum(EnumArr1).keyFromValue('1')).toBe('1');
+        expect(Enum(EnumArr1).keyFromValue(EnumArr1.somethingOther)).toBe('somethingOther');
+        expect(Enum(EnumArr1).keyFromValue('somethingOther')).toBe('somethingOther');
+        expect(Enum(EnumArr1).keyFromValue('thing')).toBe('thing');
+        expect(Enum(EnumArr1).keyFromValue('other')).toBe('other');
+        // Error cases
+        expect(Enum(EnumArr1).keyFromValue(1)).toBeUndefined();
+        expect(Enum(EnumArr1).keyFromValue('something')).toBeUndefined();
+        expect(Enum(EnumArr1).keyFromValue(5)).toBeUndefined();
+        expect(Enum(EnumArr1).keyFromValue(null)).toBeUndefined();
+        expect(Enum(EnumArr1).keyFromValue(undefined)).toBeUndefined();
       });
     });
   });

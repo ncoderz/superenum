@@ -72,7 +72,11 @@ export type ArrayEnumToObjectEnum<T extends ReadonlyArray<string>> = {
   [K in T[number]]: K;
 };
 
-export interface Superenum<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>> {
+export interface Superenum<
+  K extends EnumKey = EnumKey,
+  V extends EnumValue = EnumValue,
+  T extends ObjectEnum<K, V> = ObjectEnum<K, V>,
+> {
   /**
    * Validate a possible enum value, returning the enum value if valid, otherwise undefined.
    *
@@ -429,5 +433,7 @@ Enum.fromArray = <KV extends Readonly<EnumKey>, T extends ArrayEnum<KV>>(
 
   return enm as ArrayEnumToObjectEnum<T>;
 };
+
+export type EnumFunc = typeof Enum;
 
 export { Enum };

@@ -11,6 +11,9 @@ type Enum1 = EnumType<typeof Enum1>;
 const test = Enum1.ONE;
 test;
 
+const test1 = Enum(Enum1);
+test1;
+
 Enum(Enum1).setAllLabels({
   [Enum1.ONE]: { en: 'One', es: 'Uno' },
   [Enum1.TWO]: { en: 'Two', es: 'Dos' },

@@ -1,5 +1,6 @@
 export {
   Enum,
+  type EnumFunc,
   type EnumType,
   type FromKeyOptions,
   type FromValueOptions,
@@ -7,5 +8,4 @@ export {
   type HasValueOptions,
   type KeyFromValueOptions,
   type Labels,
-  type Superenum,
 } from './superenum';
