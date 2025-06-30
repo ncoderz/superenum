@@ -97,7 +97,11 @@ const MyEnum {
 
 // ALTERNATIVE: String enums can also be declared
 // short-hand using arrays (keys and values are the same, so lower case in this case)
-const MyEnum = Enum.fromArray('node', 'chrome', 'safari')
+const MyEnum = Enum.fromArray([
+  'node',
+  'chrome',
+  'safari'
+]);
 
 // Type for object and array enum declarations
 // (not necessary for TypeScript enums as enum is already also type)
