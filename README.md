@@ -7,8 +7,6 @@
 
 `🚀 The enum utility that TypeScript forgot` — _JavaScript too!_
 
----
-
 ## Why @ncoderz/superenum?
 
 Ever wanted Validation, Iteration, Key-Lookups, Localization for your enums in Typescript or JavaScript?
