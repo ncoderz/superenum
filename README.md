@@ -144,8 +144,8 @@ for (const key of Enum(MyEnum).keys()) {
 }
 
 // Iteration (entries)
-for (const e of Enum(MyEnum).entries()) {
-  console.log(e); // ['NODE', 'node'], ['CHROME', 'chrome'], ['SAFARI', 'safari']
+for (const entry of Enum(MyEnum).entries()) {
+  console.log(entry); // ['NODE', 'node'], ['CHROME', 'chrome'], ['SAFARI', 'safari']
 }
 ```
 
@@ -159,7 +159,7 @@ enum MyEnum {
 }
 
 // Key to Value (fromKey)
-const value = Enum(MyEnum).fromKey('NODE'); // 'node'
+const value = Enum(MyEnum).fromKey('NODE'); // MyEnum.node
 ```
 
 #### value => key conversion
@@ -327,9 +327,9 @@ type MyEnum = EnumType<typeof MyEnum>;
 
 // End enum declaration
 
-const nodeValue = MyEnum.fromKey('node'); // MyEnum.node
-const invalidValue = MyEnum.fromKey('NoDe'); // undefined
-const nodeValue2 = MyEnum.fromKey('NoDe', {
+const nodeValue = Enum(MyEnum).fromKey('node'); // MyEnum.node
+const invalidValue = Enum(MyEnum).fromKey('NoDe'); // undefined
+const nodeValue2 = Enum(MyEnum).fromKey('NoDe', {
   ignoreCase: true,
 }); // MyEnum.node
 ```
