@@ -1,19 +1,25 @@
 import { Enum, EnumType } from '../src';
 
-// enum Enum1 {
-//   ONE = 1,
-//   TWO = 'two',
-// }
+enum Enum1 {
+  ONE = 1,
+  TWO = 'two',
+}
 
 // Problem is Objects always sort numeric keys before string keys, so the order of the enum is not preserved.
-const Enum1 = Enum.fromArray(['ONE', 'TWO', '3']);
-type Enum1 = EnumType<typeof Enum1>;
+// const Enum1 = Enum.fromArray(['ONE', 'TWO', '3']);
+// type Enum1 = EnumType<typeof Enum1>;
 
-const test = Enum1.ONE;
+const test = Enum(Enum1).fromValue(Enum1.ONE) ?? Enum1.TWO; // Bad
 test;
 
 const test1 = Enum(Enum1);
 test1;
+
+if (test === Enum1.ONE) {
+  console.log('Test is ONE');
+} else if (test === Enum1.TWO) {
+  console.log('Test is TWO');
+}
 
 Enum(Enum1).setAllLabels({
   [Enum1.ONE]: { en: 'One', es: 'Uno' },

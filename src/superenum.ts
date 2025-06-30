@@ -231,7 +231,15 @@ interface Cache {
 
 const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
 
-// Implementation of superenum
+/**
+ * Wraps an enum or enum-like object to provide methods for interacting with it.
+ *
+ * Uses a WeakMap and lazy instantiation to cache the enum's keys, values, and labels
+ * for fast performance while keeping memory footprint small.
+ *
+ * @param enm - an enum or enum like object
+ * @returns a Superenum object that provides methods to interact with the enum
+ */
 function Enum<K extends string, V extends string | number, T extends ObjectEnum<K, V>>(
   enm: T,
 ): Superenum<K, V, T> {
