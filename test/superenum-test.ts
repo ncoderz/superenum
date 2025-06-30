@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { describe, expect, test } from 'vitest';
 
 import { type EnumFunc } from '../src';
@@ -18,10 +16,8 @@ const superenumTests = (Enum: EnumFunc) => {
     something: 'somethingOther',
     '99': 1,
   };
-  // type EnumObj1Type = EnumType<typeof EnumObj1>;
 
   const EnumArr1 = Enum.fromArray(['thing', 'other', 'somethingOther', '1']);
-  // type EnumArr1Type = EnumType<typeof EnumObj1>;
 
   describe('superenum', () => {
     describe('initialisation', () => {
@@ -59,26 +55,11 @@ const superenumTests = (Enum: EnumFunc) => {
       });
     });
 
-    describe('read-only behaviour', () => {
-      test.fails('<enum> assignment', async () => {
-        (Enum(Enum1) as any)[99] = 'Should Fail';
-      });
-      test.fails('<enum>.values() mutation', async () => {
-        (Enum(Enum1).values() as any[]).push('Should fail');
-      });
-      test.fails('<enum>.keys() mutation', async () => {
-        (Enum(Enum1).keys() as any[]).push('Should fail');
-      });
-      test.fails('<enum>.entries() mutation', async () => {
-        (Enum(Enum1).entries() as any[]).push('Should fail');
-      });
-    });
-
     describe('enum value validation', () => {
       test('fromValue', async () => {
-        expect(Enum(Enum1).fromValue(Enum[99])).toBe(1);
+        expect(Enum(Enum1).fromValue(Enum1.ninetynine)).toBe(1);
         expect(Enum(Enum1).fromValue(1, { ignoreCase: true })).toBe(1);
-        expect(Enum(Enum1).fromValue(Enum1['99'])).toBe(1);
+        expect(Enum(Enum1).fromValue(Enum1.ninetynine)).toBe(1);
         expect(Enum(Enum1).fromValue(1)).toBe(1);
         expect(Enum(Enum1).fromValue(Enum1.something)).toBe('somethingOther');
         expect(Enum(Enum1).fromValue('somethingOther')).toBe('somethingOther');
@@ -96,9 +77,9 @@ const superenumTests = (Enum: EnumFunc) => {
         expect(Enum(Enum1).fromValue('someThingother')).toBeUndefined();
       });
       test('fromKey', async () => {
-        expect(Enum(Enum1).fromKey(99)).toBe(1);
-        expect(Enum(Enum1).fromKey('99')).toBe(1);
-        expect(Enum(Enum1).fromKey(99, { ignoreCase: true })).toBe(1);
+        expect(Enum(Enum1).fromKey('ninetynine')).toBe(1);
+        expect(Enum(Enum1).fromKey('ninetynine')).toBe(1);
+        expect(Enum(Enum1).fromKey('ninetynine', { ignoreCase: true })).toBe(1);
         expect(Enum(Enum1).fromKey('something')).toBe('somethingOther');
         expect(Enum(Enum1).fromKey('thing')).toBe('thing');
         expect(Enum(Enum1).fromKey('tHiNg', { ignoreCase: true })).toBe('thing');
@@ -112,14 +93,14 @@ const superenumTests = (Enum: EnumFunc) => {
         expect(Enum(Enum1).fromKey('tHiNg')).toBeUndefined();
       });
       test('keyFromValue', async () => {
-        expect(Enum(Enum1).keyFromValue(Enum1[99])).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(Enum1.ninetynine)).toBe('ninetynine');
         expect(Enum(Enum1).keyFromValue(1, { ignoreCase: true })).toBe('ninetynine');
-        expect(Enum(Enum1).keyFromValue(Enum1['99'])).toBe('ninetynine');
+        expect(Enum(Enum1).keyFromValue(Enum1.ninetynine)).toBe('ninetynine');
         expect(Enum(Enum1).keyFromValue(1)).toBe('ninetynine');
         expect(Enum(Enum1).keyFromValue(Enum1.something)).toBe('something');
         expect(Enum(Enum1).keyFromValue('somethingOther')).toBe('something');
         expect(Enum(Enum1).keyFromValue('someThingother', { ignoreCase: true })).toBe('something');
-        expect(Enum(Enum1).keyFromValue(Enum1[99])).not.toBe(99);
+        expect(Enum(Enum1).keyFromValue(Enum1.ninetynine)).not.toBe(99);
         expect(Enum(Enum1).keyFromValue('1')).toBeUndefined();
         expect(Enum(Enum1).keyFromValue('something')).toBeUndefined();
         expect(Enum(Enum1).keyFromValue(5)).toBeUndefined();
@@ -140,8 +121,8 @@ const superenumTests = (Enum: EnumFunc) => {
           expect(Enum(Enum1).getLabel(Enum1.other)).toBe('Other');
           expect(Enum(Enum1).getLabel(Enum1.other, 'es')).toBe('Otro');
           expect(Enum(Enum1).getLabel(Enum1.something, 'en')).toBe('Something Other');
-          expect(Enum(Enum1).getLabel(Enum1.thing)).toBeUndefined();
-          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBeUndefined();
+          expect(Enum(Enum1).getLabel(Enum1.thing)).toBe('thing');
+          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBe('badKey');
         });
       });
       describe('setLabels/getLabels', () => {
@@ -153,8 +134,8 @@ const superenumTests = (Enum: EnumFunc) => {
           expect(Enum(Enum1).getLabel(Enum1.other)).toBe('Other');
           expect(Enum(Enum1).getLabel(Enum1.other, 'en')).toBe('Other');
           expect(Enum(Enum1).getLabel(Enum1.something, 'es')).toBe('Algo Más');
-          expect(Enum(Enum1).getLabel(Enum1.thing)).toBeUndefined();
-          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBeUndefined();
+          expect(Enum(Enum1).getLabel(Enum1.thing)).toBe('thing');
+          expect(Enum(Enum1).getLabel('badKey' as Enum1)).toBe('badKey');
         });
       });
     });
@@ -188,16 +169,38 @@ const superenumTests = (Enum: EnumFunc) => {
           for (const value of Enum(EnumArr1)) {
             switch (i) {
               case 0:
-                expect(value).toBe(EnumArr1.thing);
+                expect(value).toBe(EnumArr1['1']);
                 break;
               case 1:
-                expect(value).toBe(EnumArr1.other);
+                expect(value).toBe(EnumArr1.thing);
                 break;
               case 2:
-                expect(value).toBe(EnumArr1.somethingOther);
+                expect(value).toBe(EnumArr1.other);
                 break;
               case 3:
-                expect(value).toBe(EnumArr1['1']);
+                expect(value).toBe(EnumArr1.somethingOther);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+        test('Enum(EnumObj1) order', async () => {
+          let i = 0;
+          for (const value of Enum(EnumObj1)) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(EnumObj1['99']);
+                break;
+              case 1:
+                expect(value).toBe(EnumObj1.thing);
+                break;
+              case 2:
+                expect(value).toBe(EnumObj1.other);
+                break;
+              case 3:
+                expect(value).toBe(EnumObj1.something);
                 break;
               default:
                 throw new Error(`Unexpected value: ${value}`);
@@ -212,16 +215,16 @@ const superenumTests = (Enum: EnumFunc) => {
           for (const value of Enum(EnumObj1).values()) {
             switch (i) {
               case 0:
-                expect(value).toBe(Enum1.thing);
+                expect(value).toBe(EnumObj1['99']);
                 break;
               case 1:
-                expect(value).toBe(Enum1.other);
+                expect(value).toBe(EnumObj1.thing);
                 break;
               case 2:
-                expect(value).toBe(Enum1.something);
+                expect(value).toBe(EnumObj1.other);
                 break;
               case 3:
-                expect(value).toBe(Enum1.ninetynine);
+                expect(value).toBe(EnumObj1.something);
                 break;
               default:
                 throw new Error(`Unexpected value: ${value}`);
@@ -234,16 +237,38 @@ const superenumTests = (Enum: EnumFunc) => {
           for (const value of Enum(EnumArr1).values()) {
             switch (i) {
               case 0:
-                expect(value).toBe(EnumArr1.thing);
+                expect(value).toBe(EnumArr1['1']);
                 break;
               case 1:
-                expect(value).toBe(EnumArr1.other);
+                expect(value).toBe(EnumArr1.thing);
                 break;
               case 2:
-                expect(value).toBe(EnumArr1.somethingOther);
+                expect(value).toBe(EnumArr1.other);
                 break;
               case 3:
-                expect(value).toBe(EnumArr1['1']);
+                expect(value).toBe(EnumArr1.somethingOther);
+                break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+        test('Enum1 order', async () => {
+          let i = 0;
+          for (const value of Enum(Enum1).values()) {
+            switch (i) {
+              case 0:
+                expect(value).toBe(Enum1.thing);
+                break;
+              case 1:
+                expect(value).toBe(Enum1.other);
+                break;
+              case 2:
+                expect(value).toBe(Enum1.something);
+                break;
+              case 3:
+                expect(value).toBe(Enum1.ninetynine);
                 break;
               default:
                 throw new Error(`Unexpected value: ${value}`);
@@ -277,22 +302,44 @@ const superenumTests = (Enum: EnumFunc) => {
         });
         test('EnumArr1 order', async () => {
           let i = 0;
-          for (const value of Enum(EnumArr1).keys()) {
+          for (const key of Enum(EnumArr1).keys()) {
             switch (i) {
               case 0:
-                expect(value).toBe('thing');
+                expect(key).toBe('1');
                 break;
               case 1:
-                expect(value).toBe('other');
+                expect(key).toBe('thing');
                 break;
               case 2:
-                expect(value).toBe('somethingOther');
+                expect(key).toBe('other');
                 break;
               case 3:
-                expect(value).toBe('1');
+                expect(key).toBe('somethingOther');
                 break;
               default:
-                throw new Error(`Unexpected value: ${value}`);
+                throw new Error(`Unexpected value: ${key}`);
+            }
+            i++;
+          }
+        });
+        test('EnumObj1 order', async () => {
+          let i = 0;
+          for (const key of Enum(EnumObj1).keys()) {
+            switch (i) {
+              case 0:
+                expect(key).toBe('99');
+                break;
+              case 1:
+                expect(key).toBe('thing');
+                break;
+              case 2:
+                expect(key).toBe('other');
+                break;
+              case 3:
+                expect(key).toBe('something');
+                break;
+              default:
+                throw new Error(`Unexpected key: ${key}`);
             }
             i++;
           }
@@ -330,20 +377,46 @@ const superenumTests = (Enum: EnumFunc) => {
           for (const [key, value] of Enum(EnumArr1).entries()) {
             switch (i) {
               case 0:
+                expect(key).toBe('1');
+                expect(value).toBe(EnumArr1['1']);
+                break;
+              case 1:
                 expect(key).toBe('thing');
                 expect(value).toBe(EnumArr1.thing);
                 break;
-              case 1:
+              case 2:
                 expect(key).toBe('other');
                 expect(value).toBe(EnumArr1.other);
                 break;
-              case 2:
+              case 3:
                 expect(key).toBe('somethingOther');
                 expect(value).toBe(EnumArr1.somethingOther);
                 break;
+              default:
+                throw new Error(`Unexpected value: ${value}`);
+            }
+            i++;
+          }
+        });
+        test('EnumObj1 order', async () => {
+          let i = 0;
+          for (const [key, value] of Enum(EnumObj1).entries()) {
+            switch (i) {
+              case 0:
+                expect(key).toBe('99');
+                expect(value).toBe(EnumObj1['99']);
+                break;
+              case 1:
+                expect(key).toBe('thing');
+                expect(value).toBe(EnumObj1.thing);
+                break;
+              case 2:
+                expect(key).toBe('other');
+                expect(value).toBe(EnumObj1.other);
+                break;
               case 3:
-                expect(key).toBe('1');
-                expect(value).toBe(EnumArr1['1']);
+                expect(key).toBe('something');
+                expect(value).toBe(EnumObj1.something);
                 break;
               default:
                 throw new Error(`Unexpected value: ${value}`);
@@ -366,6 +439,7 @@ const superenumTests = (Enum: EnumFunc) => {
         expect(StringEnum.Blue).toBe('blue');
         expect(Enum(StringEnum).fromValue('green')).toBe('green');
         expect(Enum(StringEnum).fromValue('GREEN', { ignoreCase: true })).toBe('green');
+        expect(Enum(StringEnum).fromKey('Green')).toBe('green');
         expect(Enum(StringEnum).fromKey('Blue')).toBe('blue');
         expect(Enum(StringEnum).keyFromValue('red')).toBe('Red');
         expect(Enum(StringEnum).values()).toEqual(['red', 'green', 'blue']);

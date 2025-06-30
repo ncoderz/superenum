@@ -5,7 +5,8 @@ import { Enum, EnumType } from '../src';
 //   TWO = 'two',
 // }
 
-const Enum1 = Enum.fromArray(['ONE', 'TWO']);
+// Problem is Objects always sort numeric keys before string keys, so the order of the enum is not preserved.
+const Enum1 = Enum.fromArray(['ONE', 'TWO', '3']);
 type Enum1 = EnumType<typeof Enum1>;
 
 const test = Enum1.ONE;
