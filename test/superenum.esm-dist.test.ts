@@ -1,6 +1,8 @@
-import { superenum } from '../dist';
+import { describe } from 'vitest';
+
+import { Enum } from '../dist';
 import { superenumTests } from './superenum-test';
 
 describe('NodeJS ESM build', () => {
-  superenumTests(superenum);
+  superenumTests(Enum);
 });

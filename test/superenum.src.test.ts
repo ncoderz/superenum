@@ -1,5 +1,7 @@
-import { superenum } from '../src/superenum';
+import { Enum } from '../src';
 import { superenumTests } from './superenum-test';
 
+// TODO - need to export the fn type of Enum
+
 // Run tests on src
-superenumTests(superenum);
+superenumTests(Enum);

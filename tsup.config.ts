@@ -20,9 +20,26 @@ export default defineConfig([
     globalName: 'superenum', // Replace with your desired global
     outDir: 'dist/browser',
     sourcemap: true,
-    minify: true,
+    minify: 'terser',
+    minifySyntax: true,
+    minifyIdentifiers: true,
+    minifyWhitespace: true,
     clean: false, // prevent removing CJS/ESM outputs
-    shims: true, // Include shims for browser compatibility
+    shims: false,
     target: 'es6',
+
+    // Enable Terser manually (tsup will detect this if installed)
+    terserOptions: {
+      compress: {
+        passes: 1, // Number of times to run Terser
+      },
+      mangle: {
+        properties: {
+          // Use a regex to match internal-only properties
+          // regex: /^_?([a-z])/i,
+          regex: /^_/,
+        },
+      },
+    },
   },
 ]);

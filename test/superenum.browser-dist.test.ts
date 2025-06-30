@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { Script } from 'node:vm';
 
-import { type Superenum } from '../src';
+import { describe, expect, test } from 'vitest';
+
+import { type EnumFunc } from '../src';
 import { superenumTests } from './superenum-test';
 
 describe('Browser IIFE build', () => {
@@ -12,15 +14,15 @@ describe('Browser IIFE build', () => {
   script.runInNewContext(context);
   const { superenum } = context as {
     superenum: {
-      superenum: Superenum;
+      Enum: EnumFunc;
     };
   };
 
-  it('attaches superenum to window', () => {
+  test('attaches superenum to window', () => {
     expect(superenum).toBeDefined();
-    expect(typeof superenum.superenum).toBe('function');
+    expect(typeof superenum.Enum).toBe('function');
   });
 
   // Run tests on dist (TS compiled, rollup bundled and minified file)
-  superenumTests(superenum.superenum);
+  superenumTests(superenum.Enum);
 });
