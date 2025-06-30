@@ -7,13 +7,13 @@
 
 `🚀 The enum utility that TypeScript forgot` — _JavaScript too!_
 
-## Why @ncoderz/superenum?
+## Why?
 
 Ever wanted Validation, Iteration, Key-Lookups, Localization for your enums in Typescript or JavaScript?
 
 Ever wanted it to be so simple you'll use it everywhere?
 
-@ncoderz/superenum is the enum utility that TS forgot:
+superenum is the enum utility that TS forgot:
 
 - 🚀 Super-powers for your enums
 - ✅ Input validation
@@ -373,7 +373,7 @@ This open source software is licensed under the [BSD-2-Clause license](https://o
 ## Table of Contents
 
 - [Superenum](#superenum)
-  - [Why @ncoderz/superenum?](#why-ncoderzsuperenum)
+  - [Why?](#why)
   - [Installation](#installation)
   - [Importing](#importing)
   - [Basic Usage](#basic-usage)
