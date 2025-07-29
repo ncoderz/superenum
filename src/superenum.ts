@@ -1,70 +1,10 @@
-/*
-
-Copyright ©2022-24 Ncoderz Ltd
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
- * Enum keys
+ * Create an enum type from an enum like object or array.
  */
-export type EnumKey = string;
+export type EnumType<T> = T[keyof T];
 
 /**
- * Enum values
- */
-export type EnumValue = string | number;
-
-/**
- * Array Enum declaration
- */
-export type ArrayEnum<V extends EnumValue> = V[];
-
-/**
- * Object enum declaration
- */
-export type ObjectEnum<K extends EnumKey, V extends EnumValue> = { [key in K]: V };
-
-/**
- * Convert an ArrayEnum type to an ObjectEnum
- */
-export type ArrayEnumToObjectEnum<T extends ReadonlyArray<EnumValue>> = {
-  [K in T extends ReadonlyArray<infer U> ? U : never]: T extends ReadonlyArray<infer U> ? U : never;
-};
-
-/**
- * Get the type of an enum from a superenum, removing the  {@link EnumExtensions} from the type
- */
-export type EnumType<T> = T[keyof Omit<T, keyof EnumExtensions<EnumValue>>];
-
-/**
- * Options for the {@link Superenum} and {@link Superenum.fromArray} functions
- */
-export interface EnumOptions {
-  iterationKeys?: ArrayEnum<EnumValue>;
-  noFreeze?: boolean;
-}
-
-/**
- * Options for the {@link EnumExtensions.fromValue} function
+ * Options for the {@link Superenum.fromValue} function
  */
 export interface FromValueOptions {
   /**
@@ -74,7 +14,7 @@ export interface FromValueOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.fromKey} function
+ * Options for the {@link Superenum.fromKey} function
  */
 export interface FromKeyOptions {
   /**
@@ -84,7 +24,7 @@ export interface FromKeyOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.keyFromValue} function
+ * Options for the {@link Superenum.keyFromValue} function
  */
 export interface KeyFromValueOptions {
   /**
@@ -94,48 +34,84 @@ export interface KeyFromValueOptions {
 }
 
 /**
- * Options for the {@link EnumExtensions.setMetadata} function
+ * Options for the {@link Superenum.hasKey} function
  */
-export interface SetMetadataOptions {}
+export interface HasKeyOptions {
+  /**
+   * Ignore case when getting the enum key from the value
+   */
+  ignoreCase?: boolean;
+}
 
 /**
- * Options for the {@link EnumExtensions.getMetadata} function
+ * Options for the {@link Superenum.hasValue} function
  */
-export interface GetMetadataOptions {}
-
-export interface EnumExtensions<V extends EnumValue> {
+export interface HasValueOptions {
   /**
-   * Validate an enum value, returning the value if valid, otherwise undefined.
+   * Ignore case when getting the enum key from the value
+   */
+  ignoreCase?: boolean;
+}
+
+/**
+ * i18n labels for enum values.
+ */
+export interface Labels {
+  [key: string]: string;
+}
+
+/**
+ * Array Enum declaration
+ */
+export type ArrayEnum<KV extends EnumKey> = ReadonlyArray<KV>;
+
+/**
+ * Convert an ArrayEnum type to an ObjectEnum
+ */
+export type ArrayEnumToObjectEnum<T extends ReadonlyArray<string>> = {
+  [K in T[number]]: K;
+};
+
+export interface Superenum<
+  K extends EnumKey = EnumKey,
+  V extends EnumValue = EnumValue,
+  T extends ObjectEnum<K, V> = ObjectEnum<K, V>,
+> {
+  /**
+   * Validate a possible enum value, returning the enum value if valid, otherwise undefined.
    *
-   * Since a superenum is just the value, then all this function does is check to see if the value exists, and if
-   * so returns it, otherwise it returns undefined.
+   * Since an enum value is just the value, then all this function does is check to see if the value exists on the enum, and if
+   * so returns it cast to the enum type, otherwise it returns undefined.
    *
-   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
-   * {@link FromValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   * Note: If the enum has duplicate values when lower-cased and
+   * {@link FromValueOptions.ignoreCase} is true, the data returned when when values clash will be indeterminate.
    *
    * @param value - the enum value to validate
    * @param options - options for the function
    * @returns the enum value, or undefined if the value cannot be matched to the enum
    */
-  fromValue(value: unknown | null | undefined, options?: FromValueOptions): V | undefined;
+  fromValue(value: unknown | null | undefined, options?: FromValueOptions): EnumType<T> | undefined;
 
   /**
    * Get an enum value from its key, returning the value if key valid, otherwise undefined.
    *
-   * Note: If the enum has duplicate keys when lower-cased if
+   * Note: If the enum has duplicate keys when lower-cased and
    * {@link FromKeyOptions.ignoreCase} is true, the data returned when when keys clash will be indeterminate.
    *
    * @param key - the enum key to convert to enum value
    * @param options - options for the function
    * @returns the enum represented by the key, or undefined if the key cannot be matched to the enum
    */
-  fromKey(key: EnumKey | number | null | undefined, options?: FromKeyOptions): V | undefined;
+  fromKey(
+    key: EnumKey | number | null | undefined,
+    options?: FromKeyOptions,
+  ): EnumType<T> | undefined;
 
   /**
    * Get an enum key from its value, returning the key if value valid, otherwise undefined.
    *
-   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
-   * {@link KeyFromValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   * Note: If the enum has duplicate values when lower-cased and
+   * {@link FromValueOptions.ignoreCase} is true, the data returned when when values clash will be indeterminate.
    *
    * @param value - the enum value to convert to enum key
    * @param options - options for the function
@@ -147,404 +123,325 @@ export interface EnumExtensions<V extends EnumValue> {
   ): string | undefined;
 
   /**
-   * Store metadata for an enum value. If value is not valid, the metadata will not be stored.
+   * Check if an enum has a value, returning true if yes, otherwise false.
    *
-   * @param value - the value for which to store metadata
-   * @param metadata - the metadata to store
+   * Note: If the enum has duplicate values (or duplicate values when lower-cased if
+   * {@link HasValueOptions.ignoreCase} is true), the data returned when when values clash will be indeterminate.
+   *
+   * @param value - the enum value to check
    * @param options - options for the function
-   * @returns true if the metadata was associated with the value, otherwise false
+   * @returns true if the enum has the value, otherwise false
    */
-  setMetadata<M>(value: V | null | undefined, metadata: M, options?: SetMetadataOptions): boolean;
+  hasValue(value: EnumType<T> | null | undefined, options?: HasValueOptions): boolean;
 
   /**
-   * Retrieve metadata that was stored against an enum value.
+   * Check if an enum has a key, returning true if yes, otherwise false.
    *
-   * If no metadata is found, or the value is invalid, undefined will be returned.
+   * Note: If the enum has duplicate keys when lower-cased and
+   * {@link FromKeyOptions.ignoreCase} is true, the data returned when when keys clash will be indeterminate.
    *
-   * @param value - the value for which to retrieve metadata
+   * @param key - the enum key to check
    * @param options - options for the function
-   * @returns the metadata associated with the enum value
+   * @returns true if the enum has the key, otherwise false
    */
-  getMetadata<M>(value: V | null | undefined, options?: GetMetadataOptions): M | undefined;
+  hasKey(key: EnumKey | null | undefined, options?: HasKeyOptions): boolean;
 
   /**
    * Get an array of the enum values.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  values(): readonly V[];
+  values(): readonly EnumType<T>[];
 
   /**
    * Get an array of the enum keys.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  keys(): readonly EnumKey[];
+  keys(): readonly ExtractEnumKey<K, V, T>[];
 
   /**
    * Get an array of the enum entries.
    *
-   * Note: Item order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  entries(): readonly [EnumKey, V][];
+  entries(): readonly [ExtractEnumKey<K, V, T>, EnumType<T>][];
 
   /**
    * An iterator that iterates the enum values.
    *
-   * Note: Iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee iteration order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired iteration order.
-   *
-   * https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
-   *
    * @returns iterator over the enum values
    */
-  [Symbol.iterator](): IterableIterator<V>;
+  [Symbol.iterator](): IterableIterator<EnumType<T>>;
+
+  /**
+   * Set i18n labels for all enum values.
+   *
+   * @param allLabels - an object containing i18n labels for each enum value
+   */
+  setAllLabels(allLabels: { [key: EnumValue]: Labels }): void;
+
+  /**
+   * Set i18n labels for a specific enum value.
+   *
+   * @param value - the enum value to set i18n labels for
+   * @param labels - an object containing i18n labels for the enum value
+   */
+  setLabels(value: EnumType<T>, labels: Labels): void;
+
+  /**
+   * Get i18n labels for a specific enum value.
+   *
+   * @param value - the enum value to get i18n labels for
+   * @returns an object containing i18n labels for the enum value
+   */
+  getLabels(value: EnumType<T>): Labels;
+
+  /**
+   * Get a label for a specific enum value in a specific locale.
+   *
+   * If no locale is provided, it will return the first label that was set.
+   * If no label is found for the value, it will return the value as a string.
+   *
+   * @param value - the enum value to get the label for
+   * @param locale - the locale to get the label for
+   * @returns the label for the enum value in the specified locale
+   */
+  getLabel(value: EnumType<T>, locale?: string): string;
 }
+
+type EnumKey = string;
+type EnumValue = string | number;
+type ExtractEnumKey<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>> = keyof T;
+
+type GenericEnum = Readonly<Record<EnumKey, EnumValue>>;
+
+type ObjectEnum<K extends EnumKey, V extends EnumValue> = { [key in K]: V };
+
+interface Cache {
+  _keys: EnumKey[];
+  _valueKeyMap: Map<EnumValue, EnumKey>;
+  _keyValueMap?: Map<EnumKey, EnumValue>;
+  _lcValueKeyMap?: Map<EnumValue, EnumKey>;
+  _lcKeyValueMap?: Map<EnumKey, EnumValue>;
+  _valueLabelMap?: Map<EnumValue, Labels>;
+  _values?: EnumValue[];
+  _entries?: [EnumKey, EnumValue][];
+}
+
+const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
 
 /**
- * Interface to manage superenums
+ * Wraps an enum or enum-like object to provide methods for interacting with it.
+ *
+ * Uses a WeakMap and lazy instantiation to cache the enum's keys, values, and labels
+ * for fast performance while keeping memory footprint small.
+ *
+ * @param enm - an enum or enum like object
+ * @returns a Superenum object that provides methods to interact with the enum
  */
-export interface Superenum {
-  /**
-   * Create a superenum from a plain JavaScript object.
-   *
-   * Alias of {@link Superenum.fromObject}.
-   *
-   * @param enumeration - the plain JavaScript object enum to enhance
-   * @param options - options for the enum enhancement
-   * @returns the plain object enum converted to a superenum
-   */
-  <K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>>(
-    enumeration: T,
-    options?: EnumOptions,
-  ): Readonly<T> & EnumExtensions<EnumType<T>>;
+function Enum<K extends string, V extends string | number, T extends ObjectEnum<K, V>>(
+  enm: T,
+): Superenum<K, V, T> {
+  let _cache: Cache = CACHED_ENUMS.get(enm) as Cache;
 
-  /**
-   * Create a superenum from a plain JavaScript object.
-   *
-   * Alias of {@link Superenum.fromArray}.
-   *
-   * @param enumeration - the plain JavaScript array to convert and enhance
-   * @param options - options for the enum enhancement
-   * @returns the plain array enum converted to a superenum
-   */
-  <V extends EnumValue, T extends ArrayEnum<V>>(
-    enumeration: T,
-    options?: EnumOptions,
-  ): Readonly<ArrayEnumToObjectEnum<T>> & EnumExtensions<EnumType<ArrayEnumToObjectEnum<T>>>;
+  // Get the enum as a generic object
+  const enmAny = enm as unknown as Record<string, EnumValue>;
 
-  /**
-   * Create a superenum from a plain JavaScript object.
-   *
-   * The plain JavaScript object will be enhanced with {@link EnumExtensions}.
-   *
-   * Note: Item / iteration order is guaranteed unless the enum is initialised using {@link Superenum} or
-   * {@link Superenum.fromObject} and it contains keys which can be converted to integers. In this case it will
-   * follow the rules of the JavaScript engine which may vary. In order to guarantee the item / iteration order
-   * in the case of integer keys, use {@link Superenum.fromArray} to initialise the enum, or pass in an array
-   * of keys to {@link EnumOptions.iterationKeys} to represent the desired item / iteration order.
-   *
-   * Note: If the object has duplicate values, or duplicate keys or values when lower-cased, the initialisation will
-   * still succeed. However, the behaviour of
-   * {@link EnumExtensions.fromValue},
-   * {@link EnumExtensions.fromKey},
-   * {@link EnumExtensions.keyFromValue}
-   * will be indeterminate in cases where the keys / values clash.
-   *
-   * @param enumeration - the plain JavaScript object enum to enhance
-   * @param options - options for the enum enhancement
-   * @returns the plain object enum converted to a superenum
-   */
-  fromObject<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>>(
-    enumeration: T,
-    options?: EnumOptions,
-  ): Readonly<T> & EnumExtensions<EnumType<T>>;
+  if (!_cache) {
+    // Get iteration keys from the enum object (ignore reverse mapped integers)
+    const enmKeys: EnumKey[] = [];
+    for (const key in enm) {
+      const nkey = Number(key);
+      const isReverseKey = !isNaN(nkey) && enmAny[enmAny[nkey]] === nkey;
 
-  /**
-   * Create a superenum from a plain JavaScript array.
-   *
-   * The array will be converted to a plain JavaScript object will be enhanced with {@link EnumExtensions}.
-   *
-   * Note: Iteration order is guaranteed to be that of the items in the array. A different iteration order can be
-   * specified using {@link EnumOptions.iterationKeys} to represent the desired iteration order.
-   *
-   * Note: If the array has duplicate values, the initialisation will not fail. Instead the duplicate values will
-   * be ignored and the resultant enum will contain just one of the values.
-   *
-   * Note: If the array has duplicate values when lower-cased, the data returned when
-   * calling {@link EnumExtensions.fromKey} and {@link EnumExtensions.keyFromValue} with
-   * *ignoreCase* set will be indeterminate for duplicate keys / values.
-   *
-   * @param enumeration - the plain JavaScript array to convert and enhance
-   * @param options - options for the enum enhancement
-   * @returns the plain array enum converted to a superenum
-   */
-  fromArray<V extends EnumValue, T extends ArrayEnum<V>>(
-    enumeration: T,
-    options?: EnumOptions,
-  ): Readonly<ArrayEnumToObjectEnum<T>> & EnumExtensions<EnumType<ArrayEnumToObjectEnum<T>>>;
+      if (!isReverseKey) {
+        enmKeys.push(key);
+      }
+    }
+
+    const newCache: Cache = {
+      _keys: enmKeys,
+      _valueKeyMap: new Map(),
+    } as Cache;
+
+    // Fill keyValueMap and lcKeyValueMap, valueKeyMap and lcValueKeyMap
+    for (const key of newCache._keys) {
+      const value = enmAny[key];
+      newCache._valueKeyMap.set(value, key);
+    }
+
+    CACHED_ENUMS.set(enm, newCache);
+    _cache = newCache;
+  }
+
+  function createKeyValueMap(): Map<EnumKey, EnumValue> {
+    const newMap = new Map<EnumKey, EnumValue>();
+    for (const key of _cache._keys) {
+      const value = enmAny[key] as EnumValue;
+      newMap.set(key, value);
+    }
+    _cache._keyValueMap = newMap;
+    return newMap;
+  }
+
+  function createLowerCaseValueKeyMap(): Map<EnumValue, EnumKey> {
+    const newMap = new Map<EnumValue, EnumKey>();
+    for (const key of _cache._keys) {
+      const value = enmAny[key];
+      const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
+      newMap.set(lcValue, key);
+    }
+    _cache._lcValueKeyMap = newMap;
+
+    return newMap;
+  }
+
+  function createLowerCaseKeyValueMap(): Map<EnumKey, EnumValue> {
+    const newMap = new Map<EnumKey, EnumValue>();
+    for (const key of _cache._keys) {
+      const value = enmAny[key];
+      newMap.set(key.toLowerCase(), value as EnumValue);
+    }
+    _cache._lcKeyValueMap = newMap;
+    return newMap;
+  }
+
+  function createValueLabelMap(): Map<EnumValue, Labels> {
+    const newMap = new Map<EnumValue, Labels>();
+    _cache._valueLabelMap = newMap;
+    return newMap;
+  }
+
+  function createValues() {
+    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
+    _cache._values = _cache._keys.map((k) => keyValueMap.get(k)!);
+    return _cache._values;
+  }
+
+  function createEntries() {
+    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
+    _cache._entries = _cache._keys.map((k) => [k, keyValueMap.get(k)!]);
+    return _cache._entries;
+  }
+
+  function fromValue(value: EnumValue, options?: FromValueOptions) {
+    if (options?.ignoreCase && typeof value === 'string') {
+      const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
+      const lcValueKeyMap = _cache._lcValueKeyMap ?? createLowerCaseValueKeyMap();
+      const key = lcValueKeyMap.get(value.toLowerCase());
+      if (!key) return undefined;
+      return keyValueMap.get(key);
+    }
+    if (!_cache._valueKeyMap.has(value)) return undefined;
+    return value;
+  }
+
+  function fromKey(key: EnumKey, options?: FromKeyOptions) {
+    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
+    if (options?.ignoreCase && typeof key === 'string') {
+      const lcKeyValueMap = _cache._lcKeyValueMap ?? createLowerCaseKeyValueMap();
+      return lcKeyValueMap.get(key.toLowerCase());
+    }
+    return keyValueMap.get(`${key}`);
+  }
+
+  function keyFromValue(value: EnumValue, options?: KeyFromValueOptions) {
+    if (options?.ignoreCase && typeof value === 'string') {
+      const lcValueKeyMap = _cache._lcValueKeyMap ?? createLowerCaseValueKeyMap();
+      return lcValueKeyMap.get(value.toLowerCase());
+    }
+    return _cache._valueKeyMap.get(value);
+  }
+
+  function hasKey(key: EnumKey, options?: HasKeyOptions) {
+    return fromKey(key, options) != null;
+  }
+
+  function hasValue(value: EnumValue, options?: HasValueOptions) {
+    return fromValue(value, options) != null;
+  }
+
+  function keys() {
+    return _cache._keys;
+  }
+
+  function values() {
+    return _cache._values ?? createValues();
+  }
+
+  function entries() {
+    return _cache._entries ?? createEntries();
+  }
+
+  function* valueIterator() {
+    for (const v of values()) {
+      yield v;
+    }
+  }
+
+  function setAllLabels(allLabels: { [key: EnumValue]: Labels }): void {
+    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    for (const [v, labels] of Object.entries(allLabels)) {
+      const value = fromValue(v);
+      if (value != null) {
+        valueLabelMap.set(value, labels);
+      }
+    }
+  }
+
+  function setLabels(value: EnumValue, labels: Labels): void {
+    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    valueLabelMap.set(value, labels);
+  }
+
+  function getLabels(value: EnumValue): Labels {
+    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    return valueLabelMap.get(value) ?? {};
+  }
+
+  function getLabel(value: EnumValue, locale?: string): string {
+    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    const labels = valueLabelMap.get(value) ?? {};
+    if (!locale) {
+      for (const label of Object.values(labels)) {
+        return label ?? `${value}`;
+      }
+    }
+    return labels[locale as string] ?? `${value}`;
+  }
+
+  return {
+    fromValue,
+    fromKey,
+    keyFromValue,
+    hasKey,
+    hasValue,
+    keys: () => keys(),
+    values: () => values(),
+    entries: () => entries(),
+    [Symbol.iterator]: valueIterator,
+    setAllLabels,
+    setLabels,
+    getLabels,
+    getLabel,
+  } as unknown as Superenum<K, V, T>;
 }
 
-function fromArray(arr: any, options?: EnumOptions) {
+Enum.fromArray = <KV extends Readonly<EnumKey>, T extends ArrayEnum<KV>>(
+  enumeration: T,
+): ArrayEnumToObjectEnum<T> => {
+  let arr: ArrayEnum<KV> = enumeration;
   if (!Array.isArray(arr)) arr = [];
 
-  const enumeration = arr.reduce((acc: any, v: any) => {
-    acc[`${v}`] = v;
+  const enm = arr.reduce((acc, v) => {
+    acc[v] = v;
     return acc;
   }, {});
 
-  // Default the iteration keys to be the passed in arr if not set
-  if (!options || (options && !options.iterationKeys)) {
-    options = Object.assign({}, options);
-    options.iterationKeys = arr;
-  }
+  return enm as ArrayEnumToObjectEnum<T>;
+};
 
-  return fromObject(enumeration, options);
-}
+export type EnumFunc = typeof Enum;
 
-function fromObject(enumeration: any, options?: EnumOptions) {
-  // For reducing code size when minified
-  const Object_freeze = Object.freeze;
-  const Object_defineProperty = Object.defineProperty;
-  const Object_assign = Object.assign;
-  const definePropertyOptions = {
-    enumerable: false,
-  };
-
-  const keyValueMap = new Map<EnumKey, EnumValue>();
-  const valueKeyMap = new Map<EnumValue, EnumKey>();
-  const lcKeyValueMap = new Map<EnumKey, EnumValue>();
-  const lcValueKeyMap = new Map<EnumValue, EnumKey>();
-  const metadataMap = new Map<EnumValue, unknown>();
-  const iterationKeys = (options?.iterationKeys ?? Object.keys(enumeration)).map((k) => `${k}`);
-
-  // Fill keyValueMap and lcKeyValueMap
-  for (const [key, value] of Object.entries(enumeration)) {
-    // key must be a string since it's an object property
-    keyValueMap.set(key, value as EnumValue);
-    lcKeyValueMap.set(key.toLowerCase(), value as EnumValue);
-  }
-
-  // Fill valueKeyMap and lcValueKeyMap
-  for (const [key, value] of keyValueMap) {
-    // value might be a number, so much check
-    const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
-
-    valueKeyMap.set(value, key);
-    lcValueKeyMap.set(lcValue, key);
-  }
-
-  const values = iterationKeys.map((k) => keyValueMap.get(k));
-  const entries = iterationKeys.map((k) => [k, keyValueMap.get(k)]);
-
-  const init = (options?: EnumOptions) => {
-    let superEn = enumeration;
-
-    // If original object is not extensible, so we have to make a copy
-    if (!Object.isExtensible(enumeration)) {
-      superEn = Object_assign({}, enumeration);
-    }
-
-    function fromValue(value: EnumValue, options?: FromValueOptions) {
-      if (options?.ignoreCase && typeof value === 'string') {
-        return keyValueMap.get(lcValueKeyMap.get(value.toLowerCase()) as EnumKey);
-      }
-      if (!valueKeyMap.has(value)) return undefined;
-      return value;
-    }
-
-    function fromKey(key: EnumKey | number, options?: FromKeyOptions) {
-      if (options?.ignoreCase && typeof key === 'string') {
-        return lcKeyValueMap.get(key.toLowerCase());
-      }
-      return keyValueMap.get(`${key}`);
-    }
-
-    function keyFromValue(value: EnumValue, options?: KeyFromValueOptions) {
-      if (options?.ignoreCase && typeof value === 'string') {
-        return lcValueKeyMap.get(value.toLowerCase());
-      }
-      return valueKeyMap.get(value);
-    }
-
-    function setMetadata(value: EnumValue, metadata: unknown, options?: SetMetadataOptions) {
-      options;
-      const v = fromValue(value);
-      if (v != null) metadataMap.set(v, metadata);
-    }
-
-    function getMetadata(value: EnumValue, options?: GetMetadataOptions) {
-      options;
-      return metadataMap.get(value);
-    }
-
-    function valueIterator() {
-      let i = 0;
-      return {
-        // [Symbol.iterator]() {
-        //   return this;
-        // },
-        next: () => {
-          if (i < iterationKeys.length) {
-            return { value: keyValueMap.get(`${iterationKeys[i++]}`), done: false };
-          }
-          return {
-            done: true,
-          };
-        },
-      };
-    }
-
-    // Add helper functions to the enum but so they cannot be enumerated
-    Object_defineProperty(
-      superEn,
-      'fromKey',
-      Object_assign(
-        {
-          value: fromKey,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'fromValue',
-      Object_assign(
-        {
-          value: fromValue,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'keyFromValue',
-      Object_assign(
-        {
-          value: keyFromValue,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'setMetadata',
-      Object_assign(
-        {
-          value: setMetadata,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'getMetadata',
-      Object_assign(
-        {
-          value: getMetadata,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      Symbol.iterator,
-      Object_assign(
-        {
-          value: valueIterator,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'values',
-      Object_assign(
-        {
-          value: () => values,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'keys',
-      Object_assign(
-        {
-          value: () => iterationKeys,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    Object_defineProperty(
-      superEn,
-      'entries',
-      Object_assign(
-        {
-          value: () => entries,
-        },
-        definePropertyOptions,
-      ),
-    );
-
-    // Freeze the enum if required
-    let res = superEn;
-    if (!options?.noFreeze) {
-      res = Object_freeze(superEn);
-      Object_freeze(iterationKeys);
-      Object_freeze(values);
-      Object_freeze(entries);
-    }
-
-    return res;
-  };
-
-  return init(options);
-}
-
-const superenum: Superenum = ((enumeration: any, options?: EnumOptions) => {
-  if (Array.isArray(enumeration)) {
-    return fromArray(enumeration, options);
-  }
-  return fromObject(enumeration, options);
-}) as Superenum;
-
-superenum.fromObject = fromObject;
-superenum.fromArray = fromArray;
-
-export { superenum };
+export { Enum };

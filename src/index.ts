@@ -1,11 +1,11 @@
 export {
-  type EnumOptions,
+  Enum,
+  type EnumFunc,
   type EnumType,
   type FromKeyOptions,
   type FromValueOptions,
-  type GetMetadataOptions,
+  type HasKeyOptions,
+  type HasValueOptions,
   type KeyFromValueOptions,
-  type SetMetadataOptions,
-  type Superenum,
-  superenum,
+  type Labels,
 } from './superenum';
