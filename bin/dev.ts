@@ -1,4 +1,4 @@
-import { Enum, EnumType } from '../src';
+import { Enum } from '../src';
 
 enum Enum1 {
   ONE = 1,
