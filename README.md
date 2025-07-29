@@ -25,6 +25,7 @@ superenum is the enum utility that TS forgot:
 
 Additionally:
 
+- 👍 Works with Node 24 without `--experimental-transform-types`
 - 🌐 Works with TypeScript or JavaScript enums
 - 🖥️ Works in NodeJS, Deno, Bun, or the browser
 - 📦 Very small code footprint (~1.5kB minified + gzipped)
