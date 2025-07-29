@@ -361,6 +361,37 @@ const invalid = Enum(MyEnum).keyFromValue('node'); // undefined
 [API Documentation](dist/docs/API.md)
 -->
 
+## Migration from version 0.x.x
+
+Version 1 changed the philosophy to leave enum declarations as they are, and apply Superenum
+features when required using a lightweight, weak map cache.
+
+### Declaration
+
+```ts
+const MyEnum = superenum({
+  key: 'value',
+});
+
+// ==>
+
+const MyEnum = {
+  key: 'value',
+};
+```
+
+### Function usage
+
+```ts
+const v = MyEnum.fromValue('value');
+
+// ==>
+
+import { Enum } from '@ncoderz/superenum';
+
+const v = Enum(MyEnum).fromValue();
+```
+
 ## License
 
 This open source software is licensed under the [BSD-2-Clause license](https://opensource.org/licenses/BSD-2-Clause).
@@ -388,6 +419,9 @@ This open source software is licensed under the [BSD-2-Clause license](https://o
     - [A note on Iteration Order](#a-note-on-iteration-order)
   - [Enum value from enum key](#enum-value-from-enum-key)
   - [Enum key from enum value](#enum-key-from-enum-value)
+  - [Migration from version 0.x.x](#migration-from-version-0xx)
+    - [Declaration](#declaration)
+    - [Function usage](#function-usage)
   - [License](#license)
   - [Alternatives](#alternatives)
   - [Table of Contents](#table-of-contents)
