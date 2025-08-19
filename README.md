@@ -3,7 +3,6 @@
 ![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
 ![npm version](https://img.shields.io/npm/v/@ncoderz/superenum)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Minified Size](https://img.shields.io/bundlephobia/min/@ncoderz/superenum)
 
 `🚀 The enum utility that TypeScript forgot` — _JavaScript too!_
 
@@ -409,14 +408,14 @@ This open source software is licensed under the [BSD-2-Clause license](https://o
   - [Installation](#installation)
   - [Importing](#importing)
   - [Basic Usage](#basic-usage)
-    - [Validation](#validation)
-    - [Iteration](#iteration)
-    - [key =\> value conversion](#key--value-conversion)
-    - [value =\> key conversion](#value--key-conversion)
-    - [Localization (i18n)](#localization-i18n)
+      - [Validation](#validation)
+      - [Iteration](#iteration)
+      - [key =\> value conversion](#key--value-conversion)
+      - [value =\> key conversion](#value--key-conversion)
+      - [Localization (i18n)](#localization-i18n)
   - [Validation](#validation-1)
   - [Iteration / forEach / map / reduce](#iteration--foreach--map--reduce)
-    - [A note on Iteration Order](#a-note-on-iteration-order)
+      - [A note on Iteration Order](#a-note-on-iteration-order)
   - [Enum value from enum key](#enum-value-from-enum-key)
   - [Enum key from enum value](#enum-key-from-enum-value)
   - [Migration from version 0.x.x](#migration-from-version-0xx)

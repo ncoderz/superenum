@@ -2,7 +2,7 @@
   "name": "@ncoderz/superenum",
   "version": "1.0.0",
   "description": "Simple, typesafe enums in TypeScript, fully compatible with standard JavaScript",
-  "author": "six5536",
+  "author": "RA Sewell <richard.sewell@ncoderz.com>",
   "license": "BSD-2-Clause",
   "type": "module",
   "main": "./dist/index.cjs",
