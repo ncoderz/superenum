@@ -83,13 +83,14 @@
     "ts",
     "js"
   ],
+  "homepage": "https://github.com/ncoderz/superenum#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ncoderz/superenum.git"
   },
-  "contributors": [
-    "Richard Sewell (https://github.com/six5536)"
-  ],
+  "bugs": {
+    "url": "https://github.com/ncoderz/superenum/issues"
+  },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.1.0",
