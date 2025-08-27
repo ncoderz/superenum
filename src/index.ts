@@ -1,3 +1,4 @@
+export { PACKAGE_INFO } from './_generated/package_info';
 export {
   Enum,
   type EnumFunc,

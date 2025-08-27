@@ -232,6 +232,20 @@ interface Cache {
 const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
 
 /**
+ * Type guard to check if a value is a valid Cache object
+ */
+function isCache(value: unknown): value is Cache {
+  return (
+    value != null &&
+    typeof value === 'object' &&
+    '_keys' in value &&
+    '_valueKeyMap' in value &&
+    Array.isArray((value as Cache)._keys) &&
+    (value as Cache)._valueKeyMap instanceof Map
+  );
+}
+
+/**
  * Wraps an enum or enum-like object to provide methods for interacting with it.
  *
  * Uses a WeakMap and lazy instantiation to cache the enum's keys, values, and labels
@@ -243,19 +257,20 @@ const CACHED_ENUMS = new WeakMap<GenericEnum, Cache>();
 function Enum<K extends string, V extends string | number, T extends ObjectEnum<K, V>>(
   enm: T,
 ): Superenum<K, V, T> {
-  let _cache: Cache = CACHED_ENUMS.get(enm) as Cache;
+  const cached = CACHED_ENUMS.get(enm);
+  let _cache: Cache = isCache(cached) ? cached : (undefined as unknown as Cache);
 
-  // Get the enum as a generic object
-  const enmAny = enm as unknown as Record<string, EnumValue>;
+  // Get the enum as a more precisely typed object
+  const enmRecord = enm as Readonly<Record<string, EnumValue>>;
 
   if (!_cache) {
     // Get iteration keys from the enum object (ignore reverse mapped integers)
     const enmKeys: EnumKey[] = [];
     for (const key in enm) {
       const nkey = Number(key);
-      const mappedValue = enmAny[nkey];
+      const mappedValue = enmRecord[nkey];
       const isReverseKey =
-        !isNaN(nkey) && mappedValue !== undefined && enmAny[mappedValue] === nkey;
+        !isNaN(nkey) && mappedValue !== undefined && enmRecord[mappedValue] === nkey;
 
       if (!isReverseKey) {
         enmKeys.push(key);
@@ -269,7 +284,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
 
     // Fill keyValueMap and lcKeyValueMap, valueKeyMap and lcValueKeyMap
     for (const key of newCache._keys) {
-      const value = enmAny[key];
+      const value = enmRecord[key];
       if (value !== undefined) {
         newCache._valueKeyMap.set(value, key);
       }
@@ -283,7 +298,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     if (!_cache._keyValueMap) {
       const newMap = new Map<EnumKey, EnumValue>();
       for (const key of _cache._keys) {
-        const value = enmAny[key];
+        const value = enmRecord[key];
         if (value !== undefined) {
           newMap.set(key, value as EnumValue);
         }
@@ -297,7 +312,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     if (!_cache._lcValueKeyMap) {
       const newMap = new Map<EnumValue, EnumKey>();
       for (const key of _cache._keys) {
-        const value = enmAny[key];
+        const value = enmRecord[key];
         if (value !== undefined) {
           const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
           newMap.set(lcValue, key);
@@ -312,7 +327,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     if (!_cache._lcKeyValueMap) {
       const newMap = new Map<EnumKey, EnumValue>();
       for (const key of _cache._keys) {
-        const value = enmAny[key];
+        const value = enmRecord[key];
         if (value !== undefined) {
           newMap.set(key.toLowerCase(), value as EnumValue);
         }
@@ -431,6 +446,9 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     return labels[locale as string] ?? `${value}`;
   }
 
+  // Type assertion is necessary here due to TypeScript's limitations with
+  // generic variance and the complex relationship between K, V, and T.
+  // The implementation is type-safe but TypeScript cannot fully verify this.
   return {
     fromValue,
     fromKey,
@@ -457,7 +475,7 @@ Enum.fromArray = <KV extends Readonly<EnumKey>, T extends ArrayEnum<KV>>(
   const enm = arr.reduce((acc, v) => {
     acc[v] = v;
     return acc;
-  }, {});
+  }, Object.create(null));
 
   return enm as ArrayEnumToObjectEnum<T>;
 };
