@@ -37,19 +37,16 @@
     "LICENSE"
   ],
   "scripts": {
+    "init": "node scripts/init.ts",
     "dev": "node ./bin/dev.ts",
-    "build": "npm run lint && npm run typecheck && tsup",
-    "build:watch": "tsup --watch",
-    "test": "vitest",
-    "test-ci": "vitest run",
+    "build": "npm run check && tsup",
+    "check": "npm run init && tsc --noEmit && eslint . --max-warnings 0",
+    "fix": "eslint . --fix",
+    "test": "vitest run",
+    "test-watch": "vitest",
     "test-src": "vitest ./test/superenum.src.test.ts",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'",
-    "lint-fix": "eslint --fix --max-warnings 0 -- './**/*.@(tsx|ts|jsx|js|mjs|cjs)'",
-    "format": "prettier --write 'src/**/*.{ts,tsx}' '*.{json,md}'",
-    "format-check": "prettier --check 'src/**/*.{ts,tsx}' '*.{json,md}'",
     "docs": "typedoc",
-    "prepublishOnly": "npm run clean && npm run build && npm run test-ci && npm run docs",
+    "prepublishOnly": "npm run clean && npm run build && npm run test && npm run docs",
     "clean": "node scripts/clean.ts"
   },
   "devEngines": {

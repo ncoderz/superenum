@@ -8,6 +8,8 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true, // Stricter array access
+    "exactOptionalPropertyTypes": true, // Stricter optionals
     "module": "CommonJS",
     "target": "ES6",
     "esModuleInterop": true,

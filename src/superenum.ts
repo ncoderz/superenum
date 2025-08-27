@@ -253,7 +253,9 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     const enmKeys: EnumKey[] = [];
     for (const key in enm) {
       const nkey = Number(key);
-      const isReverseKey = !isNaN(nkey) && enmAny[enmAny[nkey]] === nkey;
+      const mappedValue = enmAny[nkey];
+      const isReverseKey =
+        !isNaN(nkey) && mappedValue !== undefined && enmAny[mappedValue] === nkey;
 
       if (!isReverseKey) {
         enmKeys.push(key);
@@ -268,67 +270,85 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
     // Fill keyValueMap and lcKeyValueMap, valueKeyMap and lcValueKeyMap
     for (const key of newCache._keys) {
       const value = enmAny[key];
-      newCache._valueKeyMap.set(value, key);
+      if (value !== undefined) {
+        newCache._valueKeyMap.set(value, key);
+      }
     }
 
     CACHED_ENUMS.set(enm, newCache);
     _cache = newCache;
   }
 
-  function createKeyValueMap(): Map<EnumKey, EnumValue> {
-    const newMap = new Map<EnumKey, EnumValue>();
-    for (const key of _cache._keys) {
-      const value = enmAny[key] as EnumValue;
-      newMap.set(key, value);
+  function getKeyValueMap(): Map<EnumKey, EnumValue> {
+    if (!_cache._keyValueMap) {
+      const newMap = new Map<EnumKey, EnumValue>();
+      for (const key of _cache._keys) {
+        const value = enmAny[key];
+        if (value !== undefined) {
+          newMap.set(key, value as EnumValue);
+        }
+      }
+      _cache._keyValueMap = newMap;
     }
-    _cache._keyValueMap = newMap;
-    return newMap;
+    return _cache._keyValueMap;
   }
 
-  function createLowerCaseValueKeyMap(): Map<EnumValue, EnumKey> {
-    const newMap = new Map<EnumValue, EnumKey>();
-    for (const key of _cache._keys) {
-      const value = enmAny[key];
-      const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
-      newMap.set(lcValue, key);
+  function getLowerCaseValueKeyMap(): Map<EnumValue, EnumKey> {
+    if (!_cache._lcValueKeyMap) {
+      const newMap = new Map<EnumValue, EnumKey>();
+      for (const key of _cache._keys) {
+        const value = enmAny[key];
+        if (value !== undefined) {
+          const lcValue = typeof value === 'string' ? value.toLowerCase() : value;
+          newMap.set(lcValue, key);
+        }
+      }
+      _cache._lcValueKeyMap = newMap;
     }
-    _cache._lcValueKeyMap = newMap;
-
-    return newMap;
+    return _cache._lcValueKeyMap;
   }
 
-  function createLowerCaseKeyValueMap(): Map<EnumKey, EnumValue> {
-    const newMap = new Map<EnumKey, EnumValue>();
-    for (const key of _cache._keys) {
-      const value = enmAny[key];
-      newMap.set(key.toLowerCase(), value as EnumValue);
+  function getLowerCaseKeyValueMap(): Map<EnumKey, EnumValue> {
+    if (!_cache._lcKeyValueMap) {
+      const newMap = new Map<EnumKey, EnumValue>();
+      for (const key of _cache._keys) {
+        const value = enmAny[key];
+        if (value !== undefined) {
+          newMap.set(key.toLowerCase(), value as EnumValue);
+        }
+      }
+      _cache._lcKeyValueMap = newMap;
     }
-    _cache._lcKeyValueMap = newMap;
-    return newMap;
+    return _cache._lcKeyValueMap;
   }
 
-  function createValueLabelMap(): Map<EnumValue, Labels> {
-    const newMap = new Map<EnumValue, Labels>();
-    _cache._valueLabelMap = newMap;
-    return newMap;
+  function getValueLabelMap(): Map<EnumValue, Labels> {
+    if (!_cache._valueLabelMap) {
+      _cache._valueLabelMap = new Map<EnumValue, Labels>();
+    }
+    return _cache._valueLabelMap;
   }
 
-  function createValues() {
-    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
-    _cache._values = _cache._keys.map((k) => keyValueMap.get(k)!);
+  function getValues(): readonly EnumValue[] {
+    if (!_cache._values) {
+      const keyValueMap = getKeyValueMap();
+      _cache._values = _cache._keys.map((k) => keyValueMap.get(k)!);
+    }
     return _cache._values;
   }
 
-  function createEntries() {
-    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
-    _cache._entries = _cache._keys.map((k) => [k, keyValueMap.get(k)!]);
+  function getEntries(): readonly [EnumKey, EnumValue][] {
+    if (!_cache._entries) {
+      const keyValueMap = getKeyValueMap();
+      _cache._entries = _cache._keys.map((k) => [k, keyValueMap.get(k)!]);
+    }
     return _cache._entries;
   }
 
   function fromValue(value: EnumValue, options?: FromValueOptions) {
     if (options?.ignoreCase && typeof value === 'string') {
-      const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
-      const lcValueKeyMap = _cache._lcValueKeyMap ?? createLowerCaseValueKeyMap();
+      const keyValueMap = getKeyValueMap();
+      const lcValueKeyMap = getLowerCaseValueKeyMap();
       const key = lcValueKeyMap.get(value.toLowerCase());
       if (!key) return undefined;
       return keyValueMap.get(key);
@@ -338,9 +358,9 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
   }
 
   function fromKey(key: EnumKey, options?: FromKeyOptions) {
-    const keyValueMap = _cache._keyValueMap ?? createKeyValueMap();
+    const keyValueMap = getKeyValueMap();
     if (options?.ignoreCase && typeof key === 'string') {
-      const lcKeyValueMap = _cache._lcKeyValueMap ?? createLowerCaseKeyValueMap();
+      const lcKeyValueMap = getLowerCaseKeyValueMap();
       return lcKeyValueMap.get(key.toLowerCase());
     }
     return keyValueMap.get(`${key}`);
@@ -348,7 +368,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
 
   function keyFromValue(value: EnumValue, options?: KeyFromValueOptions) {
     if (options?.ignoreCase && typeof value === 'string') {
-      const lcValueKeyMap = _cache._lcValueKeyMap ?? createLowerCaseValueKeyMap();
+      const lcValueKeyMap = getLowerCaseValueKeyMap();
       return lcValueKeyMap.get(value.toLowerCase());
     }
     return _cache._valueKeyMap.get(value);
@@ -367,11 +387,11 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
   }
 
   function values() {
-    return _cache._values ?? createValues();
+    return getValues();
   }
 
   function entries() {
-    return _cache._entries ?? createEntries();
+    return getEntries();
   }
 
   function* valueIterator() {
@@ -381,7 +401,7 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
   }
 
   function setAllLabels(allLabels: { [key: EnumValue]: Labels }): void {
-    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    const valueLabelMap = getValueLabelMap();
     for (const [v, labels] of Object.entries(allLabels)) {
       const value = fromValue(v);
       if (value != null) {
@@ -391,17 +411,17 @@ function Enum<K extends string, V extends string | number, T extends ObjectEnum<
   }
 
   function setLabels(value: EnumValue, labels: Labels): void {
-    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    const valueLabelMap = getValueLabelMap();
     valueLabelMap.set(value, labels);
   }
 
   function getLabels(value: EnumValue): Labels {
-    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    const valueLabelMap = getValueLabelMap();
     return valueLabelMap.get(value) ?? {};
   }
 
   function getLabel(value: EnumValue, locale?: string): string {
-    const valueLabelMap = _cache._valueLabelMap ?? createValueLabelMap();
+    const valueLabelMap = getValueLabelMap();
     const labels = valueLabelMap.get(value) ?? {};
     if (!locale) {
       for (const label of Object.values(labels)) {
