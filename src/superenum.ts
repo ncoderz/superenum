@@ -73,9 +73,9 @@ export type ArrayEnumToObjectEnum<T extends ReadonlyArray<string>> = {
 };
 
 export interface Superenum<
-  K extends EnumKey = EnumKey,
+  K extends string = string,
   V extends EnumValue = EnumValue,
-  T extends ObjectEnum<K, V> = ObjectEnum<K, V>,
+  T extends Readonly<Record<K, V>> = Readonly<Record<K, V>>,
 > {
   /**
    * Validate a possible enum value, returning the enum value if valid, otherwise undefined.
@@ -210,13 +210,18 @@ export interface Superenum<
   getLabel(value: EnumType<T>, locale?: string): string;
 }
 
+// Core enum types with better constraints
 type EnumKey = string;
 type EnumValue = string | number;
+
+// Helper type to extract keys from enum object with proper constraints
 type ExtractEnumKey<K extends EnumKey, V extends EnumValue, T extends ObjectEnum<K, V>> = keyof T;
 
+// Generic enum type with readonly constraint for immutability
 type GenericEnum = Readonly<Record<EnumKey, EnumValue>>;
 
-type ObjectEnum<K extends EnumKey, V extends EnumValue> = { [key in K]: V };
+// Object enum type with readonly constraint and better generic bounds
+type ObjectEnum<K extends EnumKey, V extends EnumValue> = Readonly<{ [key in K]: V }>;
 
 interface Cache {
   _keys: EnumKey[];
@@ -254,7 +259,7 @@ function isCache(value: unknown): value is Cache {
  * @param enm - an enum or enum like object
  * @returns a Superenum object that provides methods to interact with the enum
  */
-function Enum<K extends string, V extends string | number, T extends ObjectEnum<K, V>>(
+function Enum<K extends string, V extends EnumValue, T extends Readonly<Record<K, V>>>(
   enm: T,
 ): Superenum<K, V, T> {
   const cached = CACHED_ENUMS.get(enm);
