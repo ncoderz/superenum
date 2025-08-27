@@ -10,3 +10,6 @@ node_modules
 
 # PACKAGE SPECIFIC
 /src/_generated
+
+# CLAUDE
+.claude/
