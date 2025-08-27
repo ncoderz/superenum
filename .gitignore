@@ -7,8 +7,8 @@ node_modules
 # VSCODE
 .vscode/mise-tools
 
-# VSCODE
-.vscode/mise-tools
+# CLAUDE
+.claude
 
 # PACKAGE SPECIFIC
-
+/src/_generated
