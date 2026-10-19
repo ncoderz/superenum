@@ -8,7 +8,17 @@ import tseslint from 'typescript-eslint';
 /** @type {import("eslint").Linter.Config[]} */
 export default [
   {
-    ignores: ['**/node_modules', '**/dist', '**/docs', '**/coverage', '**/*.d.ts'],
+    // The public export and the commit lint are shared, byte for byte, with
+    // other projects, so they keep their own style.
+    ignores: [
+      '**/node_modules',
+      '**/dist',
+      '**/docs',
+      '**/coverage',
+      '**/*.d.ts',
+      'scripts/export-public/**',
+      'scripts/commit-lint.mjs',
+    ],
   },
 
   // Base JS rules

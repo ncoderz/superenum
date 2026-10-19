@@ -1,6 +1,6 @@
 # Superenum
 
-![Build & Test](https://github.com/ncoderz/superenum/actions/workflows/build-test.yml/badge.svg?branch=main)
+![Publish](https://github.com/ncoderz/superenum/actions/workflows/publish.yml/badge.svg)
 ![npm version](https://img.shields.io/npm/v/@ncoderz/superenum)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Minified Size](https://img.shields.io/bundlephobia/min/@ncoderz/superenum)

@@ -1,0 +1,140 @@
+name: Publish
+
+# This repository is the public mirror of superenum. The export in the
+# internal repository pushes one commit and one annotated tag for each
+# release, with the release notes in the tag's message, and the tag starts
+# this workflow. It builds the package from the exported tree, publishes it to
+# npm through trusted publishing with provenance, and creates the GitHub
+# release. The internal repository ran the tests before the export, so this
+# workflow runs none.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+# Two releases never run at once, and a release in progress is never
+# cancelled, because a publish that stops halfway is the worst outcome.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Check that the tag agrees with the tree and carries the notes.
+  # ---------------------------------------------------------------------------
+  meta:
+    name: verify tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      prerelease: ${{ steps.v.outputs.prerelease }}
+      npm_tag: ${{ steps.v.outputs.npm_tag }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Derive the version from the tag
+        id: v
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # A semver prerelease version has a hyphen after the patch number.
+          if [[ "$version" == *-* ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "npm_tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Releasing $version"
+
+      - name: The tag matches the package's version
+        run: |
+          actual="$(node -p "require('./package.json').version")"
+          if [ "$actual" != "${{ steps.v.outputs.version }}" ]; then
+            echo "::error::package.json holds $actual, but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+      # The export writes the release notes into the tag's message. A tag
+      # without notes didn't come from the export.
+      - name: The tag carries the release notes
+        run: |
+          git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+          if [ "$(git cat-file -t "$GITHUB_REF_NAME")" != tag ]; then
+            echo "::error::$GITHUB_REF_NAME is no annotated tag, so it has no release notes"
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------------
+  # 2. Build and publish to npm. prepublishOnly builds the package and its
+  #    documentation.
+  # ---------------------------------------------------------------------------
+  publish:
+    name: publish
+    needs: meta
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # The OpenID Connect token authenticates trusted publishing on npm and
+      # signs the provenance.
+      id-token: write
+    env:
+      VERSION: ${{ needs.meta.outputs.version }}
+      NPM_TAG: ${{ needs.meta.outputs.npm_tag }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      # A version that is already on npm is skipped, so a run again after a
+      # half-failed release goes on to the GitHub release.
+      - name: Publish the package to npm
+        run: |
+          name="$(node -p "require('./package.json').name")"
+          if npm view "$name@$VERSION" version >/dev/null 2>&1; then
+            echo "$name@$VERSION is already published"
+            exit 0
+          fi
+          npm publish --access public --tag "$NPM_TAG"
+
+  # ---------------------------------------------------------------------------
+  # 3. Create the GitHub release with the notes of the tag's message. The
+  #    GitHub releases are the project's changelog.
+  # ---------------------------------------------------------------------------
+  github-release:
+    name: github release
+    needs: [meta, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read the release notes from the tag
+        run: |
+          mkdir -p dist
+          git fetch --force origin "refs/tags/v${VERSION}:refs/tags/v${VERSION}"
+          git for-each-ref "refs/tags/v${VERSION}" --format='%(contents:body)' > dist/notes.md
+          if [ ! -s dist/notes.md ]; then
+            echo "::error::the tag v${VERSION} carries no release notes"
+            exit 1
+          fi
+          cat dist/notes.md
+
+      - name: Create the release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: v${{ env.VERSION }}
+          body_path: dist/notes.md
+          prerelease: ${{ needs.meta.outputs.prerelease == 'true' }}
